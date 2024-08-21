@@ -4,7 +4,7 @@ import adminController from '../controller/adminController.js'
 import { adminProtect } from '../middleware/adminAuthMiddleware.js'
 
 
-router.post('/auth', adminController.authAdmin)
+router.post('/admin-auth', adminController.authAdmin)
 router.post('/logout', adminController.logoutAdmin)
 
 export default router

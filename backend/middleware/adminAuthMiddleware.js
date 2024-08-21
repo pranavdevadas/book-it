@@ -9,7 +9,6 @@ let adminProtect = expressAsyncHandler( async(req, res, next) => {
         try {
             let decoded = jwt.verify(token, process.env.JWT_SECRET_ADMIN)            
             req.admin = await Admin.findById(decoded.adminId).select('-password')
-            console.log(req.admin);
             next()
         } catch (error) {
             console.error('Token verification failed:', error);

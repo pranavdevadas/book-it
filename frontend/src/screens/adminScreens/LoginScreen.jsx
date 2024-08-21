@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import {  useNavigate } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../../components/userComponents/FormContainer.jsx';
-import { useLoginMutation, useResendOtpMutation } from '../../slice/userSlice/userApiSlice.js';
-import { setCredentials } from '../../slice/userSlice/userAuthSlice.js';
+import { useAdminLoginMutation } from '../../slice/adminSlice/adminApiSlice.js';
+import { setAdminCredentials } from '../../slice/adminSlice/adminAuthSlice.js'
 import { toast } from 'react-toastify';
-import Loader from '../../components/userComponents/Loader.jsx';
+import Loader from '../../components/userComponents/Loader.jsx'
 
 function LoginScreen() {
     const [email, setEmail] = useState('');
@@ -15,40 +15,31 @@ function LoginScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [login, { isLoading }] = useLoginMutation();
-    const [resend] = useResendOtpMutation();
+    const [adminLogin, { isLoading }] = useAdminLoginMutation();
 
-    const { userInfo } = useSelector((state) => state.auth);
-
+    const { adminInfo } = useSelector((state) => state.adminAuth);
+    
     useEffect(() => {
-        // If userInfo exists and isVerified is true, redirect to homepage
-        if (userInfo && userInfo.isVerified) {
-            navigate('/');
+        if (adminInfo) {
+            navigate('/admin/home');
         }
-    }, [userInfo, navigate]);
+    }, [navigate, adminInfo]);
 
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            const res = await login({ email, password }).unwrap();
-
-            if (!res.isVerified) {
-                await resend({ email: res.email }).unwrap();
-                navigate('/otp', { state: { email: res.email } });
-                toast.error('You are not verified. An OTP has been sent to your email.');
-            } else {
-                dispatch(setCredentials(res));
-                toast.success('Logged In');
-                navigate('/');
-            }
-        } catch (err) {
-            toast.error(err?.data?.message || err.error);
-        }
+        let res = await adminLogin({ email, password }).unwrap()
+        dispatch(setAdminCredentials({...res}))
+        navigate('/admin/home')
+       } catch (err) {
+        toast.error(err?.data?.message || err.error);
+       }
+       
     };
 
     return (
         <FormContainer>
-            <h1>Sign In</h1>
+            <h1>Admin Login</h1>
             <Form onSubmit={submitHandler}>
                 <Form.Group className="my-2" controlId="email">
                     <Form.Label>Email Address</Form.Label>
@@ -69,16 +60,11 @@ function LoginScreen() {
                     ></Form.Control>
                 </Form.Group>
 
-                {isLoading && <Loader />}
+                {isLoading && <Loader/>}
                 <Button type="submit" variant="primary" className="mt-3">
-                    Sign In
+                    Login
                 </Button>
             </Form>
-            <Row className="py-3">
-                <Col>
-                    New Customer? <Link to="/register">Register</Link>
-                </Col>
-            </Row>
         </FormContainer>
     );
 }

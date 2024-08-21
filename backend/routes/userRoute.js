@@ -10,5 +10,7 @@ router.post('/logout', userController.logoutUser)
 router.route('/profile')
                         .get(userProtect, userController.getUserProfile)
                         .put(userProtect, userController.updateUserProfile)
+router.post('/verify-otp', userController.verifyOtp)
+router.post('/resend-otp', userController.resendOtp)
 
 export default router

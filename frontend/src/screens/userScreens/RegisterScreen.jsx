@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Col } from "react-bootstrap";
 import FormContainer from "../../components/userComponents/FormContainer.jsx";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/userComponents/Loader.jsx";
 import { useRegisterMutation } from "../../slice/userSlice/userApiSlice.js";
-import { setCredentials } from "../../slice/userSlice/userAuthSlice.js";
 
 function RegisterScreen() {
   const [name, setName] = useState("");
@@ -19,38 +18,52 @@ function RegisterScreen() {
   const dispatch = useDispatch();
 
   const [register, { isLoading, error }] = useRegisterMutation();
-  
-  const { userInfo } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/");
+  const validateForm = () => {
+    const hasRepeatedDigitsPattern = /(0123456789|1234567890|0000000000|1111111111|2222222222|3333333333|4444444444|5555555555|6666666666|7777777777|8888888888|9999999999)/;
+
+    // Validate name
+    if (!/^[A-Za-z]{3,}$/.test(name)) {
+        toast.error('Invalid name');
+        return false;
     }
-  }, [navigate, userInfo]);
+
+    // Validate email
+    if (!/^[a-zA-Z][a-zA-Z0-9._%+-]{3,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        toast.error('Invalid email');
+        return false;
+    }
+
+    // Validate phone
+    if (!/^\d{10}$/.test(phone) || hasRepeatedDigitsPattern.test(phone)) {
+        toast.error('Invalid Mobile number');
+        return false;
+    }
+
+    // Validate password
+    if (!/.{6,}/.test(password)) {
+        toast.error('Invalid password: Must be at least 6 characters long, include at least one capital letter and one symbol.');
+        return false;
+    }
+
+    // Validate confirm password
+    if (password !== confirmPassword) {
+        toast.error('Password do not match');
+        return false;
+    }
+
+    return true;
+};
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !phone || !password || !confirmPassword) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error("Invalid email format");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
+   if (!validateForm()) return 
 
     try {
-      const result = await register({ email, password, phone, name }).unwrap();
-      dispatch(setCredentials(result));
-      navigate("/");
+      await register({ email, password, phone, name }).unwrap();
+      toast.success('OTP Sended to your Registerd Email')
+      navigate("/otp", { state: { email } }); 
     } catch (err) {
       toast.error(err?.data?.message || "An unexpected error occurred");
     }
