@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import userRepository from "../repository/userRepository.js";
-import userGenerateToken from "../utils/userGenerateToken.js";
+
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -71,7 +71,7 @@ let userService = {
   registerUser: async ({ name, email, phone, password }) => {
     const userExist = await userRepository.findUserByEmail(email);
     if (userExist) {
-      throw new Error("User Already Exists");
+      throw new Error("User Already Exist");
     }
 
     const salt = await bcrypt.genSalt(10);

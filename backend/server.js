@@ -4,6 +4,7 @@ dotenv.config()
 let port = process.env.PORT
 import userRoutes from './routes/userRoute.js'
 import adminRoutes from './routes/adminRoute.js'
+import ownerRoutes from './routes/ownerRoute.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import connectDB from './config/db.js'
 import cookieParser from 'cookie-parser'
@@ -19,6 +20,7 @@ app.use(cookieParser())
 
 app.use('/api/users', userRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/owner', ownerRoutes)
 
 app.get('/', (req, res) => res.send('server is ready'))
 app.use(notFound)

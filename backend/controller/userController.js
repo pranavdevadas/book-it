@@ -7,7 +7,10 @@ const userController = {
     const { email, password } = req.body;
 
     try {
-      const { user, isVerified, otp } = await userService.authenticateUser(email, password);
+      const { user, isVerified, otp } = await userService.authenticateUser(
+        email,
+        password
+      )
 
       if (!isVerified) {
         res.status(200).json({ message: "User Not Verified", otp, email });
@@ -55,8 +58,13 @@ const userController = {
     const { name, email, phone, password } = req.body;
 
     try {
-      const { user } = await userService.registerUser({ name, email, phone, password });
-      userGenerateToken(res, user._id);
+      const { user } = await userService.registerUser({
+        name,
+        email,
+        phone,
+        password,
+      });
+      // userGenerateToken(res, user._id);
 
       res.status(201).json({
         _id: user._id,
@@ -89,7 +97,12 @@ const userController = {
     const { name, email, phone, password } = req.body;
 
     try {
-      const updatedUser = await userService.updateUserProfile(req.user._id, { name, email, phone, password });
+      const updatedUser = await userService.updateUserProfile(req.user._id, {
+        name,
+        email,
+        phone,
+        password,
+      });
       res.status(200).json({
         _id: updatedUser._id,
         name: updatedUser.name,
