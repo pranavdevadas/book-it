@@ -9,5 +9,7 @@ router.post('/owner-logout',ownerController.logoutOwner)
 router.route('/owner-profile')
                             .get(ownerProtect, ownerController.getOwnerProfile)
                             .put(ownerProtect, ownerController.updateOwnerProfile)
+router.post('/owner-verify-otp', ownerController.verifyOtp)
+router.post('/owner-resend-otp', ownerController.resendOtp)
 
 export default router

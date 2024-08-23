@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 let ownerService = {
   authenticateOwner: async (email, password) => {
     let owner = await ownerRepository.findOwnerByEmail(email);
-    
+
     if (!owner) {
       throw new Error("Invalid Email or Password");
     }
@@ -27,12 +27,11 @@ let ownerService = {
     }
     if (!owner.isVerified) {
       return { isVerified: false, otp: owner.otp, email: owner.email };
-    }    
+    }
     return { owner, isVerified: true };
   },
 
-  registerOwner: async ( name, email, phone, password ) => {
-    
+  registerOwner: async (name, email, phone, password) => {
     let existingOwner = await ownerRepository.findOwnerByEmail(email);
     if (existingOwner) {
       throw new Error("Owner already Exist");
@@ -84,9 +83,9 @@ let ownerService = {
       throw new Error("Owner Not Found");
     }
 
-    owner.name = name || owner.name,
-    owner.email = email || owner.email,
-    owner.phone = phone || owner.phone;
+    (owner.name = name || owner.name),
+      (owner.email = email || owner.email),
+      (owner.phone = phone || owner.phone);
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -95,6 +94,46 @@ let ownerService = {
 
     let updateOwner = await ownerRepository.saveOwner(owner);
     return updateOwner;
+  },
+
+  verifyOtp: async (email, otp) => {
+
+    let owner = await ownerRepository.findOwnerByEmail(email);    
+
+    if (!owner) {
+      throw new Error("Owner Not Found");
+    }
+
+    if (otp !== owner.otp) {
+      throw new Error("Invalid OTP");
+    }    
+
+    owner.isVerified = true;
+    await ownerRepository.saveOwner(owner);
+    
+    return { message: "OTP Verified" };
+  },
+
+  resendOtp: async (email) => {
+    let owner = await ownerRepository.findOwnerByEmail(email);
+
+    if (!owner) {
+      throw new Error("Owner Not Found");
+    }
+
+    owner.otp = Math.floor(100000 + Math.random() * 900000);
+    await ownerRepository.saveOwner(owner);
+
+    const mailOptions = {
+      from: "pranavdevadas2@gmail.com",
+      to: owner.email,
+      subject: "OTP Verification",
+      text: `Your OTP is: ${owner.otp}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return { message: "OTP Resent" };
   },
 };
 

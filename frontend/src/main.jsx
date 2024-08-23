@@ -22,6 +22,13 @@ import AdminHomeScreen from './screens/adminScreens/HomeScreen.jsx'
 import AdminPrivateRoute from './components/adminComponents/PrivateRoute.jsx'
 import OtpScreen from './screens/userScreens/OtpScreen.jsx'
 
+import OwnerLoginScreen from './screens/ownerScreens/LoginScreen.jsx'
+import OwnerPrivateRoute from './components/ownerComonents/PrivateRoute.jsx'
+import OwnerHomeScreen from './screens/ownerScreens/HomeScreen.jsx'
+import OwnerRegister from './screens/ownerScreens/RegisterScreen.jsx'
+import OwnerProfile from './screens/ownerScreens/ProfileScreen.jsx'
+import OwnerOtpScreen from './screens/ownerScreens/OtpScreen.jsx'
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -38,10 +45,19 @@ const router = createBrowserRouter(
       
       {/* Admin Routes */}
       <Route path='/admin/login' element={<AdminLoginScreen />}/>
-      {/* Private Route */}
       <Route path="/admin" element={<AdminPrivateRoute/>}>
         <Route index path="home" element={<AdminHomeScreen/>} />
       </Route>
+
+      {/* Owner Routes */}
+      <Route path="/owner/login" element={<OwnerLoginScreen />} />
+      <Route path="/owner/register" element={<OwnerRegister />} />
+      <Route path="/owner/otp" element={<OwnerOtpScreen />} />
+      <Route path="/owner" element={<OwnerPrivateRoute />} >
+        <Route index path="home" element={<OwnerHomeScreen />} />
+        <Route path="profile" element={<OwnerProfile />} />
+      </Route>
+      
 
 
     </Route>

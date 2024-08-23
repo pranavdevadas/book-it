@@ -1,18 +1,17 @@
-import React from 'react';
+import React from 'react'
+import SideBarOwner from '../../components/ownerComonents/Sidebar'
 import { Container } from "react-bootstrap";
-import SideBar from '../../components/adminComponents/SideBar';
-import './style.css'
-
+import "./style.css";
 
 function HomeScreen() {
   return (
     <div className="admin-home-screen">
-      <SideBar />
+      <SideBarOwner />
       <Container className="content-container">
-        <h1>Admin HomeScreen</h1>
+        <h1>Owner HomeScreen</h1>
       </Container>
     </div>
-  );
+  )
 }
 
-export default HomeScreen;
+export default HomeScreen

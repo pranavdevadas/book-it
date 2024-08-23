@@ -9,16 +9,21 @@ let ownerController = {
       let result = await ownerService.authenticateOwner(email, password);
 
       const { owner, isVerified, otp } = result;
-
+      
       if (!isVerified) {
         return res
           .status(200)
           .json({ message: "Owner Not Verified", otp, email });
       } else {
         ownerGenerateToken(res, owner._id);
-        return res
-          .status(200)
-          .json({ message: "Authentication Successful", owner });
+        return res.status(200).json({
+          _id: owner._id,
+          name: owner.name,
+          email: owner.email,
+          phone: owner.phone,
+          isVerified: owner.isVerified,
+          owner
+        });
       }
     } catch (error) {
       res.status(400);
@@ -64,7 +69,6 @@ let ownerController = {
   }),
 
   getOwnerProfile: expressAsyncHandler(async (req, res) => {
-    
     try {
       let owner = ownerService.getOwnerProfile(req.owner);
       res.status(200).json({ owner });
@@ -76,7 +80,7 @@ let ownerController = {
 
   updateOwnerProfile: expressAsyncHandler(async (req, res) => {
     const { name, email, phone, password } = req.body;
-    
+
     try {
       let updateOwner = await ownerService.updateOwnerProfile(req.owner._id, {
         name,
@@ -90,6 +94,30 @@ let ownerController = {
         email: updateOwner.email,
         phone: updateOwner.phone,
       });
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  verifyOtp: expressAsyncHandler(async (req, res) => {
+    const { otp, email } = req.body;    
+    try {
+      let result = await ownerService.verifyOtp(email, otp);
+      
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  resendOtp: expressAsyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    try {
+      let result = await ownerService.resendOtp(email);
+      res.status(200).json(result);
     } catch (error) {
       res.status(400);
       throw new Error(error.message);

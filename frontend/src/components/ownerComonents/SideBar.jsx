@@ -1,3 +1,4 @@
+
 import React from "react";
 import "./style.css";
 import {
@@ -15,27 +16,27 @@ import { Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useAdminLogoutMutation } from "../../slice/adminSlice/adminApiSlice";
-import { clearAdminCredentials } from "../../slice/adminSlice/adminAuthSlice";
+import { useOwnerLogoutMutation } from "../../slice/ownerSlice/ownerApiSlice";
+import { clearOwnerCredentials } from "../../slice/ownerSlice/ownerAuthSlice";
 import { toast } from "react-toastify";
 
-function SideBarAdmin() {
-  const { adminInfo } = useSelector((state) => state.adminAuth);
+function SideBarOwner() {
+  const { ownerInfo } = useSelector((state) => state.ownerAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [clearCredentialsApiCall] = useAdminLogoutMutation();
+  const [clearCredentialsApiCall] = useOwnerLogoutMutation();
 
   const logoutHandler = async () => {
     try {
       await clearCredentialsApiCall().unwrap();
-      dispatch(clearAdminCredentials());
-      navigate("/admin/login");
+      dispatch(clearOwnerCredentials());
+      navigate("/owner/login");
       toast.success("Logout Success");
     } catch (err) {
       toast.error("Logout Failed");
     }
-  };
+  }
 
   return (
     <>
@@ -43,12 +44,12 @@ function SideBarAdmin() {
         <CDBSidebar className="sidebar">
           {/* <CDBSidebarHeader prefix={<i className="fa fa-bars" />}> */}
           <CDBSidebarHeader >
-            Admin
+            Theatre Owner
           </CDBSidebarHeader>
           <CDBSidebarContent>
             <Nav>
               <CDBSidebarMenu>
-                <LinkContainer to="/admin/home">
+                <LinkContainer to="/owner/home">
                   <CDBSidebarMenuItem>
                     <Nav.Link>
                       <FaHome /> &nbsp;Homepage
@@ -56,31 +57,7 @@ function SideBarAdmin() {
                   </CDBSidebarMenuItem>
                 </LinkContainer>
 
-                <LinkContainer to="/admin/users">
-                  <CDBSidebarMenuItem>
-                    <Nav.Link>
-                      <FaRegUserCircle /> &nbsp;Users
-                    </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer>
-
-                <LinkContainer to="/admin/owners">
-                  <CDBSidebarMenuItem>
-                    <Nav.Link>
-                      <MdLocalMovies /> &nbsp;Owners
-                    </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer>
-
-                <LinkContainer to="/admin/owners">
-                  <CDBSidebarMenuItem>
-                    <Nav.Link>
-                      <FaCity /> &nbsp;City Managment
-                    </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer>
-
-                <LinkContainer to="/admin/movies">
+                <LinkContainer to="/owner/movies">
                   <CDBSidebarMenuItem>
                     <Nav.Link>
                       <BiSolidMoviePlay /> &nbsp;Movies
@@ -88,7 +65,31 @@ function SideBarAdmin() {
                   </CDBSidebarMenuItem>
                 </LinkContainer>
 
-                <LinkContainer to="/admin/theatres">
+                <LinkContainer to="/owner/users">
+                  <CDBSidebarMenuItem>
+                    <Nav.Link>
+                      <FaRegUserCircle /> &nbsp;Users
+                    </Nav.Link>
+                  </CDBSidebarMenuItem>
+                </LinkContainer>
+
+                <LinkContainer to="/owner/owners">
+                  <CDBSidebarMenuItem>
+                    <Nav.Link>
+                      <MdLocalMovies /> &nbsp;Owners
+                    </Nav.Link>
+                  </CDBSidebarMenuItem>
+                </LinkContainer>
+
+                <LinkContainer to="/owner/city">
+                  <CDBSidebarMenuItem>
+                    <Nav.Link>
+                      <FaCity /> &nbsp;City Managment
+                    </Nav.Link>
+                  </CDBSidebarMenuItem>
+                </LinkContainer>
+
+                <LinkContainer to="/owner/theatres">
                   <CDBSidebarMenuItem>
                     <Nav.Link>
                       <MdOutlineTheaters /> &nbsp;Theatres
@@ -109,4 +110,4 @@ function SideBarAdmin() {
   );
 }
 
-export default SideBarAdmin;
+export default SideBarOwner;

@@ -2,6 +2,7 @@
     display: flex;
     justify-content: flex-start;
     height: 100vh;
+    /* margin-left: -117px; */
     width: 10px;
   }
   
@@ -10,8 +11,6 @@
     left: 0;
     top: 0;
     bottom: 0;
-    width: 250px; /* Adjust width as needed */
-    z-index: 1000; /* Ensure it's on top of other elements */
+    width: 250px; 
+    z-index: 1000; 
   }
-
-  

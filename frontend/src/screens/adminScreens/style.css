@@ -1,0 +1,14 @@
+.admin-home-screen {
+    display: flex;
+  }
+  
+  .sidebar-container {
+    flex-shrink: 0; /* Ensures the sidebar doesn't shrink */
+  }
+  
+  .content-container {
+    margin-left: 250px; /* Matches the sidebar width */
+    padding: 20px; /* Optional: Adds padding around the content */
+    width: calc(100% - 250px); /* Takes up the remaining width */
+  }
+  
