@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs"
 
 const ownerSchema = mongoose.Schema({
   name:{

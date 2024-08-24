@@ -17,7 +17,25 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+    addCity: builder.mutation({
+      query: (data) => ({
+        url: `${ADMIN_URL}/admin-city`,
+        method: "POST",
+        body: data
+      }),
+    }),
+    getCities: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/admin-city`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useAdminLoginMutation, useAdminLogoutMutation } = adminApiSlice;
+export const {
+  useAdminLoginMutation,
+  useAdminLogoutMutation,
+  useAddCityMutation,
+  useGetCitiesQuery
+} = adminApiSlice;

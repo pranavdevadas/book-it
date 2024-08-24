@@ -21,6 +21,9 @@ import AdminLoginScreen from './screens/adminScreens/LoginScreen.jsx'
 import AdminHomeScreen from './screens/adminScreens/HomeScreen.jsx'
 import AdminPrivateRoute from './components/adminComponents/PrivateRoute.jsx'
 import OtpScreen from './screens/userScreens/OtpScreen.jsx'
+import AdminMovieScreen from "./screens/adminScreens/MovieScreen.jsx";
+import AdminCityScreen from './screens/adminScreens/CityScreen.jsx'
+import AddCityScreen from './screens/adminScreens/CityAddScreen.jsx'
 
 import OwnerLoginScreen from './screens/ownerScreens/LoginScreen.jsx'
 import OwnerPrivateRoute from './components/ownerComonents/PrivateRoute.jsx'
@@ -47,6 +50,9 @@ const router = createBrowserRouter(
       <Route path='/admin/login' element={<AdminLoginScreen />}/>
       <Route path="/admin" element={<AdminPrivateRoute/>}>
         <Route index path="home" element={<AdminHomeScreen/>} />
+        <Route path="movies" element={<AdminMovieScreen />} />
+        <Route path="cities" element={<AdminCityScreen />} />
+        <Route path="add-city" element={<AddCityScreen />} />
       </Route>
 
       {/* Owner Routes */}

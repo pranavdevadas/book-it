@@ -28,6 +28,38 @@ let adminController = {
     });
     res.status(200).json({ message: "Admin logged out" });
   }),
+
+  addCity: expressAsyncHandler(async (req, res) => {
+    let { name } = req.body;
+
+    try {
+      if (!name) {
+        res.status(400).json({ message: "Enter City Name" });
+      } else {
+        let { city } = await adminService.addCity(name);
+        res.status(200).json({
+          _id: city._id,
+          name: city.name,
+        });
+      }
+
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  getCity: expressAsyncHandler(async (req, res) => {
+    try {
+      let { city } = await adminService.getCity();
+      console.log(city);
+
+      res.status(200).json(city);
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
 };
 
 export default adminController;

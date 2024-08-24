@@ -39,62 +39,65 @@ function SideBarAdmin() {
 
   return (
     <>
-      <div className="sidebar-container">
+      <div >
         <CDBSidebar className="sidebar">
           {/* <CDBSidebarHeader prefix={<i className="fa fa-bars" />}> */}
-          <CDBSidebarHeader >
-            Admin
-          </CDBSidebarHeader>
+          <CDBSidebarHeader>Admin</CDBSidebarHeader>
           <CDBSidebarContent>
             <Nav>
               <CDBSidebarMenu>
-                <LinkContainer to="/admin/home">
                   <CDBSidebarMenuItem>
+                <LinkContainer to="/admin/home">
                     <Nav.Link>
                       <FaHome /> &nbsp;Homepage
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
                 </LinkContainer>
+                  </CDBSidebarMenuItem>
 
-                <LinkContainer to="/admin/users">
                   <CDBSidebarMenuItem>
+                <LinkContainer to="/admin/users">
                     <Nav.Link>
                       <FaRegUserCircle /> &nbsp;Users
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
                 </LinkContainer>
+                  </CDBSidebarMenuItem>
 
-                <LinkContainer to="/admin/owners">
                   <CDBSidebarMenuItem>
+                <LinkContainer to="/admin/owners">
                     <Nav.Link>
                       <MdLocalMovies /> &nbsp;Owners
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
                 </LinkContainer>
+                  </CDBSidebarMenuItem>
 
-                <LinkContainer to="/admin/owners">
                   <CDBSidebarMenuItem>
+                <LinkContainer to="/admin/cities">
                     <Nav.Link>
                       <FaCity /> &nbsp;City Managment
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
                 </LinkContainer>
+                  </CDBSidebarMenuItem>
 
-                <LinkContainer to="/admin/movies">
                   <CDBSidebarMenuItem>
+                <LinkContainer to="/admin/movies">
                     <Nav.Link>
                       <BiSolidMoviePlay /> &nbsp;Movies
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
                 </LinkContainer>
+                  </CDBSidebarMenuItem>
 
-                <LinkContainer to="/admin/theatres">
-                  <CDBSidebarMenuItem>
+                <CDBSidebarMenuItem>
+                  <LinkContainer to="/admin/theatres">
                     <Nav.Link>
                       <MdOutlineTheaters /> &nbsp;Theatres
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer>
+                  </LinkContainer>
+                </CDBSidebarMenuItem>
+                <br />
+                <br />
+                <br />
+                <br />
+
                 <CDBSidebarMenuItem>
                   <Nav.Link onClick={logoutHandler}>
                     <LuLogOut /> &nbsp;Logout

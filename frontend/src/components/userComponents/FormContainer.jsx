@@ -1,9 +1,9 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 
-function FormContainer({ children }) {
+function FormContainer({ children, style }) {
   return (
-    <Container className='mb-5'>
+    <Container className='mb-5' style={style}>
         <Row className='justify-content-md-center mt-5'>
             <Col xs={12} md={6} className='card p-5'>
                 {children}
