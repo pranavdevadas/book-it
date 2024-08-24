@@ -25,6 +25,10 @@ const movieScema = mongoose.Schema({
     poster: {
         type: String,
         require: true
+    },
+    isListed: {
+        type: Boolean,
+        default: true
     }
 })
 

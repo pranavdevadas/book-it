@@ -21,12 +21,44 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${ADMIN_URL}/admin-city`,
         method: "POST",
-        body: data
+        body: data,
       }),
     }),
     getCities: builder.query({
       query: () => ({
         url: `${ADMIN_URL}/admin-city`,
+        method: "GET",
+      }),
+    }),
+    addMovie: builder.mutation({
+      query: (data) => ({
+        url: `${ADMIN_URL}/admin-movie`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getMovies: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/admin-movie`,
+        method: "GET",
+      }),
+    }),
+    toggleListStatus: builder.mutation({
+      query: (id) => ({
+        url: `${ADMIN_URL}/movie/${id}/toggle-status`,
+        method: "PATCH",
+      }),
+    }),
+    editMovie: builder.mutation({
+      query: ({ id, formData }) => ({
+        url: `${ADMIN_URL}/movie/${id}`,
+        method: "PATCH",
+        body: formData,
+      }),
+    }),
+    getMovieById: builder.query({
+      query: (id) => ({
+        url: `${ADMIN_URL}/movie/${id}`,
         method: "GET",
       }),
     }),
@@ -37,5 +69,10 @@ export const {
   useAdminLoginMutation,
   useAdminLogoutMutation,
   useAddCityMutation,
-  useGetCitiesQuery
+  useGetCitiesQuery,
+  useAddMovieMutation,
+  useGetMoviesQuery,
+  useToggleListStatusMutation,
+  useEditMovieMutation,
+  useGetMovieByIdQuery,
 } = adminApiSlice;

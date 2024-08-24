@@ -52,7 +52,6 @@ let adminController = {
   getCity: expressAsyncHandler(async (req, res) => {
     try {
       let { city } = await adminService.getCity();
-      console.log(city);
 
       res.status(200).json(city);
     } catch (error) {

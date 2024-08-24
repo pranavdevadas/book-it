@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import CityTable from "../../components/adminComponents/CityTable.jsx";
 import { useGetCitiesQuery } from "../../slice/adminSlice/adminApiSlice.js";
+import { toast } from "react-toastify";
 import Loader from "../../components/userComponents/Loader.jsx";
 
 function CityScreen() {

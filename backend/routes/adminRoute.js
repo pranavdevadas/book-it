@@ -7,10 +7,15 @@ import movieController from '../controller/movieController.js'
 
 router.post('/admin-auth', adminController.authAdmin)
 router.post('/logout', adminController.logoutAdmin)
-
-router.post('/admin-movie', movieController.addMovie)
+router.route('/admin-movie') 
+                            .get(adminProtect, movieController.getMovie)
+                            .post(adminProtect, movieController.addMovie)
+router.patch('/movie/:id/toggle-status', adminProtect, movieController.toggleListStatus);
+router.route('/movie/:id')
+                            .patch(adminProtect, movieController.editMovie)
+                            .get(adminProtect, movieController.getMovieById)
 router.route('/admin-city')
-                            .get(adminController.getCity)
-                            .post(adminController.addCity)
+                            .get(adminProtect ,adminController.getCity)
+                            .post(adminProtect ,adminController.addCity)
 
 export default router
