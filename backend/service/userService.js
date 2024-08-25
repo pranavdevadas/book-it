@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import userRepository from "../repository/userRepository.js";
+import userGenerateToken from "../utils/userGenerateToken.js";
 
 dotenv.config();
 
@@ -131,6 +132,45 @@ let userService = {
 
     const updatedUser = await userRepository.saveUser(user);
     return updatedUser;
+  },
+
+  loginOrCreateGoogleUser: async (email, name, res) => {
+    let user = await userRepository.findUserByEmail(email);
+
+    if (user) {
+
+      userGenerateToken(res, user._id);
+
+      return {
+        message: "Logged In",
+        name: user.name,
+        email: user.email,
+      };
+
+    } else {
+
+      let generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      let salt = await bcrypt.genSalt(10);
+      let hashedPassword = await bcrypt.hash(generatedPassword, salt);
+
+      let newUser = await userRepository.createUser({
+        name: name,
+        email,
+        isVerified: true,
+        phone: '565775757',
+        password: hashedPassword,
+      });
+
+      userGenerateToken(res, newUser._id);
+
+      return {
+        message: "Login Success",
+        name: newUser.name,
+        email: newUser.email,
+      };
+    }
   },
 };
 

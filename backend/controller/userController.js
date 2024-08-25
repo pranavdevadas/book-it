@@ -1,6 +1,8 @@
 import expressAsyncHandler from "express-async-handler";
 import userService from "../service/userService.js";
 import userGenerateToken from "../utils/userGenerateToken.js";
+import User from '../model/user.js'
+import bcrypt from 'bcryptjs'
 
 const userController = {
   authUser: expressAsyncHandler(async (req, res) => {
@@ -73,6 +75,47 @@ const userController = {
         phone: user.phone,
         otp: user.otp,
       });
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  google: expressAsyncHandler(async (req, res) => {    
+    let { email, name } = req.body
+    try {
+
+      const result = await userService.loginOrCreateGoogleUser(email, name, res);
+      res.status(200).json(result);
+      // let user = await User.findOne({ email });    
+      // if (user) {
+      //   userGenerateToken(res, user._id);
+      //   res.status(200).json({ 
+      //     message: "Login Success",
+      //     name: user.name,
+      //     email: user.email,
+      //   });
+      // } else {
+      //   let generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+      //   const salt = await bcrypt.genSalt(10);
+      //   const hashedPassword = await bcrypt.hash(generatedPassword, salt);
+      //   let newUser = new User({
+      //     name: name,
+      //     email,
+      //     isVerified: true,
+      //     password: hashedPassword,
+      //   });
+  
+      //   await newUser.save(); 
+  
+      //   userGenerateToken(res, newUser._id); 
+  
+      //   res.status(200).json({ 
+      //     message: "Login Success",
+      //     name: newUser.name,
+      //     email: newUser.email,
+      //   });
+      // }
     } catch (error) {
       res.status(400);
       throw new Error(error.message);

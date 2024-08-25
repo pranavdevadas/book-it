@@ -13,4 +13,6 @@ router.route('/profile')
 router.post('/verify-otp', userController.verifyOtp)
 router.post('/resend-otp', userController.resendOtp)
 
+router.post('/google', userController.google)
+
 export default router
