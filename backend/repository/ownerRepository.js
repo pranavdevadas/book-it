@@ -16,6 +16,12 @@ let ownerRepository = {
   saveOwner: async (owner) => {
     return await owner.save()
   },
+
+  findOwners: async () => {
+    return await Owner.find()
+  },
+
+  
 };
 
 export default ownerRepository;

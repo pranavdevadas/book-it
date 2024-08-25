@@ -42,7 +42,6 @@ let adminController = {
           name: city.name,
         });
       }
-
     } catch (error) {
       res.status(400);
       throw new Error(error.message);
@@ -59,6 +58,47 @@ let adminController = {
       throw new Error(error.message);
     }
   }),
+
+  getUsers: expressAsyncHandler(async (req, res) => {
+    try {
+      let { users } = await adminService.getUsers();
+      res.status(200).json(users);
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  blockUnblockUser: expressAsyncHandler(async (req, res) => {
+    try {
+      let { updatedUser } = await adminService.blockUnblockUser(req.params.id);
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  getOwners: expressAsyncHandler(async (req, res) => {
+    try {
+      let { owners } = await adminService.getOwners();
+      res.status(200).json(owners);
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  blockUnblockOwner: expressAsyncHandler(async (req, res) => {    
+    try {
+      let { updatedOwner } = await adminService.blockUnblockOwner(req.params.id);
+      res.status(200).json(updatedOwner);
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
 };
 
 export default adminController;

@@ -20,7 +20,7 @@ import { clearAdminCredentials } from "../../slice/adminSlice/adminAuthSlice";
 import { toast } from "react-toastify";
 
 function SideBarAdmin() {
-  const { adminInfo } = useSelector((state) => state.adminAuth);
+  // const { adminInfo } = useSelector((state) => state.adminAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ function SideBarAdmin() {
   return (
     <>
       <div >
-        <CDBSidebar className="sidebar">
+        <CDBSidebar >
           {/* <CDBSidebarHeader prefix={<i className="fa fa-bars" />}> */}
           <CDBSidebarHeader>Admin</CDBSidebarHeader>
           <CDBSidebarContent>
@@ -93,7 +93,6 @@ function SideBarAdmin() {
                     </Nav.Link>
                   </LinkContainer>
                 </CDBSidebarMenuItem>
-                <br />
                 <br />
                 <br />
                 <br />

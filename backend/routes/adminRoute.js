@@ -17,5 +17,9 @@ router.route('/movie/:id')
 router.route('/admin-city')
                             .get(adminProtect ,adminController.getCity)
                             .post(adminProtect ,adminController.addCity)
+router.get('/admin-user', adminProtect, adminController.getUsers)
+router.patch('/:id/blockUnblockUser', adminProtect, adminController.blockUnblockUser);
+router.get('/admin-owner', adminProtect, adminController.getOwners)
+router.patch('/:id/blockUnblockOwner', adminProtect, adminController.blockUnblockOwner);
 
 export default router

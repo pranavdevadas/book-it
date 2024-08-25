@@ -17,6 +17,9 @@ let userRepository = {
     return await user.save();
   },
 
+  findUsers: async () => {
+    return await User.find();
+  },
   
 };
 

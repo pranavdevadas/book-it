@@ -62,6 +62,30 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getUsers: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/admin-user`,
+        method: "GET",
+      }),
+    }),
+    blockUnblockUser: builder.mutation({
+      query: (id) => ({
+        url: `${ADMIN_URL}/${id}/blockUnblockUser`,
+        method: "PATCH",
+      }),
+    }),
+    getOwners: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/admin-owner`,
+        method: "GET",
+      }),
+    }),
+    blockUnblockOwner: builder.mutation({
+      query: (id) => ({
+        url: `${ADMIN_URL}/${id}/blockUnblockOwner`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -75,4 +99,8 @@ export const {
   useToggleListStatusMutation,
   useEditMovieMutation,
   useGetMovieByIdQuery,
+  useGetUsersQuery,
+  useBlockUnblockUserMutation,
+  useGetOwnersQuery,
+  useBlockUnblockOwnerMutation
 } = adminApiSlice;

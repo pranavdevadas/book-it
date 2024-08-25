@@ -1,4 +1,6 @@
 import adminRepository from "../repository/adminRepository.js";
+import userRepository from '../repository/userRepository.js'
+import OwnerRepository from '../repository/ownerRepository.js'
 
 let adminService = {
   authenticateAdmin: async (email, password) => {
@@ -92,6 +94,49 @@ let adminService = {
     }
     return { movie };
   },
+
+  getUsers: async () => {
+    let users = await userRepository.findUsers()
+    
+    if (!users) {
+      throw new Error('No User Found')
+    }
+
+    return { users }
+  },
+
+  blockUnblockUser: async (id) => {
+    let user = await userRepository.findUserById(id)
+    if (!user) {
+      throw new Error('User Not Found')
+    } else {
+      user.isBlocked = !user.isBlocked;
+      const updatedUser = await user.save();
+      return { updatedUser };
+    }
+  },
+
+  getOwners: async () => {
+    let owners = await OwnerRepository.findOwners()
+    
+    if (!owners) {
+      throw new Error('No Owner Found')
+    }
+
+    return { owners }
+  },
+
+  blockUnblockOwner: async (id) => {
+    let owner = await OwnerRepository.findOwnerById(id)
+    if (!owner) {
+      throw new Error('User Not Found')
+    } else {
+      owner.isBlocked = !owner.isBlocked;
+      const updatedOwner = await owner.save();
+      return { updatedOwner };
+    }
+  },
+
 };
 
 export default adminService;

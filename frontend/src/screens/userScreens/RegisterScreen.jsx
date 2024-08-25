@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/userComponents/Loader.jsx";
 import { useRegisterMutation } from "../../slice/userSlice/userApiSlice.js";
+import OAuth from "../../components/userComponents/OAuth.jsx";
 
 function RegisterScreen() {
   const [name, setName] = useState("");
@@ -125,6 +126,7 @@ function RegisterScreen() {
         <Col className="py-2">
           Existing user? <Link to="/login">Login</Link>
         </Col>
+        <OAuth />
       </FormContainer>
     </Form>
   );
