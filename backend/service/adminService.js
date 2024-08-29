@@ -44,13 +44,21 @@ let adminService = {
   addMovie: async (movieData) => {
     const { name } = movieData;
 
-    const existingMovie = await adminRepository.findByMovieName(name);
-    if (existingMovie) {
-      throw new Error("Movie already exists");
-    }
+    // const existingMovie = await adminRepository.findByMovieName(name);
+    // if (existingMovie) {
+    //   throw new Error("Movie already exists");
+    // }
 
-    const createdMovie = await adminRepository.createMovie(movieData);
-    return createdMovie;
+    // const createdMovie = await adminRepository.createMovie(movieData);
+    // return createdMovie;
+    const existingMovie = await adminRepository.findByMovieName(name);
+  if (existingMovie) {
+    throw new Error("Movie already exists");
+  }
+
+  // Create and return the new movie
+  const createdMovie = await adminRepository.createMovie(movieData);
+  return createdMovie;
   },
 
   getMovie: async () => {
@@ -77,13 +85,13 @@ let adminService = {
   editMovie: async (id, updatedData) => {
     const movie = await adminRepository.findMovieById(id);
 
-    if (!movie) {
-      throw new Error("Movie not found");
-    }
+  if (!movie) {
+    throw new Error("Movie not found");
+  }
 
-    const updatedMovie = await adminRepository.updateMovie(id, updatedData);
+  const updatedMovie = await adminRepository.updateMovie(id, updatedData);
 
-    return { updatedMovie };
+  return { updatedMovie };
   },
 
   getMovieById: async (id) => {
@@ -112,7 +120,7 @@ let adminService = {
     } else {
       user.isBlocked = !user.isBlocked;
       const updatedUser = await user.save();
-      return { updatedUser };
+      return updatedUser ;
     }
   },
 

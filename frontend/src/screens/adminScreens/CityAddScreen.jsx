@@ -16,6 +16,12 @@ function CityAddScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    const cityRegex = /^[A-Za-z\s]{3,}$/;
+    if (!cityRegex.test(name)) {
+      toast.error("Invalid city name");
+      return;
+    }
     try {
       await addCity({ name }).unwrap();
 

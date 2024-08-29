@@ -9,17 +9,24 @@ import Loader from "../../components/userComponents/Loader.jsx";
 import FormContainer from "../../components/userComponents/FormContainer.jsx";
 import { Form, Button } from "react-bootstrap";
 
+const categoriesOptions = ["Action", "Comedy", "Drama", "Horror", "Romance"];
+const languagesOptions = ["English", "Spanish", "French", "German", "Chinese"];
+
 function MovieEditScreen() {
   const { id: movieId } = useParams();
   const navigate = useNavigate();
 
-  const { data: movie, isLoading: loadingMovie, refetch } = useGetMovieByIdQuery(movieId);
+  const {
+    data: movie,
+    isLoading: loadingMovie,
+    refetch,
+  } = useGetMovieByIdQuery(movieId);
   const [editMovie, { isLoading: loadingEdit }] = useEditMovieMutation();
 
   const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
-  const [categories, setCategories] = useState("");
-  const [language, setLanguage] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [language, setLanguage] = useState([]);
   const [cast, setCast] = useState("");
   const [poster, setPoster] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -28,11 +35,11 @@ function MovieEditScreen() {
     if (movie) {
       setName(movie.name);
       setDuration(movie.duration);
-      setCategories(movie.categories.join(", "));
-      setLanguage(movie.language.join(", "));
+      setCategories(movie.categories);
+      setLanguage(movie.language);
       setCast(movie.cast.join(", "));
-      setPreview(`http://localhost:5000/moviePoster/${movie.poster}`)
-      refetch()
+      setPreview(`http://localhost:5000/moviePoster/${movie.poster}`);
+      refetch();
     }
   }, [movie, refetch]);
 
@@ -51,31 +58,68 @@ function MovieEditScreen() {
     }
   };
 
+  const handleCategoriesChange = (e) => {
+    const selectedCategories = Array.from(e.target.selectedOptions, option => option.value);
+    setCategories(selectedCategories);
+  };
+
+  const handleLanguageChange = (e) => {
+    const selectedLanguages = Array.from(e.target.selectedOptions, option => option.value);
+    setLanguage(selectedLanguages);
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
+      toast.error("Invalid movie name");
+      isValid = false;
+    }
+
+    const [hours, minutes] = duration.split(":").map(Number);
+    const totalMinutes = hours * 60 + minutes;
+    if (totalMinutes < 60 || totalMinutes > 240) {
+      toast.error("Invalid duration");
+      isValid = false;
+    }
+
+    if (categories.length === 0) {
+      toast.error("Categories cannot be empty");
+      isValid = false;
+    }
+
+    if (language.length === 0) {
+      toast.error("Languages cannot be empty");
+      isValid = false;
+    }
+
+    if (cast.trim() === "") {
+      toast.error("Cast cannot be empty");
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     const formData = new FormData();
     formData.append("name", name);
     formData.append("duration", duration);
-    formData.append("categories", categories);
-    formData.append(
-      "language",
-      language.split(",").map((lang) => lang.trim())
-    );
-    formData.append(
-      "cast",
-      cast.split(",").map((actor) => actor.trim())
-    );
+    formData.append("categories", JSON.stringify(categories));
+    formData.append("language", JSON.stringify(language));
+    formData.append("cast", cast.split(",").map(actor => actor.trim()));
     if (poster) {
       formData.append("poster", poster);
     }
 
-
-    
-    
     try {
       await editMovie({ id: movieId, formData }).unwrap();
-      
       toast.success("Movie updated successfully");
       navigate("/admin/movies");
     } catch (err) {
@@ -105,7 +149,7 @@ function MovieEditScreen() {
             <Form.Label>Duration</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter duration"
+              placeholder="Enter duration (HH:MM)"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
               required
@@ -115,30 +159,38 @@ function MovieEditScreen() {
           <Form.Group controlId="categories" className="mb-3">
             <Form.Label>Categories</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Enter categories"
+              as="select"
+              multiple
               value={categories}
-              onChange={(e) => setCategories(e.target.value)}
+              onChange={handleCategoriesChange}
               required
-            ></Form.Control>
+            >
+              {categoriesOptions.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </Form.Control>
           </Form.Group>
 
           <Form.Group controlId="language" className="mb-3">
             <Form.Label>Language</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Enter language"
+              as="select"
+              multiple
               value={language}
-              onChange={(e) => setLanguage(e.target.value)}
+              onChange={handleLanguageChange}
               required
-            ></Form.Control>
+            >
+              {languagesOptions.map((lang) => (
+                <option key={lang} value={lang}>{lang}</option>
+              ))}
+            </Form.Control>
           </Form.Group>
 
           <Form.Group controlId="cast" className="mb-3">
             <Form.Label>Cast</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter cast"
+              placeholder="Enter cast (comma separated)"
               value={cast}
               onChange={(e) => setCast(e.target.value)}
               required

@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import Loader from "../../components/userComponents/Loader.jsx";
 import OAuth from "../../components/userComponents/OAuth.jsx";
 
-
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +24,6 @@ function LoginScreen() {
 
   const { userInfo } = useSelector((state) => state.auth);
 
- 
   useEffect(() => {
     if (userInfo && userInfo.isVerified) {
       navigate("/");
@@ -34,15 +32,31 @@ function LoginScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    if (!email) {
+      toast.error("Enter your email");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Enter your password");
+      return;
+    }
+    
     try {
       const res = await login({ email, password }).unwrap();
+
+      if (res.message === "User is blocked. For more details, contact admin.") {
+        dispatch(setCredentials(null)); // Clear user credentials
+        toast.error(res.message); // Display blocked message
+        navigate("/"); // Redirect to home page or login page
+        return;
+      }
 
       if (!res.isVerified) {
         await resend({ email: res.email }).unwrap();
         navigate("/otp", { state: { email: res.email } });
-        toast.error(
-          "You are not verified. An OTP has been sent to your email."
-        );
+        toast.error("You are not verified. An OTP has been sent to your email.");
       } else {
         dispatch(setCredentials(res));
         toast.success("Logged In");

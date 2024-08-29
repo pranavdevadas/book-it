@@ -135,6 +135,11 @@ let ownerService = {
 
     return { message: "OTP Resent" };
   },
+
+  getOwnerById: async (id) => {
+    let owner = await ownerRepository.findOwnerById(id)
+    return owner
+  }
 };
 
 export default ownerService;

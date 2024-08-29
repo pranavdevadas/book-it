@@ -8,13 +8,19 @@ const userController = {
     const { email, password } = req.body;
 
     try {
-      const { user, isVerified, otp } = await userService.authenticateUser(
+      const { user, isVerified, otp, isBlocked } = await userService.authenticateUser(
         email,
         password
-      );
+      );      
+
+      if (isBlocked) {        
+        res.status(403).json({ message: "User is blocked. For more details, contact admin." });
+        return;
+      }
 
       if (!isVerified) {
         res.status(200).json({ message: "User Not Verified", otp, email });
+        
       } else {
         userGenerateToken(res, user._id);
         res.status(200).json({
@@ -23,6 +29,7 @@ const userController = {
           email: user.email,
           phone: user.phone,
           isVerified: user.isVerified,
+          isBlocked: user.isBlocked,
         });
       }
     } catch (error) {
@@ -129,6 +136,16 @@ const userController = {
       res.status(400).json({ message: error.message });
     }
   }),
+
+  fetchData: expressAsyncHandler(async (req, res) => {
+    try {
+      let user = await userService.getUserById(req.user._id)
+      res.json(user);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  })
+
 };
 
 export default userController;

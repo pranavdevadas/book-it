@@ -11,11 +11,23 @@ function LoginScreen() {
     const location = useLocation();
     const [otp, setOtp] = useState('');
     const email = location.state?.email || ''; 
-    const [isResendDisabled, setIsResendDisabled] = useState(false);
-    const [timer, setTimer] = useState(0);
+    const [isResendDisabled, setIsResendDisabled] = useState(true); // Initially disable resend button
+    const [timer, setTimer] = useState(30); // Set the timer to 30 seconds initially
 
     const [verifyOtp, { isLoading: verifyLoading }] = useVerifyOtpMutation();
     const [resendOtp, { isLoading: resendLoading }] = useResendOtpMutation();
+
+    useEffect(() => {
+        let interval = null;
+        if (timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1);
+            }, 1000);
+        } else {
+            setIsResendDisabled(false); // Enable the resend button after 30 seconds
+        }
+        return () => clearInterval(interval);
+    }, [timer]);
 
     const resendHandler = async (e) => {
         e.preventDefault();
@@ -23,29 +35,17 @@ function LoginScreen() {
             await resendOtp({ email }).unwrap(); 
             toast.success('OTP Sent Successfully');
             setIsResendDisabled(true);
-            setTimer(30);
+            setTimer(30); // Reset the timer to 30 seconds after resending OTP
         } catch (error) {
             toast.error(error.message || 'OTP Resend failed');
         }
     };
 
-    useEffect(() => {
-        let interval = null;
-        if (isResendDisabled && timer > 0) {
-            interval = setInterval(() => {
-                setTimer((prevTimer) => prevTimer - 1);
-            }, 1000);
-        } else if (timer === 0) {
-            setIsResendDisabled(false);
-        }
-        return () => clearInterval(interval);
-    }, [isResendDisabled, timer]);
-
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
             if (!otp) {
-                toast.error('Please Enter OTP')
+                toast.error('Please Enter OTP');
             } else {
                 await verifyOtp({ otp, email }).unwrap(); 
                 toast.success('OTP Verified, Please Login');

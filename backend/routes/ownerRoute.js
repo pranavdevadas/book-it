@@ -6,6 +6,7 @@ import ownerController from '../controller/ownerController.js'
 router.post('/owner-auth', ownerController.authOwner)
 router.post('/owner-register', ownerController.registerOwner)
 router.post('/owner-logout',ownerController.logoutOwner)
+// router.get('/owner/fetchData', ownerController.fetchData)
 router.route('/owner-profile')
                             .get(ownerProtect, ownerController.getOwnerProfile)
                             .put(ownerProtect, ownerController.updateOwnerProfile)

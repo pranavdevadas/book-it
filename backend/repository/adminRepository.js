@@ -37,6 +37,15 @@ let adminRepository = {
   },
 
   updateMovie: async (id, updatedData) => {
+    if (updatedData.categories) {
+      updatedData.categories = JSON.parse(updatedData.categories);
+    }
+    if (updatedData.language) {
+      updatedData.language = JSON.parse(updatedData.language);
+    }
+    if (updatedData.cast) {
+      updatedData.cast = updatedData.cast.split(',').map(actor => actor.trim());
+    }
     return await Movie.findByIdAndUpdate(id, updatedData, { new: true });
   },
   

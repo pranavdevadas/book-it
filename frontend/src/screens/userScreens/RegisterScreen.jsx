@@ -21,50 +21,55 @@ function RegisterScreen() {
   const [register, { isLoading, error }] = useRegisterMutation();
 
   const validateForm = () => {
-    const hasRepeatedDigitsPattern = /(0123456789|1234567890|0000000000|1111111111|2222222222|3333333333|4444444444|5555555555|6666666666|7777777777|8888888888|9999999999)/;
+    const hasRepeatedDigitsPattern =
+      /(0123456789|1234567890|0000000000|1111111111|2222222222|3333333333|4444444444|5555555555|6666666666|7777777777|8888888888|9999999999)/;
 
     // Validate name
     if (!/^[A-Za-z]{3,}$/.test(name)) {
-        toast.error('Invalid name');
-        return false;
+      toast.error("Invalid name");
+      return false;
     }
 
     // Validate email
-    if (!/^[a-zA-Z][a-zA-Z0-9._%+-]{3,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-        toast.error('Invalid email');
-        return false;
+    if (
+      !/^[a-zA-Z][a-zA-Z0-9._%+-]{3,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
+    ) {
+      toast.error("Invalid email");
+      return false;
     }
 
     // Validate phone
     if (!/^\d{10}$/.test(phone) || hasRepeatedDigitsPattern.test(phone)) {
-        toast.error('Invalid Mobile number');
-        return false;
+      toast.error("Invalid Mobile number");
+      return false;
     }
 
     // Validate password
     if (!/.{6,}/.test(password)) {
-        toast.error('Invalid password: Must be at least 6 characters long, include at least one capital letter and one symbol.');
-        return false;
+      toast.error(
+        "Invalid password: Must be at least 6 characters long, include at least one capital letter and one symbol."
+      );
+      return false;
     }
 
     // Validate confirm password
     if (password !== confirmPassword) {
-        toast.error('Password do not match');
-        return false;
+      toast.error("Password do not match");
+      return false;
     }
 
     return true;
-};
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-   if (!validateForm()) return 
+    if (!validateForm()) return;
 
     try {
       await register({ email, password, phone, name }).unwrap();
-      toast.success('OTP Sended to your Registerd Email')
-      navigate("/otp", { state: { email } }); 
+      toast.success("OTP Sended to your Registerd Email");
+      navigate("/otp", { state: { email } });
     } catch (err) {
       toast.error(err?.data?.message || "An unexpected error occurred");
     }
@@ -126,6 +131,7 @@ function RegisterScreen() {
         <Col className="py-2">
           Existing user? <Link to="/login">Login</Link>
         </Col>
+        <br />
         <OAuth />
       </FormContainer>
     </Form>

@@ -47,7 +47,7 @@ function MovieTable({ movies, refetch }) {
             <td>{movie.name}</td>
             <td>{movie.categories.join(", ")}</td>
             <td>{movie.language.join(", ")}</td>
-            <td>{movie.duration}</td>
+            <td>{movie.duration}hr</td>
             <td>
               <Button 
                 variant="dark" 

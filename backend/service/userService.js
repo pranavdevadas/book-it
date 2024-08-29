@@ -26,11 +26,15 @@ let userService = {
       throw new Error("Invalid Email or Password");
     }
 
+    if (user.isBlocked) {
+      return { isBlocked: true };
+    }
+
     if (!user.isVerified) {
       return { isVerified: false, otp: user.otp, email: user.email };
     }
 
-    return { user, isVerified: true };
+    return { user, isVerified: true, isBlocked: false };
   },
 
   verifyOtp: async (email, otp) => {
@@ -172,6 +176,20 @@ let userService = {
       };
     }
   },
+
+  isBlocked: async (id) => {
+    let user = await userRepository.findUserById(id)
+
+    if (!user) {
+      throw new Error('User Not Found')
+    }
+    return user.isBlocked
+  },
+
+  getUserById: async (id) => {
+    let user = await userRepository.findUserById(id)
+    return user
+  }
 };
 
 export default userService;

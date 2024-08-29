@@ -123,6 +123,16 @@ let ownerController = {
       throw new Error(error.message);
     }
   }),
+
+  fetchData: expressAsyncHandler(async (req, res) => {
+    try {
+      let owner = await ownerService.getOwnerById(req.owener._id)
+      res.status(200).json(owner)
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
 };
 
 export default ownerController;

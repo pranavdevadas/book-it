@@ -30,8 +30,34 @@ function ProfileScreen() {
     }
   }, [ownerInfo]);
 
+  const validateForm = () => {
+    const hasRepeatedDigitsPattern = /(0123456789|1234567890|0000000000|1111111111|2222222222|3333333333|4444444444|5555555555|6666666666|7777777777|8888888888|9999999999)/;
+
+    // Validate name
+    if (!/^[A-Za-z]{3,}$/.test(name)) {
+        toast.error('Invalid name');
+        return false;
+    }
+
+    // Validate email
+    if (!/^[a-zA-Z][a-zA-Z0-9._%+-]{3,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        toast.error('Invalid email');
+        return false;
+    }
+
+    // Validate phone
+    if (!/^\d{10}$/.test(phone) || hasRepeatedDigitsPattern.test(phone)) {
+        toast.error('Invalid Mobile number');
+        return false;
+    }
+
+    return true;
+};
+
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return 
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -57,7 +83,7 @@ function ProfileScreen() {
   };
 
   return (
-    <Form onSubmit={submitHandler}>
+    <Form onSubmit={submitHandler}  style={{ marginTop: "-611px", marginLeft: "200px" }}>
       <FormContainer>
         <h1>Update Profile</h1>
         <Form.Group className="my-2" controlId="name">

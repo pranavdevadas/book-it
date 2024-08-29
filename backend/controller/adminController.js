@@ -89,16 +89,17 @@ let adminController = {
     }
   }),
 
-  blockUnblockOwner: expressAsyncHandler(async (req, res) => {    
+  blockUnblockOwner: expressAsyncHandler(async (req, res) => {
     try {
-      let { updatedOwner } = await adminService.blockUnblockOwner(req.params.id);
+      let { updatedOwner } = await adminService.blockUnblockOwner(
+        req.params.id
+      );
       res.status(200).json(updatedOwner);
     } catch (error) {
       res.status(400);
       throw new Error(error.message);
     }
   }),
-
 };
 
 export default adminController;
