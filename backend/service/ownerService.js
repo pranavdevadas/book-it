@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import ownerRepository from "../repository/ownerRepository.js";
+import adminRepository from "../repository/adminRepository.js";
 
 dotenv.config();
 
@@ -139,7 +140,13 @@ let ownerService = {
   getOwnerById: async (id) => {
     let owner = await ownerRepository.findOwnerById(id)
     return owner
-  }
+  },
+
+  getCity: async () => {
+    let cities = await ownerRepository.findCities()
+    return cities
+  },
+
 };
 
 export default ownerService;

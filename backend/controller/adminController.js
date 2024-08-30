@@ -48,7 +48,7 @@ let adminController = {
     }
   }),
 
-  getCity: expressAsyncHandler(async (req, res) => {
+  getCity: expressAsyncHandler(async (req, res) => {    
     try {
       let { city } = await adminService.getCity();
 

@@ -20,7 +20,7 @@ router.route('/movie/:id')
 
 //City Operations                           
 router.route('/admin-city')
-                            .get(adminProtect ,adminController.getCity)
+                            .get(adminController.getCity)
                             .post(adminProtect ,adminController.addCity)
 
 //User Operations                            

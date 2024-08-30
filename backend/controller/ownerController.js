@@ -1,6 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import ownerService from "../service/ownerService.js";
 import ownerGenerateToken from "../utils/ownerGenerateToken.js";
+import adminService from "../service/adminService.js";
 
 let ownerController = {
   authOwner: expressAsyncHandler(async (req, res) => {
@@ -9,7 +10,7 @@ let ownerController = {
       let result = await ownerService.authenticateOwner(email, password);
 
       const { owner, isVerified, otp } = result;
-      
+
       if (!isVerified) {
         return res
           .status(200)
@@ -22,7 +23,7 @@ let ownerController = {
           email: owner.email,
           phone: owner.phone,
           isVerified: owner.isVerified,
-          owner
+          owner,
         });
       }
     } catch (error) {
@@ -101,10 +102,10 @@ let ownerController = {
   }),
 
   verifyOtp: expressAsyncHandler(async (req, res) => {
-    const { otp, email } = req.body;    
+    const { otp, email } = req.body;
     try {
       let result = await ownerService.verifyOtp(email, otp);
-      
+
       res.status(200).json(result);
     } catch (error) {
       res.status(400);
@@ -126,13 +127,25 @@ let ownerController = {
 
   fetchData: expressAsyncHandler(async (req, res) => {
     try {
-      let owner = await ownerService.getOwnerById(req.owener._id)
-      res.status(200).json(owner)
+      let owner = await ownerService.getOwnerById(req.owener._id);
+      res.status(200).json(owner);
     } catch (error) {
       res.status(400);
       throw new Error(error.message);
     }
   }),
+
+  getCities: expressAsyncHandler(async (req, res) => {
+    try {
+      let cities = await ownerService.getCity();
+      res.status(200).json({ cities });
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+
 };
 
 export default ownerController;

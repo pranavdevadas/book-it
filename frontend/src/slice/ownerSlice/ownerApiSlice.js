@@ -45,6 +45,12 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+    getCities: builder.query({
+      query: () => ({
+        url: `${OWNER_URL}/owner-city`,
+        method: "GET",
+      }),
+    }),
     ownerAddTheatre: builder.mutation({
       query: (data) => ({
         url: `${OWNER_URL}/owner-addtheatre`,
@@ -62,5 +68,6 @@ export const {
   useOwnerUpdateMutation,
   useOwnerVerifyOtpMutation,
   useOwnerResendOtpMutation,
-  useOwnerAddTheatreMutation
+  useOwnerAddTheatreMutation,
+  useGetCitiesQuery
 } = ownerApiSlice;

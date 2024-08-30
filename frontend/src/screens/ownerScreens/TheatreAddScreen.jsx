@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormContainer from "../../components/userComponents/FormContainer";
 import SeatSelection from "../../components/ownerComonents/SeatSelection";
-import { useOwnerAddTheatreMutation } from "../../slice/ownerSlice/ownerApiSlice";
+import { toast } from "react-toastify";
+import {
+  useOwnerAddTheatreMutation,
+  useGetCitiesQuery,
+} from "../../slice/ownerSlice/ownerApiSlice";
 
 function TheatreAddScreen() {
   const [screens, setScreens] = useState([]);
@@ -12,6 +16,7 @@ function TheatreAddScreen() {
   const [ticketPrice, setTicketPrice] = useState("");
 
   const [addTheatre] = useOwnerAddTheatreMutation();
+  const { data: cities, error, isLoading } = useGetCitiesQuery();
 
   const handleAddScreen = () => {
     setScreens([...screens, { name: "", showTimes: [], seats: {} }]);
@@ -54,8 +59,67 @@ function TheatreAddScreen() {
     setScreens(updatedScreens);
   };
 
+  const validateForm = () => {
+    const namePattern = /^[A-Za-z\s]{3,}$/;
+    const locationPattern =
+      /^https:\/\/maps\.app\.goo\.gl\/|^maps\.app\.goo\.gl\//;
+    const pricePattern = /^[0-9]{2,3}$/;
+
+    if (!namePattern.test(theatreName)) {
+      toast.error("Invalid theatre name.");
+      return false;
+    }
+    if (!locationPattern.test(location)) {
+      toast.error("Invalid location link.");
+      return false;
+    }
+    if (!city) {
+      toast.error("Select at least one city.");
+      return false;
+    }
+    if (
+      !pricePattern.test(ticketPrice) ||
+      ticketPrice < 99 ||
+      ticketPrice > 700
+    ) {
+      toast.error("Ticket price must be between 99 and 700.");
+      return false;
+    }
+    if (screens.length === 0) {
+      toast.error("Select at least one screen.");
+      return false;
+    }
+    for (let screen of screens) {
+      if (
+        !screen.name ||
+        isNaN(screen.name) ||
+        screen.name < 1 ||
+        screen.name > 10
+      ) {
+        toast.error("Screen number must be between 1 and 10.");
+        return false;
+      }
+      if (screen.showTimes.length === 0) {
+        toast.error("Select at least one show time.");
+        return false;
+      }
+      if (screen.showTimes.length > 4) {
+        toast.error("Maximum 4 show times can be added.");
+        return false;
+      }
+      const selectedSeats = Object.keys(screen.seats).length;
+      if (selectedSeats < 10) {
+        toast.error("Select a minimum of 10 seats.");
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     const processedScreens = screens.map((screen) => {
       const seatObjects = [];
@@ -121,12 +185,23 @@ function TheatreAddScreen() {
         <Form.Group controlId="city">
           <Form.Label>City</Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Enter city"
+            as="select"
             value={city}
             onChange={(e) => setCity(e.target.value)}
             required
-          />
+          >
+            <option value="" disabled>
+              Select a city
+            </option>
+            {isLoading && <option>Loading cities...</option>}
+            {error && <option>Error loading cities</option>}
+            {cities &&
+              cities.map((city) => (
+                <option key={city._id} value={city.name}>
+                  {city.name}
+                </option>
+              ))}
+          </Form.Control>
         </Form.Group>
 
         <Form.Group controlId="ticketPrice">

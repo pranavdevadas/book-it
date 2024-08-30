@@ -1,3 +1,4 @@
+import City from "../model/city.js";
 import Owner from "../model/owner.js";
 
 let ownerRepository = {
@@ -19,6 +20,10 @@ let ownerRepository = {
 
   findOwners: async () => {
     return await Owner.find()
+  },
+
+  findCities: async () => {
+    return await City.find()
   },
 
   
