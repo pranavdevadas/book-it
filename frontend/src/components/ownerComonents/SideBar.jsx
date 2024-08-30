@@ -1,4 +1,3 @@
-
 import React from "react";
 import "./style.css";
 import {
@@ -36,34 +35,41 @@ function SideBarOwner() {
     } catch (err) {
       toast.error("Logout Failed");
     }
-  }
+  };
 
   return (
     <>
       <div className="sidebar-container">
         <CDBSidebar className="sidebar">
           {/* <CDBSidebarHeader prefix={<i className="fa fa-bars" />}> */}
-          <CDBSidebarHeader >
-            Theatre Owner
-          </CDBSidebarHeader>
+          <CDBSidebarHeader>Theatre Owner</CDBSidebarHeader>
           <CDBSidebarContent>
             <Nav>
+              
               <CDBSidebarMenu>
-                <LinkContainer to="/owner/home">
-                  <CDBSidebarMenuItem>
+                <CDBSidebarMenuItem>
+                  <LinkContainer to="/owner/home">
                     <Nav.Link>
                       <FaHome /> &nbsp;Homepage
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer>
+                  </LinkContainer>
+                </CDBSidebarMenuItem>
 
-                <LinkContainer to="/owner/movies">
-                  <CDBSidebarMenuItem>
+                <CDBSidebarMenuItem>
+                  <LinkContainer to="/owner/theatres">
                     <Nav.Link>
-                      <BiSolidMoviePlay /> &nbsp;Movies
+                      <MdOutlineTheaters /> &nbsp;Theatres
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer>
+                  </LinkContainer>
+                </CDBSidebarMenuItem>
+
+                <CDBSidebarMenuItem>
+                  <LinkContainer to="/owner/now-showing">
+                    <Nav.Link>
+                      <BiSolidMoviePlay /> &nbsp;Now Showing
+                    </Nav.Link>
+                  </LinkContainer>
+                </CDBSidebarMenuItem>
 
                 <LinkContainer to="/owner/users">
                   <CDBSidebarMenuItem>
@@ -89,13 +95,6 @@ function SideBarOwner() {
                   </CDBSidebarMenuItem>
                 </LinkContainer>
 
-                <LinkContainer to="/owner/theatres">
-                  <CDBSidebarMenuItem>
-                    <Nav.Link>
-                      <MdOutlineTheaters /> &nbsp;Theatres
-                    </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer>
                 <CDBSidebarMenuItem>
                   <Nav.Link onClick={logoutHandler}>
                     <LuLogOut /> &nbsp;Logout

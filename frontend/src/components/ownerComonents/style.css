@@ -1,16 +1,26 @@
+* {
+  margin: 0;
+}
 .sidebar-container {
-    display: flex;
-    justify-content: flex-start;
-    height: 100vh;
-    /* margin-left: -117px; */
-    width: 10px;
-  }
-  
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 250px; 
-    z-index: 1000; 
-  }
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-container .cdbsidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-container .cdbsidebar-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.pro-sidebar {
+  height: 1240%;
+}
+.sidebar-container .mt-auto {
+  margin-top: auto;
+}

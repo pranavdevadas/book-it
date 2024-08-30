@@ -35,6 +35,8 @@ import OwnerHomeScreen from './screens/ownerScreens/HomeScreen.jsx'
 import OwnerRegister from './screens/ownerScreens/RegisterScreen.jsx'
 import OwnerProfile from './screens/ownerScreens/ProfileScreen.jsx'
 import OwnerOtpScreen from './screens/ownerScreens/OtpScreen.jsx'
+import OwnerTheatreScreen from './screens/ownerScreens/TheatreScreen.jsx'
+import TheatreAddScreen from "./screens/ownerScreens/TheatreAddScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -70,6 +72,8 @@ const router = createBrowserRouter(
       <Route path="/owner" element={<OwnerPrivateRoute />} >
         <Route index path="home" element={<OwnerHomeScreen />} />
         <Route path="profile" element={<OwnerProfile />} />
+        <Route path="theatres" element={<OwnerTheatreScreen />} />
+        <Route path="add-theatre" element={<TheatreAddScreen />} />
       </Route>
       
 

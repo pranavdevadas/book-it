@@ -45,6 +45,13 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+    ownerAddTheatre: builder.mutation({
+      query: (data) => ({
+        url: `${OWNER_URL}/owner-addtheatre`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -54,5 +61,6 @@ export const {
   useOwnerRegisterMutation,
   useOwnerUpdateMutation,
   useOwnerVerifyOtpMutation,
-  useOwnerResendOtpMutation
+  useOwnerResendOtpMutation,
+  useOwnerAddTheatreMutation
 } = ownerApiSlice;
