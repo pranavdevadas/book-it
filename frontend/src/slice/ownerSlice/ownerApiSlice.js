@@ -58,6 +58,25 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getTheatres: builder.query({
+      query: () => ({
+        url: `${OWNER_URL}/owner-theatres`,
+        method: "GET",
+      }),
+    }),
+    getTheatreById: builder.query({
+      query: (id) => ({
+        url: `${OWNER_URL}/theatre/${id}`,
+        method: "GET",
+      }),
+    }),
+    ownerEditTheatre: builder.mutation({
+      query: ({ id, formData }) => ({
+        url: `${OWNER_URL}/theatre/${id}`,
+        method: "PUT",
+        body: formData,
+      }),
+    }),
   }),
 });
 
@@ -69,5 +88,8 @@ export const {
   useOwnerVerifyOtpMutation,
   useOwnerResendOtpMutation,
   useOwnerAddTheatreMutation,
-  useGetCitiesQuery
+  useGetCitiesQuery,
+  useGetTheatresQuery,
+  useGetTheatreByIdQuery,
+  useOwnerEditTheatreMutation
 } = ownerApiSlice;

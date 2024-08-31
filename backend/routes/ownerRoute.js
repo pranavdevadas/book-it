@@ -16,8 +16,12 @@ router.route('/owner-profile')
                             .get(ownerProtect, ownerController.getOwnerProfile)
                             .put(ownerProtect, ownerController.updateOwnerProfile)
 
-//Theatre managmant                            
+//Theatre managmant           
+router.get('/owner-theatres', ownerProtect, theatreController.getTheatres) 
 router.post('/owner-addtheatre', ownerProtect, theatreController.addTheatre)
+router.route('/theatre/:id')
+                            .get(ownerProtect, theatreController.getTheatreById)
+                            .put(ownerProtect, theatreController.editTheatre)
 //city managment
 router.get('/owner-city',ownerProtect, ownerController.getCities)
 

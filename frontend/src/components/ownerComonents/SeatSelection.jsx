@@ -3,9 +3,8 @@ import { Row, Col, Form, Container } from "react-bootstrap";
 
 const SeatSelection = ({ seats, handleSeatChange }) => {
   return (
-    <Container style={{ backgroundColor: 'gray', opacity: '0.9' }}>
-      <div style={{ padding: 'inherit' }}>
-        <br />
+    <Container>
+      <div>
         {[...Array(10)].map((_, row) => (
           <Row key={row} className="mb-2">
             {[...Array(12)].map((_, col) => (
@@ -25,5 +24,4 @@ const SeatSelection = ({ seats, handleSeatChange }) => {
     </Container>
   );
 };
-
 export default SeatSelection;
