@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import Loader from "../../components/userComponents/Loader.jsx";
 import { toast } from "react-toastify";
-import { useGetTheatresQuery } from '../../slice/ownerSlice/ownerApiSlice.js';
-import TheatreTable from '../../components/ownerComonents/TheatreTable.jsx'
-
+import { useGetTheatresQuery } from "../../slice/ownerSlice/ownerApiSlice.js";
+import TheatreTable from "../../components/ownerComonents/TheatreTable.jsx";
 
 function TheatreScreen() {
-  const {data : theatres = [], isLoading, error, refetch} = useGetTheatresQuery()
-  console.log(theatres);
-  
+  const {
+    data: theatres = [],
+    isLoading,
+    error,
+    refetch,
+  } = useGetTheatresQuery();
+
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    refetch();
+  }, [refetch]);
 
   return (
     <>
@@ -30,10 +33,10 @@ function TheatreScreen() {
       ) : error ? (
         toast.error(error.message)
       ) : (
-        <TheatreTable theatres={ theatres } refetch ={ refetch }/>
+        <TheatreTable theatres={theatres} refetch={refetch} />
       )}
     </>
-  )
+  );
 }
 
-export default TheatreScreen
+export default TheatreScreen;

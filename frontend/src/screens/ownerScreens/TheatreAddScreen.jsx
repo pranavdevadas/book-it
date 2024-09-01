@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormContainer from "../../components/userComponents/FormContainer";
 import SeatSelection from "../../components/ownerComonents/SeatSelection";
@@ -7,6 +7,7 @@ import {
   useOwnerAddTheatreMutation,
   useGetCitiesQuery,
 } from "../../slice/ownerSlice/ownerApiSlice";
+import { useNavigate } from "react-router-dom";
 
 function TheatreAddScreen() {
   const [screens, setScreens] = useState([]);
@@ -17,6 +18,7 @@ function TheatreAddScreen() {
 
   const [addTheatre] = useOwnerAddTheatreMutation();
   const { data: cities, error, isLoading } = useGetCitiesQuery();
+  const navigate = useNavigate();
 
   const handleAddScreen = () => {
     setScreens([...screens, { name: "", showTimes: [], seats: {} }]);
@@ -30,8 +32,10 @@ function TheatreAddScreen() {
 
   const handleAddShowTime = (screenIndex) => {
     const updatedScreens = [...screens];
-    updatedScreens[screenIndex].showTimes.push("");
-    setScreens(updatedScreens);
+    if (updatedScreens[screenIndex].showTimes.length < 4) {
+      updatedScreens[screenIndex].showTimes.push("");
+      setScreens(updatedScreens);
+    }
   };
 
   const handleShowTimeChange = (screenIndex, showTimeIndex, value) => {
@@ -41,16 +45,17 @@ function TheatreAddScreen() {
   };
 
   const handleSeatChange = (screenIndex, row, col) => {
-    const seatKey = `${row}-${col}`;
+    const seatKey = `${row + 1}-${col + 1}`;
     const updatedScreens = [...screens];
     const currentSeats = updatedScreens[screenIndex].seats;
 
+    // Toggle seat selection
     if (currentSeats[seatKey]) {
       delete currentSeats[seatKey];
     } else {
       currentSeats[seatKey] = {
         seatNumber: parseInt(seatKey.replace("-", ""), 10),
-        isAvailable: true,
+        isSelected: true,
         isBooked: false,
       };
     }
@@ -82,7 +87,7 @@ function TheatreAddScreen() {
       ticketPrice < 99 ||
       ticketPrice > 700
     ) {
-      toast.error("Ticket price must be between 99 and 700.");
+      toast.error("Invalid Ticket Price");
       return false;
     }
     if (screens.length === 0) {
@@ -125,10 +130,10 @@ function TheatreAddScreen() {
       const seatObjects = [];
       for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 12; col++) {
-          const seatKey = `${row}-${col}`;
+          const seatKey = `${row + 1}-${col + 1}`;
           const seat = screen.seats[seatKey] || {
             seatNumber: parseInt(seatKey.replace("-", ""), 10),
-            isAvailable: false,
+            isSelected: false,
             isBooked: false,
           };
           seatObjects.push(seat);
@@ -150,7 +155,8 @@ function TheatreAddScreen() {
         screens: processedScreens,
       }).unwrap();
 
-      console.log("Theatre Submitted:", processedScreens);
+      toast.success("Theatre added successfully");
+      navigate("/owner/theatres");
     } catch (error) {
       console.error("Error submitting theatre:", error);
     }
@@ -220,8 +226,8 @@ function TheatreAddScreen() {
             <Form.Group controlId={`screenName-${screenIndex}`}>
               <Form.Label>Screen No.</Form.Label>
               <Form.Control
-                type="text"
-                style={{ width: "15%" }}
+                type="number"
+                style={{ width: "12%" }}
                 value={screen.name}
                 onChange={(e) =>
                   handleScreenNameChange(screenIndex, e.target.value)
@@ -252,10 +258,12 @@ function TheatreAddScreen() {
               </Form.Group>
             ))}
             <br />
+
             <Button
               variant="dark"
               onClick={() => handleAddShowTime(screenIndex)}
               className="mb-3"
+              disabled={screen.showTimes.length >= 4}
             >
               Add Show Time
             </Button>

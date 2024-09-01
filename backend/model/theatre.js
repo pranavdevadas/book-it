@@ -13,26 +13,40 @@ const theatreSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  location: {
+    type: String,
+    required: true,
+  },
   screens: [
     {
       name: {
         type: String,
         required: true,
       },
-      seats: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Seat",
-      },
+      seats: [
+        {
+          seatNumber: {
+            type: Number,
+            required: true,
+          },
+          isSelected: {
+            type: Boolean,
+            required: true,
+            default: false,
+          },
+          isBooked: {
+            type: Boolean,
+            required: true,
+            default: false,
+          },
+        },
+      ],
       showTimes: {
-        type: Array,
+        type: [String],
         required: true,
       },
     },
   ],
-  location: {
-    type: String,
-    required: true,
-  },
 });
 
 const Theatre = mongoose.model("Theatre", theatreSchema);

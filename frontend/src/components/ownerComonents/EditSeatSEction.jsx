@@ -1,35 +1,39 @@
 import React from "react";
-import { Row, Col, Form, Container } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
-function EditSeatSection({ seats, handleSeatChange }) {
-    const seatArray = seats[1] || []; 
+const EditSeatSelection = ({ screenIndex, seats, handleSeatChange }) => {
+  const renderSeats = () => {
+    const rows = [];
+    for (let row = 9; row >= 0; row--) { 
+      const cols = [];
+      for (let col = 0; col < 12; col++) {
+        const seatIndex = row * 12 + col; 
+        const seat = seats[seatIndex] || { isSelected: false };
+        cols.push(
+          <Button
+            key={`${row}-${col}`}
+            style={{ width: "30px", height: "30px" }}
+            variant={seat.isSelected ? "success" : "danger"}
+            className="m-1"
+            onClick={() => handleSeatChange(screenIndex, row, col)}
+          >
+          </Button>
+        );
+      }
+      rows.push(
+        <div key={row} className="d-flex justify-content-center">
+          {cols}
+        </div>
+      );
+    }
+    return rows;
+  };
 
-    return (
-        <Container style={{ backgroundColor: 'gray', opacity: '0.9' }}>
-            <div style={{ padding: 'inherit' }}>
-                <br />
-                {[...Array(10)].map((_, row) => (
-                    <Row key={row} className="mb-2">
-                        {[...Array(12)].map((_, col) => {
-                            const index = row * 12 + col;
-                            const seat = seatArray[index];
-                            return (
-                                <Col key={col} xs={1} className="text-center">
-                                    <Form.Check
-                                        type="checkbox"
-                                        checked={seat ? seat.isAvailable : false} 
-                                        id={`seat-${row}-${col}`}
-                                        onChange={() => handleSeatChange(row, col)}
-                                    />
-                                </Col>
-                            );
-                        })}
-                    </Row>
-                ))}
-                <h4 style={{ textAlign: 'center' }}>Screen</h4>
-            </div>
-        </Container>
-    );
-}
+  return( 
+  <div>
+    {renderSeats()}
+    <h1 className="text-center">Screen</h1>
+  </div>)
+};
 
-export default EditSeatSection;
+export default EditSeatSelection;

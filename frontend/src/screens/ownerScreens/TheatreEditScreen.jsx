@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormContainer from "../../components/userComponents/FormContainer";
-import EditSeatSection from "../../components/ownerComonents/EditSeatSEction";
+import EditSeatSelection from "../../components/ownerComonents/EditSeatSEction";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetTheatreByIdQuery,
   useOwnerEditTheatreMutation,
-  useGetCitiesQuery
+  useGetCitiesQuery,
 } from "../../slice/ownerSlice/ownerApiSlice";
 
 function TheatreEditScreen() {
@@ -15,50 +15,107 @@ function TheatreEditScreen() {
   const [theatre, setTheatre] = useState(null);
   const [screens, setScreens] = useState([]);
 
-  const { data, error, isLoading } = useGetTheatreByIdQuery(id); 
+  let navigate = useNavigate();
+
+  const { data, error, isLoading, refetch } = useGetTheatreByIdQuery(id);
   const [editTheatre] = useOwnerEditTheatreMutation();
   const { data: cities = [] } = useGetCitiesQuery();
-  
+
   useEffect(() => {
     if (data) {
       setTheatre(data);
-      const screensWithSeatsArray = (data.screens || []).map(screen => ({
-        ...screen,
-        seats: Array.isArray(screen.seats) ? screen.seats : Object.values(screen.seats)
-      }));
-      setScreens(screensWithSeatsArray);
+      setScreens(data.screens || []);
+      refetch();
     }
-  }, [data]);  
+  }, [data, refetch]);
 
   const handleSeatChange = (screenIndex, row, col) => {
-    const updatedScreens = [...screens];
-    const currentSeats = updatedScreens[screenIndex].seats || [];
+    const updatedScreens = screens.map((screen) => ({
+      ...screen,
+      seats: screen.seats.map((seat) => ({ ...seat })),
+    }));
 
-    const seatIndex = currentSeats.findIndex(seat => seat.row === row && seat.col === col);
+    const seatIndex = row * 12 + col;
+    const seat = updatedScreens[screenIndex].seats[seatIndex];
 
-    if (seatIndex >= 0) {
-      currentSeats[seatIndex].isAvailable = !currentSeats[seatIndex].isAvailable;
-    } else {
-      currentSeats.push({
-        seatNumber: row * 12 + col + 1,
-        isAvailable: true,
-        isBooked: false,
-        row,
-        col
-      });
+    if (seat) {
+      seat.isAvailable = !seat.isAvailable;
+      seat.isSelected = seat.isAvailable;
     }
 
-    updatedScreens[screenIndex].seats = currentSeats;
     setScreens(updatedScreens);
+  };
+
+  const validateForm = () => {
+    const namePattern = /^[A-Za-z\s]{3,}$/;
+    const locationPattern =
+      /^https:\/\/maps\.app\.goo\.gl\/|^maps\.app\.goo\.gl\//;
+    const pricePattern = /^[0-9]{2,3}$/;
+
+    if (!namePattern.test(theatre?.name || "")) {
+      toast.error("Invalid theatre name.");
+      return false;
+    }
+    if (!locationPattern.test(theatre?.location || "")) {
+      toast.error("Invalid location link.");
+      return false;
+    }
+    if (!theatre?.city) {
+      toast.error("Select a city.");
+      return false;
+    }
+    if (
+      !pricePattern.test(theatre?.ticketPrice || "") ||
+      parseInt(theatre?.ticketPrice, 10) < 99 ||
+      parseInt(theatre?.ticketPrice, 10) > 700
+    ) {
+      toast.error("Invalid Ticket Price.");
+      return false;
+    }
+    if (screens.length === 0) {
+      toast.error("Select at least one screen.");
+      return false;
+    }
+    for (let screen of screens) {
+      if (
+        !screen.name ||
+        isNaN(screen.name) ||
+        parseInt(screen.name, 10) < 1 ||
+        parseInt(screen.name, 10) > 10
+      ) {
+        toast.error("Screen number must be between 1 and 10.");
+        return false;
+      }
+      if (screen.showTimes.length === 0) {
+        toast.error("Select at least one show time.");
+        return false;
+      }
+      if (screen.showTimes.length > 4) {
+        toast.error("Maximum 4 show times can be added.");
+        return false;
+      }
+      const selectedSeats = screen.seats.filter(
+        (seat) => seat.isSelected
+      ).length;
+      if (selectedSeats < 10) {
+        toast.error("Select a minimum of 10 seats.");
+        return false;
+      }
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     try {
       await editTheatre({ id, formData: { ...theatre, screens } }).unwrap();
-      toast.success('Theatre updated successfully');
+      toast.success("Theatre updated successfully");
+      navigate("/owner/theatres");
     } catch (error) {
-      toast.error('Failed to update theatre');
+      toast.error("Failed to update theatre");
     }
   };
 
@@ -74,7 +131,7 @@ function TheatreEditScreen() {
           <Form.Control
             type="text"
             placeholder="Enter theatre name"
-            value={theatre?.name || ''}
+            value={theatre?.name || ""}
             onChange={(e) => setTheatre({ ...theatre, name: e.target.value })}
             required
           />
@@ -85,8 +142,10 @@ function TheatreEditScreen() {
           <Form.Control
             type="text"
             placeholder="Enter location"
-            value={theatre?.location || ''}
-            onChange={(e) => setTheatre({ ...theatre, location: e.target.value })}
+            value={theatre?.location || ""}
+            onChange={(e) =>
+              setTheatre({ ...theatre, location: e.target.value })
+            }
             required
           />
         </Form.Group>
@@ -95,11 +154,13 @@ function TheatreEditScreen() {
           <Form.Label>City</Form.Label>
           <Form.Control
             as="select"
-            value={theatre?.city || ''}
+            value={theatre?.city || ""}
             onChange={(e) => setTheatre({ ...theatre, city: e.target.value })}
             required
           >
-            <option value="" disabled>Select a city</option>
+            <option value="" disabled>
+              Select a city
+            </option>
             {cities.map((city) => (
               <option key={city.id} value={city.name}>
                 {city.name}
@@ -111,10 +172,12 @@ function TheatreEditScreen() {
         <Form.Group controlId="ticketPrice">
           <Form.Label>Ticket Price</Form.Label>
           <Form.Control
-            type="text"
+            type="number"
             placeholder="Enter ticket price"
-            value={theatre?.ticketPrice || ''}
-            onChange={(e) => setTheatre({ ...theatre, ticketPrice: e.target.value })}
+            value={theatre?.ticketPrice || ""}
+            onChange={(e) =>
+              setTheatre({ ...theatre, ticketPrice: e.target.value })
+            }
             required
           />
         </Form.Group>
@@ -137,7 +200,10 @@ function TheatreEditScreen() {
             </Form.Group>
 
             {screen.showTimes.map((showTime, showTimeIndex) => (
-              <Form.Group controlId={`showTime-${screenIndex}-${showTimeIndex}`} key={showTimeIndex}>
+              <Form.Group
+                controlId={`showTime-${screenIndex}-${showTimeIndex}`}
+                key={showTimeIndex}
+              >
                 <Form.Label>Show Time</Form.Label>
                 <Form.Control
                   type="time"
@@ -145,7 +211,8 @@ function TheatreEditScreen() {
                   value={showTime}
                   onChange={(e) => {
                     const updatedScreens = [...screens];
-                    updatedScreens[screenIndex].showTimes[showTimeIndex] = e.target.value;
+                    updatedScreens[screenIndex].showTimes[showTimeIndex] =
+                      e.target.value;
                     setScreens(updatedScreens);
                   }}
                   required
@@ -157,7 +224,7 @@ function TheatreEditScreen() {
               variant="dark"
               onClick={() => {
                 const updatedScreens = [...screens];
-                updatedScreens[screenIndex].showTimes.push('');
+                updatedScreens[screenIndex].showTimes.push("");
                 setScreens(updatedScreens);
               }}
               className="mb-3"
@@ -167,9 +234,10 @@ function TheatreEditScreen() {
 
             <br />
             <Form.Label className="mt-3">Seats</Form.Label>
-            <EditSeatSection
-              seats={screen.seats || []}
-              handleSeatChange={(row, col) => handleSeatChange(screenIndex, row, col)}
+            <EditSeatSelection
+              screenIndex={screenIndex}
+              seats={screen.seats}
+              handleSeatChange={handleSeatChange}
             />
           </div>
         ))}
