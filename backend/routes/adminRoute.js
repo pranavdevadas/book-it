@@ -10,7 +10,7 @@ router.post('/admin-auth', adminController.authAdmin)
 router.post('/logout', adminController.logoutAdmin)
 
 //Movie Operations
-router.route('/admin-movie') 
+router.route('/admin-movie')
                             .get(adminProtect, movieController.getMovie)
                             .post(adminProtect, movieController.addMovie)
 router.patch('/movie/:id/toggle-status', adminProtect, movieController.toggleListStatus);

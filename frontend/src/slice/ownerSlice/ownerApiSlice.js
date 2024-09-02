@@ -77,6 +77,31 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         body: formData,
       }),
     }),
+    getNowShowing: builder.query({
+      query: () => ({
+        url: `${OWNER_URL}/owner-nowshowing`,
+        method: "GET",
+      }),
+    }),
+    getAllMovies: builder.query({
+      query: () => ({
+        url: `${OWNER_URL}/owner-getmovies`,
+        method: "GET",
+      }),
+    }),
+    AddShow: builder.mutation({
+      query: (data) => ({
+        url: `${OWNER_URL}/owner-addshow`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    toggleStatus: builder.mutation({
+      query: (id) => ({
+        url: `${OWNER_URL}/show/${id}/toggle-status`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -91,5 +116,9 @@ export const {
   useGetCitiesQuery,
   useGetTheatresQuery,
   useGetTheatreByIdQuery,
-  useOwnerEditTheatreMutation
+  useOwnerEditTheatreMutation,
+  useGetNowShowingQuery,
+  useGetAllMoviesQuery,
+  useAddShowMutation,
+  useToggleStatusMutation
 } = ownerApiSlice;

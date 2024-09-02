@@ -1,0 +1,62 @@
+import React from "react";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import { toast } from "react-toastify";
+import { useToggleStatusMutation } from "../../slice/ownerSlice/ownerApiSlice.js";
+
+function NowShowingTable({ nowShowing, refetch }) {
+  const [toggleListStatus] = useToggleStatusMutation();
+
+  const tableStyle = {
+    width: "1000px",
+    marginLeft: "310px",
+    marginTop: "-530px",
+  };
+
+  const handleToggleStatus = async (id) => {
+    try {
+      await toggleListStatus(id).unwrap();
+
+      toast.success("Show status updated");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to update show status");
+    }
+  };
+
+  return (
+    <Table striped bordered hover variant="dark" style={tableStyle}>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Movie</th>
+          <th>Theatre</th>
+          <th>Screen</th>
+          <th>Time (In hr)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {nowShowing.map((show, index) => (
+          <tr key={show._id}>
+            <td>{index + 1}</td>
+            <td>{show.movie}</td>
+            <td>{show.theatre}</td>
+            <td>{show.screen}</td>
+            <td>{show.showtime.join(", ")}</td>
+            <td>
+              <Button
+                variant={show.isListed ? "danger" : "success"}
+                onClick={() => handleToggleStatus(show._id)}
+              >
+                {show.isListed ? "Unlist" : "List"}
+              </Button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  );
+}
+
+export default NowShowingTable;

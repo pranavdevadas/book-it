@@ -38,6 +38,8 @@ import OwnerOtpScreen from './screens/ownerScreens/OtpScreen.jsx'
 import OwnerTheatreScreen from './screens/ownerScreens/TheatreScreen.jsx'
 import TheatreAddScreen from "./screens/ownerScreens/TheatreAddScreen.jsx";
 import TheatreEditScreen from './screens/ownerScreens/TheatreEditScreen.jsx'
+import NowShowingScreen from "./screens/ownerScreens/NowShowingScreen.jsx";
+import ShowAddScreen from "./screens/ownerScreens/ShowAddScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -76,6 +78,8 @@ const router = createBrowserRouter(
         <Route path="theatres" element={<OwnerTheatreScreen />} />
         <Route path="add-theatre" element={<TheatreAddScreen />} />
         <Route path="edit-theatre/:id" element={<TheatreEditScreen />} />
+        <Route path="now-showing" element={<NowShowingScreen />} />
+        <Route path="add-show" element={<ShowAddScreen />} />
       </Route>
       
 

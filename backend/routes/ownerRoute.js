@@ -3,6 +3,7 @@ let router = express.Router()
 import { ownerProtect } from '../middleware/ownerAuthMiddleware.js'
 import ownerController from '../controller/ownerController.js'
 import theatreController from '../controller/theatreController.js'
+import showController from '../controller/showController.js'
 
 //Authentication
 router.post('/owner-auth', ownerController.authOwner)
@@ -24,5 +25,10 @@ router.route('/theatre/:id')
                             .put(ownerProtect, theatreController.editTheatre)
 //city managment
 router.get('/owner-city',ownerProtect, ownerController.getCities)
+//Now Showing
+router.get('/owner-nowshowing', ownerProtect, showController.getShows)
+router.get('/owner-getmovies', ownerProtect, showController.getAllMovies)
+router.post('/owner-addshow', ownerProtect, showController.addShow)
+router.patch('/show/:id/toggle-status', ownerProtect, showController.toggleStatus)
 
 export default router
