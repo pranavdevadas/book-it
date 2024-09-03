@@ -2,7 +2,7 @@ import React from "react";
 
 function Search() {
   return (
-    <div class="input-group rounded mt-4 shadow">
+    <div class="input-group rounded mt-5 mb-5 shadow">
       <input
         type="search"
         class="form-control rounded border-0 bg-transparent border-dark text-dark"

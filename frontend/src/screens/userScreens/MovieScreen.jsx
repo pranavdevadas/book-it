@@ -7,8 +7,9 @@ function MovieScreen() {
   return (
     <>
         <Container>
+          <h1 className='text-center mt-4 fw-bold'>Movies</h1>
           <Search/>
-            <HorizontalCards/>
+          <HorizontalCards/>
         </Container>
     </>
   )

@@ -3,7 +3,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/userComponents/Header.jsx";
 import AdminHeader from "./components/adminComponents/Header.jsx";
 import OwnerHeader from "./components/ownerComonents/Header.jsx";
-import AdminSideBar from "./components/adminComponents/SideBar.jsx";
 import OwnerSideBar from "./components/ownerComonents/SideBar.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,7 +25,6 @@ function App() {
           {isAdminPage ? (
             <>
               <AdminHeader />
-              <AdminSideBar />
             </>
           ) : isOwnerPage ? (
             <>

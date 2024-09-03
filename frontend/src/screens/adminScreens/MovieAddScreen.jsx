@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Loader from "../../components/userComponents/Loader.jsx";
 import FormContainer from "../../components/userComponents/FormContainer.jsx";
 import { Form, Button } from "react-bootstrap";
+import SideBarAdmin from "../../components/adminComponents/SideBar.jsx";
 
 function MovieAddScreen() {
   const [name, setName] = useState("");
@@ -76,7 +77,10 @@ function MovieAddScreen() {
     formData.append("duration", duration);
     formData.append("categories", categories);
     formData.append("language", language);
-    formData.append("cast", cast.split(",").map((actor) => actor.trim()));
+    formData.append(
+      "cast",
+      cast.split(",").map((actor) => actor.trim())
+    );
     formData.append("poster", poster);
 
     try {
@@ -94,110 +98,134 @@ function MovieAddScreen() {
     }
   };
 
-  // Predefined options for categories and languages
-  const predefinedCategories = ["Action", "Comedy", "Drama", "Horror", "Romance"];
-  const predefinedLanguages = ["English", "Spanish", "French", "German", "Mandarin"];
+  const predefinedCategories = [
+    "Action",
+    "Comedy",
+    "Drama",
+    "Horror",
+    "Romance",
+  ];
+  const predefinedLanguages = [
+    "English",
+    "Malayalam",
+    "Hindi",
+    "Telugu",
+    "Tamil",
+  ];
 
   return (
-    <FormContainer style={{ marginTop: "-611px", marginLeft: "200px" }}>
-      <h1>Add Movie</h1>
-      {isLoading && <Loader />}
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="name" className="mb-3">
-          <Form.Label>Movie Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter movie name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
+    <div className="d-flex">
+      <SideBarAdmin />
+      <div className="content">
+        <FormContainer>
+          <h1>Add Movie</h1>
+          {isLoading && <Loader />}
+          <Form onSubmit={submitHandler}>
+            <Form.Group controlId="name" className="mb-3">
+              <Form.Label>Movie Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter movie name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
 
-        <Form.Group controlId="duration" className="mb-3">
-          <Form.Label>Duration In Hour</Form.Label>
-          <Form.Control
-            type="time"
-            placeholder="Enter duration"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
+            <Form.Group controlId="duration" className="mb-3">
+              <Form.Label>Duration In Hour</Form.Label>
+              <Form.Control
+                type="time"
+                placeholder="Enter duration"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
 
-        <Form.Group controlId="categories" className="mb-3">
-          <Form.Label>Categories</Form.Label>
-          <Form.Control
-            as="select"
-            multiple
-            value={categories}
-            onChange={(e) => setCategories([...e.target.selectedOptions].map(option => option.value))}
-            required
-          >
-            {predefinedCategories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
+            <Form.Group controlId="categories" className="mb-3">
+              <Form.Label>Categories</Form.Label>
+              <Form.Control
+                as="select"
+                multiple
+                value={categories}
+                onChange={(e) =>
+                  setCategories(
+                    [...e.target.selectedOptions].map((option) => option.value)
+                  )
+                }
+                required
+              >
+                {predefinedCategories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
-        <Form.Group controlId="language" className="mb-3">
-          <Form.Label>Languages</Form.Label>
-          <Form.Control
-            as="select"
-            multiple
-            value={language}
-            onChange={(e) => setLanguage([...e.target.selectedOptions].map(option => option.value))}
-            required
-          >
-            {predefinedLanguages.map((lang) => (
-              <option key={lang} value={lang}>
-                {lang}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
+            <Form.Group controlId="language" className="mb-3">
+              <Form.Label>Languages</Form.Label>
+              <Form.Control
+                as="select"
+                multiple
+                value={language}
+                onChange={(e) =>
+                  setLanguage(
+                    [...e.target.selectedOptions].map((option) => option.value)
+                  )
+                }
+                required
+              >
+                {predefinedLanguages.map((lang) => (
+                  <option key={lang} value={lang}>
+                    {lang}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
-        <Form.Group controlId="cast" className="mb-3">
-          <Form.Label>Cast</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter cast"
-            value={cast}
-            onChange={(e) => setCast(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
+            <Form.Group controlId="cast" className="mb-3">
+              <Form.Label>Cast</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter cast"
+                value={cast}
+                onChange={(e) => setCast(e.target.value)}
+                required
+              ></Form.Control>
+            </Form.Group>
 
-        <Form.Group controlId="poster" className="mb-3">
-          <Form.Label>Movie Poster</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={handlePosterChange}
-            required
-          ></Form.Control>
-        </Form.Group>
+            <Form.Group controlId="poster" className="mb-3">
+              <Form.Label>Movie Poster</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={handlePosterChange}
+                required
+              ></Form.Control>
+            </Form.Group>
 
-        {preview && (
-          <div className="mb-3">
-            <img
-              src={preview}
-              alt="Movie Poster Preview"
-              style={{
-                width: "100%",
-                maxHeight: "300px",
-                objectFit: "contain",
-              }}
-            />
-          </div>
-        )}
+            {preview && (
+              <div className="mb-3">
+                <img
+                  src={preview}
+                  alt="Movie Poster Preview"
+                  style={{
+                    width: "100%",
+                    maxHeight: "300px",
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
+            )}
 
-        <Button type="submit" variant="dark">
-          Add Movie
-        </Button>
-      </Form>
-    </FormContainer>
+            <Button type="submit" variant="dark">
+              Add Movie
+            </Button>
+          </Form>
+        </FormContainer>
+      </div>
+    </div>
   );
 }
 

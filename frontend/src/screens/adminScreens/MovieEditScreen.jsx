@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import Loader from "../../components/userComponents/Loader.jsx";
 import FormContainer from "../../components/userComponents/FormContainer.jsx";
 import { Form, Button } from "react-bootstrap";
+import SideBarAdmin from "../../components/adminComponents/SideBar.jsx";
 
 const categoriesOptions = ["Action", "Comedy", "Drama", "Horror", "Romance"];
 const languagesOptions = ["English", "Spanish", "French", "German", "Chinese"];
@@ -59,12 +60,18 @@ function MovieEditScreen() {
   };
 
   const handleCategoriesChange = (e) => {
-    const selectedCategories = Array.from(e.target.selectedOptions, option => option.value);
+    const selectedCategories = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
     setCategories(selectedCategories);
   };
 
   const handleLanguageChange = (e) => {
-    const selectedLanguages = Array.from(e.target.selectedOptions, option => option.value);
+    const selectedLanguages = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
     setLanguage(selectedLanguages);
   };
 
@@ -113,7 +120,10 @@ function MovieEditScreen() {
     formData.append("duration", duration);
     formData.append("categories", JSON.stringify(categories));
     formData.append("language", JSON.stringify(language));
-    formData.append("cast", cast.split(",").map(actor => actor.trim()));
+    formData.append(
+      "cast",
+      cast.split(",").map((actor) => actor.trim())
+    );
     if (poster) {
       formData.append("poster", poster);
     }
@@ -128,103 +138,112 @@ function MovieEditScreen() {
   };
 
   return (
-    <FormContainer style={{ marginTop: "-611px", marginLeft: "200px" }}>
-      <h1>Edit Movie</h1>
-      {loadingMovie || loadingEdit ? (
-        <Loader />
-      ) : (
-        <Form onSubmit={submitHandler}>
-          <Form.Group controlId="name" className="mb-3">
-            <Form.Label>Movie Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter movie name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            ></Form.Control>
-          </Form.Group>
+    <div className="d-flex">
+      <SideBarAdmin />
+      <div className="content">
+        <FormContainer>
+          <h1>Edit Movie</h1>
+          {loadingMovie || loadingEdit ? (
+            <Loader />
+          ) : (
+            <Form onSubmit={submitHandler}>
+              <Form.Group controlId="name" className="mb-3">
+                <Form.Label>Movie Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter movie name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                ></Form.Control>
+              </Form.Group>
 
-          <Form.Group controlId="duration" className="mb-3">
-            <Form.Label>Duration</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter duration (HH:MM)"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              required
-            ></Form.Control>
-          </Form.Group>
+              <Form.Group controlId="duration" className="mb-3">
+                <Form.Label>Duration</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter duration (HH:MM)"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  required
+                ></Form.Control>
+              </Form.Group>
 
-          <Form.Group controlId="categories" className="mb-3">
-            <Form.Label>Categories</Form.Label>
-            <Form.Control
-              as="select"
-              multiple
-              value={categories}
-              onChange={handleCategoriesChange}
-              required
-            >
-              {categoriesOptions.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+              <Form.Group controlId="categories" className="mb-3">
+                <Form.Label>Categories</Form.Label>
+                <Form.Control
+                  as="select"
+                  multiple
+                  value={categories}
+                  onChange={handleCategoriesChange}
+                  required
+                >
+                  {categoriesOptions.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
 
-          <Form.Group controlId="language" className="mb-3">
-            <Form.Label>Language</Form.Label>
-            <Form.Control
-              as="select"
-              multiple
-              value={language}
-              onChange={handleLanguageChange}
-              required
-            >
-              {languagesOptions.map((lang) => (
-                <option key={lang} value={lang}>{lang}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+              <Form.Group controlId="language" className="mb-3">
+                <Form.Label>Language</Form.Label>
+                <Form.Control
+                  as="select"
+                  multiple
+                  value={language}
+                  onChange={handleLanguageChange}
+                  required
+                >
+                  {languagesOptions.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
 
-          <Form.Group controlId="cast" className="mb-3">
-            <Form.Label>Cast</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter cast (comma separated)"
-              value={cast}
-              onChange={(e) => setCast(e.target.value)}
-              required
-            ></Form.Control>
-          </Form.Group>
+              <Form.Group controlId="cast" className="mb-3">
+                <Form.Label>Cast</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter cast (comma separated)"
+                  value={cast}
+                  onChange={(e) => setCast(e.target.value)}
+                  required
+                ></Form.Control>
+              </Form.Group>
 
-          <Form.Group controlId="poster" className="mb-3">
-            <Form.Label>Movie Poster</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={handlePosterChange}
-            ></Form.Control>
-          </Form.Group>
+              <Form.Group controlId="poster" className="mb-3">
+                <Form.Label>Movie Poster</Form.Label>
+                <Form.Control
+                  type="file"
+                  onChange={handlePosterChange}
+                ></Form.Control>
+              </Form.Group>
 
-          {preview && (
-            <div className="mb-3">
-              <img
-                src={preview}
-                alt="Movie Poster Preview"
-                style={{
-                  width: "100%",
-                  maxHeight: "300px",
-                  objectFit: "contain",
-                }}
-              />
-            </div>
+              {preview && (
+                <div className="mb-3">
+                  <img
+                    src={preview}
+                    alt="Movie Poster Preview"
+                    style={{
+                      width: "100%",
+                      maxHeight: "300px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
+              )}
+
+              <Button type="submit" variant="dark">
+                Update Movie
+              </Button>
+            </Form>
           )}
-
-          <Button type="submit" variant="dark">
-            Update Movie
-          </Button>
-        </Form>
-      )}
-    </FormContainer>
+        </FormContainer>
+      </div>
+    </div>
   );
 }
 

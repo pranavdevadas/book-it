@@ -3,12 +3,12 @@
   }
   
   .sidebar-container {
-    flex-shrink: 0; /* Ensures the sidebar doesn't shrink */
+    flex-shrink: 0; 
   }
   
   .content-container {
-    margin-left: 250px; /* Matches the sidebar width */
-    padding: 20px; /* Optional: Adds padding around the content */
-    width: calc(100% - 250px); /* Takes up the remaining width */
+    margin-left: 250px; 
+    padding: 20px; 
+    width: calc(100% - 250px); 
   }
   

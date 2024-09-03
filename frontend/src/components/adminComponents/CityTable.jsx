@@ -1,14 +1,10 @@
 import Table from "react-bootstrap/Table";
 
 function CityTable({ cities }) {
-  const tableStyle = {
-    width: "1000px",
-    marginLeft: "310px",
-    marginTop: "-484px",
-  };
+
 
   return (
-    <Table striped bordered hover variant="dark" style={tableStyle}>
+    <Table striped bordered hover variant="dark"className="rounded overflow-hidden" >
       <thead>
         <tr>
           <th>#</th>

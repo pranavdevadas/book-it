@@ -6,6 +6,7 @@ import FormContainer from "../../components/userComponents/FormContainer.jsx";
 import { useAddCityMutation } from "../../slice/adminSlice/adminApiSlice.js";
 import { toast } from "react-toastify";
 import Loader from "../../components/userComponents/Loader.jsx";
+import SideBarAdmin from "../../components/adminComponents/SideBar.jsx";
 
 function CityAddScreen() {
   const [name, setName] = useState("");
@@ -33,25 +34,28 @@ function CityAddScreen() {
   };
 
   return (
-    <FormContainer style={{ marginTop: "-611px", marginLeft: "200px" }}>
-      <h1>Add City</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="my-2" controlId="city">
-          <Form.Label>City Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter City Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+    <>
+      <SideBarAdmin />
+        <FormContainer>
+          <h1>Add City</h1>
+          <Form onSubmit={submitHandler}>
+            <Form.Group className="my-2" controlId="city">
+              <Form.Label>City Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter City Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
 
-        {isLoading && <Loader />}
-        <Button type="submit" variant="primary" className="mt-3">
-          Add
-        </Button>
-      </Form>
-    </FormContainer>
+            {isLoading && <Loader />}
+            <Button type="submit" variant="primary" className="mt-3">
+              Add
+            </Button>
+          </Form>
+        </FormContainer>
+    </>
   );
 }
 

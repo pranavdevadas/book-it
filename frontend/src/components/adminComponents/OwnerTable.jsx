@@ -1,19 +1,13 @@
 import Table from "react-bootstrap/Table";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useBlockUnblockOwnerMutation } from "../../slice/adminSlice/adminApiSlice";
 import { useEffect } from "react";
 
 function OwnerTable({ owners, refetch }) {
-  const tableStyle = {
-    width: "1000px",
-    marginLeft: "310px",
-    marginTop: "-484px",
-  };
 
   const [blockUnblockOwner] = useBlockUnblockOwnerMutation();
-  useEffect(() => {
-  },[refetch])
+  useEffect(() => {}, [refetch]);
 
   const handleBlockUnblock = async (id, isBlocked) => {
     try {
@@ -31,41 +25,45 @@ function OwnerTable({ owners, refetch }) {
   };
 
   return (
-    <Table striped bordered hover variant="dark" style={tableStyle}>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Verification Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {owners.length > 0 ? (
-          owners.map((owner, index) => (
-            <tr key={owner._id}>
-              <td>{index + 1}</td>
-              <td>{owner.name}</td>
-              <td>{owner.email}</td>
-              <td>{owner.isVerified.toString()}</td>
-              <td>
-                <Button
-                  variant={!owner.isBlocked ? "danger" : "success"}
-                  onClick={() => handleBlockUnblock(owner._id, owner.isBlocked)}
-                >
-                  {!owner.isBlocked ? "Block" : "Unblock"}
-                </Button>
-              </td>
-            </tr>
-          ))
-        ) : (
+    <Container>
+      <Table striped bordered hover variant="dark"className="rounded overflow-hidden" >
+        <thead>
           <tr>
-            <td colSpan="2">No Users found</td>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Verification Status</th>
+            <th>Action</th>
           </tr>
-        )}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {owners.length > 0 ? (
+            owners.map((owner, index) => (
+              <tr key={owner._id}>
+                <td>{index + 1}</td>
+                <td>{owner.name}</td>
+                <td>{owner.email}</td>
+                <td>{owner.isVerified.toString()}</td>
+                <td>
+                  <Button
+                    variant={!owner.isBlocked ? "danger" : "success"}
+                    onClick={() =>
+                      handleBlockUnblock(owner._id, owner.isBlocked)
+                    }
+                  >
+                    {!owner.isBlocked ? "Block" : "Unblock"}
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="2">No Users found</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+    </Container>
   );
 }
 

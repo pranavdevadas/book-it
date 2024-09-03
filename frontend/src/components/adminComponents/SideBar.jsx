@@ -38,7 +38,7 @@ function SideBarAdmin() {
   return (
     <div className="sidebar-container">
       <CDBSidebar>
-        <CDBSidebarHeader>Admin</CDBSidebarHeader>
+        <CDBSidebarHeader>Book It</CDBSidebarHeader>
         <CDBSidebarContent className="d-flex flex-column">
           <Nav className="flex-fill">
             <CDBSidebarMenu>

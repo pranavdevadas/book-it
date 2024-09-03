@@ -7,7 +7,7 @@ import ExampleCarouselImage2 from "../../assets/kali.jpg";
 function Carousels() {
   return (
     <>
-      <h2 className="text-center mt-3">Book Movies Now</h2>
+      <h2 className="text-center mt-3 fw-bold">Book Movies Now</h2>
       <Carousel className="d-flex justify-content-center mt-5">
         <Carousel.Item>
           <img

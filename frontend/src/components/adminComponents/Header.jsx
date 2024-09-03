@@ -27,8 +27,8 @@ function Header() {
 
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
-        <Container>
+      <Navbar style={{backgroundColor:'rgb(17, 24, 39)'}} variant="dark" expand="lg" collapseOnSelect >
+        <Container style={{height:'59px'}}>
           <LinkContainer to="/admin/home">
             <Navbar.Brand>Book it</Navbar.Brand>
           </LinkContainer>

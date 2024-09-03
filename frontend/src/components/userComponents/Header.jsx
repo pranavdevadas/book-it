@@ -48,17 +48,19 @@ function Header() {
                 <Nav.Link>Movie</Nav.Link>
               </LinkContainer>
             </Nav>
+            <Nav className="ms-auto"></Nav>
             <Nav className="ms-auto">
-            
-            </Nav>
-            <Nav className="ms-auto">
-            <NavDropdown title='Select city' className="mx-2" id="userName">
-              <NavDropdown.Item>Profile</NavDropdown.Item>
-              <NavDropdown.Item>Profile</NavDropdown.Item>
-              <NavDropdown.Item>Profile</NavDropdown.Item>
-            </NavDropdown>
               {userInfo ? (
                 <>
+                  <NavDropdown
+                    title="Select city"
+                    className="mx-2"
+                    id="userName"
+                  >
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </NavDropdown>
                   <NavDropdown title={userInfo.name} id="userName">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>
