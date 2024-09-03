@@ -1,31 +1,35 @@
-import { Navbar, Nav, Container, NavDropdown, Badge, Toast } from "react-bootstrap";
-import { useNavigate } from 'react-router-dom'
+import {
+  Navbar,
+  Nav,
+  Container,
+  NavDropdown,
+  Badge,
+  Toast,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { useLogoutMutation } from "../../slice/userSlice/userApiSlice";
-import { clearCredentials } from '../../slice/userSlice/userAuthSlice'
-import { toast } from 'react-toastify'
+import { clearCredentials } from "../../slice/userSlice/userAuthSlice";
+import { toast } from "react-toastify";
 
 function Header() {
   let { userInfo } = useSelector((state) => state.auth);
-  
-  let dispatch = useDispatch()
-  let navigate = useNavigate()
 
-  let [ clearCredentialsApiCall ] = useLogoutMutation()
+  let dispatch = useDispatch();
+  let navigate = useNavigate();
 
+  let [clearCredentialsApiCall] = useLogoutMutation();
 
   let logoutHandler = async () => {
     try {
-      await clearCredentialsApiCall().unwrap()
-      dispatch(clearCredentials())
-      navigate('/login')
-      toast.success('Logout Success')
-    } catch (error) {
-      
-    }
-  }
+      await clearCredentialsApiCall().unwrap();
+      dispatch(clearCredentials());
+      navigate("/login");
+      toast.success("Logout Success");
+    } catch (error) {}
+  };
 
   return (
     <header>
@@ -45,13 +49,23 @@ function Header() {
               </LinkContainer>
             </Nav>
             <Nav className="ms-auto">
+            
+            </Nav>
+            <Nav className="ms-auto">
+            <NavDropdown title='Select city' className="mx-2" id="userName">
+              <NavDropdown.Item>Profile</NavDropdown.Item>
+              <NavDropdown.Item>Profile</NavDropdown.Item>
+              <NavDropdown.Item>Profile</NavDropdown.Item>
+            </NavDropdown>
               {userInfo ? (
                 <>
                   <NavDropdown title={userInfo.name} id="userName">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>
-                    <NavDropdown.Item onClick={ logoutHandler }>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
                   </NavDropdown>
                 </>
               ) : (

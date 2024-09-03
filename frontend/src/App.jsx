@@ -7,6 +7,7 @@ import AdminSideBar from "./components/adminComponents/SideBar.jsx";
 import OwnerSideBar from "./components/ownerComonents/SideBar.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './App.css'
 
 function App() {
   let location = useLocation();
@@ -15,6 +16,8 @@ function App() {
 
   let isAdminLoginPage = location.pathname === "/admin/login";
   let isOwnerAuthPage = ["/owner/login", "/owner/register", "/owner/otp"].includes(location.pathname);
+
+  let containerClass = !isAdminPage && !isOwnerPage ? 'user-page-background' : 'admin-owner-background'; 
 
   return (
     <>
@@ -36,7 +39,7 @@ function App() {
         </>
       )}
       <ToastContainer />
-      <Outlet />
+      <Outlet className={containerClass} />
     </>
   );
 }
