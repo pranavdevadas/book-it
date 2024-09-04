@@ -9,6 +9,7 @@ import {
   useOwnerEditTheatreMutation,
   useGetCitiesQuery,
 } from "../../slice/ownerSlice/ownerApiSlice";
+import SideBarOwner from "../../components/ownerComonents/SideBar";
 
 function TheatreEditScreen() {
   const { id } = useParams();
@@ -123,130 +124,139 @@ function TheatreEditScreen() {
   if (error) return <p>Error loading theatre</p>;
 
   return (
-    <FormContainer style={{ marginTop: "-611px", marginLeft: "200px" }}>
-      <h1>Edit Theatre</h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="name">
-          <Form.Label>Theatre Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter theatre name"
-            value={theatre?.name || ""}
-            onChange={(e) => setTheatre({ ...theatre, name: e.target.value })}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group controlId="location">
-          <Form.Label>Location</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter location"
-            value={theatre?.location || ""}
-            onChange={(e) =>
-              setTheatre({ ...theatre, location: e.target.value })
-            }
-            required
-          />
-        </Form.Group>
-
-        <Form.Group controlId="city">
-          <Form.Label>City</Form.Label>
-          <Form.Control
-            as="select"
-            value={theatre?.city || ""}
-            onChange={(e) => setTheatre({ ...theatre, city: e.target.value })}
-            required
-          >
-            <option value="" disabled>
-              Select a city
-            </option>
-            {cities.map((city) => (
-              <option key={city.id} value={city.name}>
-                {city.name}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="ticketPrice">
-          <Form.Label>Ticket Price</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Enter ticket price"
-            value={theatre?.ticketPrice || ""}
-            onChange={(e) =>
-              setTheatre({ ...theatre, ticketPrice: e.target.value })
-            }
-            required
-          />
-        </Form.Group>
-
-        {screens.map((screen, screenIndex) => (
-          <div key={screenIndex} className="mt-3">
-            <Form.Group controlId={`screenName-${screenIndex}`}>
-              <Form.Label>Screen No.</Form.Label>
+    <div className="d-flex">
+      <SideBarOwner />  
+      <div className="content">
+        <FormContainer >
+          <h1>Edit Theatre</h1>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="name">
+              <Form.Label>Theatre Name</Form.Label>
               <Form.Control
                 type="text"
-                style={{ width: "15%" }}
-                value={screen.name}
-                onChange={(e) => {
-                  const updatedScreens = [...screens];
-                  updatedScreens[screenIndex].name = e.target.value;
-                  setScreens(updatedScreens);
-                }}
+                placeholder="Enter theatre name"
+                value={theatre?.name || ""}
+                onChange={(e) =>
+                  setTheatre({ ...theatre, name: e.target.value })
+                }
                 required
               />
             </Form.Group>
 
-            {screen.showTimes.map((showTime, showTimeIndex) => (
-              <Form.Group
-                controlId={`showTime-${screenIndex}-${showTimeIndex}`}
-                key={showTimeIndex}
+            <Form.Group controlId="location">
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter location"
+                value={theatre?.location || ""}
+                onChange={(e) =>
+                  setTheatre({ ...theatre, location: e.target.value })
+                }
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="city">
+              <Form.Label>City</Form.Label>
+              <Form.Control
+                as="select"
+                value={theatre?.city || ""}
+                onChange={(e) =>
+                  setTheatre({ ...theatre, city: e.target.value })
+                }
+                required
               >
-                <Form.Label>Show Time</Form.Label>
-                <Form.Control
-                  type="time"
-                  style={{ width: "22%" }}
-                  value={showTime}
-                  onChange={(e) => {
+                <option value="" disabled>
+                  Select a city
+                </option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="ticketPrice">
+              <Form.Label>Ticket Price</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter ticket price"
+                value={theatre?.ticketPrice || ""}
+                onChange={(e) =>
+                  setTheatre({ ...theatre, ticketPrice: e.target.value })
+                }
+                required
+              />
+            </Form.Group>
+
+            {screens.map((screen, screenIndex) => (
+              <div key={screenIndex} className="mt-3">
+                <Form.Group controlId={`screenName-${screenIndex}`}>
+                  <Form.Label>Screen No.</Form.Label>
+                  <Form.Control
+                    type="text"
+                    style={{ width: "15%" }}
+                    value={screen.name}
+                    onChange={(e) => {
+                      const updatedScreens = [...screens];
+                      updatedScreens[screenIndex].name = e.target.value;
+                      setScreens(updatedScreens);
+                    }}
+                    required
+                  />
+                </Form.Group>
+
+                {screen.showTimes.map((showTime, showTimeIndex) => (
+                  <Form.Group
+                    controlId={`showTime-${screenIndex}-${showTimeIndex}`}
+                    key={showTimeIndex}
+                  >
+                    <Form.Label>Show Time</Form.Label>
+                    <Form.Control
+                      type="time"
+                      style={{ width: "22%" }}
+                      value={showTime}
+                      onChange={(e) => {
+                        const updatedScreens = [...screens];
+                        updatedScreens[screenIndex].showTimes[showTimeIndex] =
+                          e.target.value;
+                        setScreens(updatedScreens);
+                      }}
+                      required
+                    />
+                  </Form.Group>
+                ))}
+                <br />
+                <Button
+                  variant="dark"
+                  onClick={() => {
                     const updatedScreens = [...screens];
-                    updatedScreens[screenIndex].showTimes[showTimeIndex] =
-                      e.target.value;
+                    updatedScreens[screenIndex].showTimes.push("");
                     setScreens(updatedScreens);
                   }}
-                  required
+                  className="mb-3"
+                >
+                  Add Show Time
+                </Button>
+
+                <br />
+                <Form.Label className="mt-3">Seats</Form.Label>
+                <EditSeatSelection
+                  screenIndex={screenIndex}
+                  seats={screen.seats}
+                  handleSeatChange={handleSeatChange}
                 />
-              </Form.Group>
+              </div>
             ))}
-            <br />
-            <Button
-              variant="dark"
-              onClick={() => {
-                const updatedScreens = [...screens];
-                updatedScreens[screenIndex].showTimes.push("");
-                setScreens(updatedScreens);
-              }}
-              className="mb-3"
-            >
-              Add Show Time
+
+            <Button type="submit" variant="primary" className="mt-3">
+              Submit
             </Button>
-
-            <br />
-            <Form.Label className="mt-3">Seats</Form.Label>
-            <EditSeatSelection
-              screenIndex={screenIndex}
-              seats={screen.seats}
-              handleSeatChange={handleSeatChange}
-            />
-          </div>
-        ))}
-
-        <Button type="submit" variant="primary" className="mt-3">
-          Submit
-        </Button>
-      </Form>
-    </FormContainer>
+          </Form>
+        </FormContainer>
+      </div>
+    </div>
   );
 }
 

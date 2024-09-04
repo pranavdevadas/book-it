@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container,NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 function Header() {
   const { ownerInfo } = useSelector((state) => state.ownerAuth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();   
+  const navigate = useNavigate();
 
   const [clearCredentialsApiCall] = useOwnerLogoutMutation();
 
@@ -27,13 +27,21 @@ function Header() {
 
   return (
     <header>
-      <Navbar style={{backgroundColor:'rgb(17, 24, 39)'}} variant="dark"  expand="lg" collapseOnSelect>
+      <Navbar
+        style={{ backgroundColor: "rgb(17, 24, 39)", height: "75px" }}
+        variant="dark"
+        expand="lg"
+        collapseOnSelect
+      >
         <Container>
           <LinkContainer to="/owner/home">
-            <Navbar.Brand>THEATRE OWNER</Navbar.Brand>
+            <Navbar.Brand>THEATRE</Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              <Navbar.Brand>THEATRE OWNER</Navbar.Brand>
+            </Nav>
             <Nav className="ms-auto">
               {ownerInfo ? (
                 <>
@@ -41,7 +49,9 @@ function Header() {
                     <LinkContainer to="/owner/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>
-                    <NavDropdown.Item onClick={ logoutHandler }>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
                   </NavDropdown>
                 </>
               ) : (

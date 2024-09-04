@@ -29,7 +29,7 @@ function App() {
           ) : isOwnerPage ? (
             <>
               <OwnerHeader />
-              <OwnerSideBar />
+              {/* <OwnerSideBar /> */}
             </>
           ) : (
             <Header />

@@ -8,6 +8,7 @@ import {
   useGetCitiesQuery,
 } from "../../slice/ownerSlice/ownerApiSlice";
 import { useNavigate } from "react-router-dom";
+import SideBarOwner from "../../components/ownerComonents/SideBar";
 
 function TheatreAddScreen() {
   const [screens, setScreens] = useState([]);
@@ -163,133 +164,138 @@ function TheatreAddScreen() {
   };
 
   return (
-    <FormContainer style={{ marginTop: "-611px", marginLeft: "200px" }}>
-      <h1>Add Theatre</h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="name">
-          <Form.Label>Theatre Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter theatre name"
-            value={theatreName}
-            onChange={(e) => setTheatreName(e.target.value)}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group controlId="location">
-          <Form.Label>Location</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group controlId="city">
-          <Form.Label>City</Form.Label>
-          <Form.Control
-            as="select"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            required
-          >
-            <option value="" disabled>
-              Select a city
-            </option>
-            {isLoading && <option>Loading cities...</option>}
-            {error && <option>Error loading cities</option>}
-            {cities &&
-              cities.map((city) => (
-                <option key={city._id} value={city.name}>
-                  {city.name}
-                </option>
-              ))}
-          </Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="ticketPrice">
-          <Form.Label>Ticket Price</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter ticket price"
-            value={ticketPrice}
-            onChange={(e) => setTicketPrice(e.target.value)}
-            required
-          />
-        </Form.Group>
-
-        {screens.map((screen, screenIndex) => (
-          <div key={screenIndex} className="mt-3">
-            <Form.Group controlId={`screenName-${screenIndex}`}>
-              <Form.Label>Screen No.</Form.Label>
+    <div className="d-flex">
+      <SideBarOwner />
+      <div className="content">
+        <FormContainer >
+          <h1>Add Theatre</h1>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="name">
+              <Form.Label>Theatre Name</Form.Label>
               <Form.Control
-                type="number"
-                style={{ width: "12%" }}
-                value={screen.name}
-                onChange={(e) =>
-                  handleScreenNameChange(screenIndex, e.target.value)
-                }
+                type="text"
+                placeholder="Enter theatre name"
+                value={theatreName}
+                onChange={(e) => setTheatreName(e.target.value)}
                 required
               />
             </Form.Group>
 
-            {screen.showTimes.map((showTime, showTimeIndex) => (
-              <Form.Group
-                controlId={`showTime-${screenIndex}-${showTimeIndex}`}
-                key={showTimeIndex}
+            <Form.Group controlId="location">
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="city">
+              <Form.Label>City</Form.Label>
+              <Form.Control
+                as="select"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                required
               >
-                <Form.Label>Show Time</Form.Label>
-                <Form.Control
-                  type="time"
-                  style={{ width: "22%" }}
-                  value={showTime}
-                  onChange={(e) =>
-                    handleShowTimeChange(
-                      screenIndex,
-                      showTimeIndex,
-                      e.target.value
-                    )
+                <option value="" disabled>
+                  Select a city
+                </option>
+                {isLoading && <option>Loading cities...</option>}
+                {error && <option>Error loading cities</option>}
+                {cities &&
+                  cities.map((city) => (
+                    <option key={city._id} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="ticketPrice">
+              <Form.Label>Ticket Price</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter ticket price"
+                value={ticketPrice}
+                onChange={(e) => setTicketPrice(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            {screens.map((screen, screenIndex) => (
+              <div key={screenIndex} className="mt-3">
+                <Form.Group controlId={`screenName-${screenIndex}`}>
+                  <Form.Label>Screen No.</Form.Label>
+                  <Form.Control
+                    type="number"
+                    style={{ width: "12%" }}
+                    value={screen.name}
+                    onChange={(e) =>
+                      handleScreenNameChange(screenIndex, e.target.value)
+                    }
+                    required
+                  />
+                </Form.Group>
+
+                {screen.showTimes.map((showTime, showTimeIndex) => (
+                  <Form.Group
+                    controlId={`showTime-${screenIndex}-${showTimeIndex}`}
+                    key={showTimeIndex}
+                  >
+                    <Form.Label>Show Time</Form.Label>
+                    <Form.Control
+                      type="time"
+                      style={{ width: "22%" }}
+                      value={showTime}
+                      onChange={(e) =>
+                        handleShowTimeChange(
+                          screenIndex,
+                          showTimeIndex,
+                          e.target.value
+                        )
+                      }
+                      required
+                    />
+                  </Form.Group>
+                ))}
+                <br />
+
+                <Button
+                  variant="dark"
+                  onClick={() => handleAddShowTime(screenIndex)}
+                  className="mb-3"
+                  disabled={screen.showTimes.length >= 4}
+                >
+                  Add Show Time
+                </Button>
+
+                <br />
+                <Form.Label className="mt-3">Seats</Form.Label>
+                <SeatSelection
+                  seats={screen.seats}
+                  handleSeatChange={(row, col) =>
+                    handleSeatChange(screenIndex, row, col)
                   }
-                  required
                 />
-              </Form.Group>
+              </div>
             ))}
-            <br />
 
-            <Button
-              variant="dark"
-              onClick={() => handleAddShowTime(screenIndex)}
-              className="mb-3"
-              disabled={screen.showTimes.length >= 4}
-            >
-              Add Show Time
+            <Button variant="dark" onClick={handleAddScreen} className="mt-3">
+              Add Screen
             </Button>
-
             <br />
-            <Form.Label className="mt-3">Seats</Form.Label>
-            <SeatSelection
-              seats={screen.seats}
-              handleSeatChange={(row, col) =>
-                handleSeatChange(screenIndex, row, col)
-              }
-            />
-          </div>
-        ))}
-
-        <Button variant="dark" onClick={handleAddScreen} className="mt-3">
-          Add Screen
-        </Button>
-        <br />
-        <br />
-        <br />
-        <Button type="submit" variant="primary" className="mt-3">
-          Submit
-        </Button>
-      </Form>
-    </FormContainer>
+            <br />
+            <br />
+            <Button type="submit" variant="primary" className="mt-3">
+              Submit
+            </Button>
+          </Form>
+        </FormContainer>
+      </div>
+    </div>
   );
 }
 

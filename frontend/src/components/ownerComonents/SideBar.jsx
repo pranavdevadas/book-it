@@ -42,10 +42,9 @@ function SideBarOwner() {
       <div className="sidebar-container">
         <CDBSidebar className="sidebar">
           {/* <CDBSidebarHeader prefix={<i className="fa fa-bars" />}> */}
-          <CDBSidebarHeader>Theatre Owner</CDBSidebarHeader>
-          <CDBSidebarContent>
-            <Nav>
-              
+          <CDBSidebarHeader>Book It</CDBSidebarHeader>
+          <CDBSidebarContent className="d-flex flex-column">
+          <Nav className="flex-fill">
               <CDBSidebarMenu>
                 <CDBSidebarMenuItem>
                   <LinkContainer to="/owner/home">
