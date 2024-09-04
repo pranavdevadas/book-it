@@ -1,6 +1,7 @@
 import showRepository from "../repository/showRepository.js";
 import Theatre from "../model/theatre.js";
 import Movie from "../model/movie.js";
+import Owner from "../model/owner.js";
 
 const showService = {
   getAllShows: async () => {
@@ -8,22 +9,25 @@ const showService = {
   },
 
   getAllMovies: async () => {
-    return await showRepository.findAllMovies()
+    return await showRepository.findAllMovies();
   },
 
-  addShow: async (showData) => {
-    const { movie, theatre, screen, showtime } = showData;
+  addShow: async (showData, owner) => {
+    const { movie, language, theatre, screen, showtime } = showData;
 
+    
+    
     if (!movie || !theatre || !screen || !showtime.length) {
       throw new Error("Please provide all required fields");
     }
 
     const theatres = await Theatre.findById(theatre);
     const movies = await Movie.findById(movie);
-
+    const ownerId = await Owner.findById(owner)
+    
     const existingShow = await showRepository.findOne({
-      movie: movies.name,
-      theatre: theatres.name,
+      movie: movies._id,
+      theatre: theatres._id,
       screen,
       showtime: { $in: showtime },
     });
@@ -33,13 +37,17 @@ const showService = {
     }
 
     const newShow = {
-      movie: movies.name,
-      theatre: theatres.name,
+      owner: ownerId._id,
+      movie: movies._id,
+      language,
+      theatre: theatres._id,
       screen,
       showtime,
     };
 
     return await showRepository.create(newShow);
+
+    
   },
 
   toggleShowStatus: async (id) => {

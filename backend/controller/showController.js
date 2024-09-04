@@ -4,7 +4,7 @@ import showService from "../service/showService.js";
 const showController = {
   getShows: expressAsyncHandler(async (req, res) => {
     try {
-      const shows = await showService.getAllShows();
+      const shows = await showService.getAllShows();      
       res.status(200).json(shows);
     } catch (error) {
       res.status(400);
@@ -14,7 +14,7 @@ const showController = {
 
   getAllMovies: expressAsyncHandler(async (req, res) => {
     try {
-      const movies = await showService.getAllMovies()      
+      const movies = await showService.getAllMovies()
       res.status(200).json(movies)
     } catch (error) {
       res.status(400);
@@ -22,9 +22,9 @@ const showController = {
     }
   }),
 
-  addShow: expressAsyncHandler(async (req, res) => {
+  addShow: expressAsyncHandler(async (req, res) => {    
     try {
-      const savedShow = await showService.addShow(req.body);
+      const savedShow = await showService.addShow(req.body, req.owner.id);
       res.status(200).json({
         message: "Show added successfully",
         show: savedShow,

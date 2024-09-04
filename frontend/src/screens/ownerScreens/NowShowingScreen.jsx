@@ -24,12 +24,11 @@ function NowShowingScreen() {
       <div className="d-flex">
         <SideBarOwner />
         <div className="content">
-          <h1 className="text-center">Theatre Managment</h1>
-
+          <h1 className="text-center">Now Showing</h1>
           <Link to="/owner/add-show">
             <Button
               variant="dark"
-              style={{ marginTop: "-1200px", marginLeft: "1089px" }}
+              style={{marginLeft:'900px'}}
             >
               Add Show
             </Button>

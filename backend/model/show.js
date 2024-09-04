@@ -1,12 +1,23 @@
 import mongoose from "mongoose";
 
 let showSchema = mongoose.Schema({
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Owner",
+    required: true
+  },
   movie: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Movie",
     required: true,
   },
-  theatre: {
+  language: {
     type: String,
+    required: true
+  },
+  theatre: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Theatre",
     required: true,
   },
   screen: {

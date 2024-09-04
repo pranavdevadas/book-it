@@ -3,7 +3,9 @@ import Show from "../model/show.js";
 
 const showRepository = {
   findAll: async () => {
-    return await Show.find();
+    return await Show.find()
+    .populate('movie', 'name duration categories language')  
+    .populate('theatre', 'name city location')
   },
 
   findAllMovies: async() => {

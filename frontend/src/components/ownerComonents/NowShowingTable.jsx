@@ -8,12 +8,6 @@ import { Container } from "react-bootstrap";
 function NowShowingTable({ nowShowing, refetch }) {
   const [toggleListStatus] = useToggleStatusMutation();
 
-  const tableStyle = {
-    width: "1000px",
-    marginLeft: "310px",
-    marginTop: "-530px",
-  };
-
   const handleToggleStatus = async (id) => {
     try {
       await toggleListStatus(id).unwrap();
@@ -27,7 +21,7 @@ function NowShowingTable({ nowShowing, refetch }) {
 
   return (
     <Container>
-      <Table striped bordered hover variant="dark">
+      <Table striped bordered hover variant="dark" className="mt-4">
         <thead>
           <tr>
             <th>#</th>
@@ -42,8 +36,8 @@ function NowShowingTable({ nowShowing, refetch }) {
           {nowShowing.map((show, index) => (
             <tr key={show._id}>
               <td>{index + 1}</td>
-              <td>{show.movie}</td>
-              <td>{show.theatre}</td>
+              <td>{show.movie.name}</td>
+              <td>{show.theatre.name}</td>
               <td>{show.screen}</td>
               <td>{show.showtime.join(", ")}</td>
               <td>
