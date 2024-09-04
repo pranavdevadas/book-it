@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const theatreSchema = new mongoose.Schema({
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Owner",
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -47,6 +52,10 @@ const theatreSchema = new mongoose.Schema({
       },
     },
   ],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Theatre = mongoose.model("Theatre", theatreSchema);

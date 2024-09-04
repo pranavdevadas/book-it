@@ -12,10 +12,12 @@ router.post('/owner-logout',ownerController.logoutOwner)
 router.post('/owner-verify-otp', ownerController.verifyOtp)
 router.post('/owner-resend-otp', ownerController.resendOtp)
 // router.get('/owner/fetchData', ownerController.fetchData)
+
 //Profile managment
 router.route('/owner-profile')
                             .get(ownerProtect, ownerController.getOwnerProfile)
                             .put(ownerProtect, ownerController.updateOwnerProfile)
+
 
 //Theatre managmant           
 router.get('/owner-theatres', ownerProtect, theatreController.getTheatres) 
@@ -23,8 +25,10 @@ router.post('/owner-addtheatre', ownerProtect, theatreController.addTheatre)
 router.route('/theatre/:id')
                             .get(ownerProtect, theatreController.getTheatreById)
                             .put(ownerProtect, theatreController.editTheatre)
+
 //city managment
 router.get('/owner-city',ownerProtect, ownerController.getCities)
+
 //Now Showing
 router.get('/owner-nowshowing', ownerProtect, showController.getShows)
 router.get('/owner-getmovies', ownerProtect, showController.getAllMovies)

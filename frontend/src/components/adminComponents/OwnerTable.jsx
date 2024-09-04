@@ -1,10 +1,18 @@
 import Table from "react-bootstrap/Table";
+import { useState, useEffect } from "react";
 import { Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useBlockUnblockOwnerMutation } from "../../slice/adminSlice/adminApiSlice";
-import { useEffect } from "react";
+import Search from "../../components/userComponents/Search.jsx";
 
 function OwnerTable({ owners, refetch }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredItems = owners.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const [blockUnblockOwner] = useBlockUnblockOwnerMutation();
   useEffect(() => {}, [refetch]);
@@ -26,7 +34,14 @@ function OwnerTable({ owners, refetch }) {
 
   return (
     <Container>
-      <Table striped bordered hover variant="dark"className="rounded overflow-hidden" >
+      <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <Table
+        striped
+        bordered
+        hover
+        variant="dark"
+        className="rounded overflow-hidden"
+      >
         <thead>
           <tr>
             <th>#</th>
@@ -37,8 +52,8 @@ function OwnerTable({ owners, refetch }) {
           </tr>
         </thead>
         <tbody>
-          {owners.length > 0 ? (
-            owners.map((owner, index) => (
+          {filteredItems.length > 0 ? (
+            filteredItems.map((owner, index) => (
               <tr key={owner._id}>
                 <td>{index + 1}</td>
                 <td>{owner.name}</td>
@@ -58,7 +73,7 @@ function OwnerTable({ owners, refetch }) {
             ))
           ) : (
             <tr>
-              <td colSpan="2">No Users found</td>
+              <td colSpan="2" className="text-center">No Users found</td>
             </tr>
           )}
         </tbody>

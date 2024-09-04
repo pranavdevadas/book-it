@@ -11,8 +11,7 @@ import { Form, Button } from "react-bootstrap";
 import SideBarAdmin from "../../components/adminComponents/SideBar.jsx";
 
 const categoriesOptions = ["Action", "Comedy", "Drama", "Horror", "Romance"];
-const languagesOptions = ["English", "Spanish", "French", "German", "Chinese"];
-
+const languagesOptions = ["English", "Malayalam", "Hindi", "Telugu", "Tamil"];
 function MovieEditScreen() {
   const { id: movieId } = useParams();
   const navigate = useNavigate();

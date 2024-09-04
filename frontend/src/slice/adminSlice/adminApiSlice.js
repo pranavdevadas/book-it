@@ -86,6 +86,12 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
       }),
     }),
+    getTheatres: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/admin-theatres`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -102,5 +108,6 @@ export const {
   useGetUsersQuery,
   useBlockUnblockUserMutation,
   useGetOwnersQuery,
-  useBlockUnblockOwnerMutation
+  useBlockUnblockOwnerMutation,
+  useGetTheatresQuery
 } = adminApiSlice;

@@ -35,6 +35,7 @@ let adminController = {
     try {
       if (!name) {
         res.status(400).json({ message: "Enter City Name" });
+        
       } else {
         let { city } = await adminService.addCity(name);
         res.status(200).json({

@@ -3,6 +3,7 @@ let router = express.Router()
 import adminController from '../controller/adminController.js'
 import { adminProtect } from '../middleware/adminAuthMiddleware.js'
 import movieController from '../controller/movieController.js'
+import theatreController from '../controller/theatreController.js'
 
 
 //Admin Autherisation
@@ -26,7 +27,12 @@ router.route('/admin-city')
 //User Operations                            
 router.get('/admin-user', adminProtect, adminController.getUsers)
 router.patch('/:id/blockUnblockUser', adminProtect, adminController.blockUnblockUser);
+
+//Owner Operations
 router.get('/admin-owner', adminProtect, adminController.getOwners)
 router.patch('/:id/blockUnblockOwner', adminProtect, adminController.blockUnblockOwner);
+
+//Theatre Operations
+router.get('/admin-theatres', adminProtect, theatreController.getTheatresForAdmin)
 
 export default router

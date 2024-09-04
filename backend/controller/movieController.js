@@ -7,10 +7,10 @@ let movieController = {
     upload.single("poster"),
     expressAsyncHandler(async (req, res) => {
       const { name, duration, categories, language, cast } = req.body;
-
+      const normalizeName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
       try {
         const movieData = {
-          name,
+          name : normalizeName,
           duration,
           categories: Array.isArray(categories) ? categories.map(cat => cat.trim()) : categories.split(",").map(cat => cat.trim()),
           language: Array.isArray(language) ? language.map(lang => lang.trim()) : language.split(",").map(lang => lang.trim()),

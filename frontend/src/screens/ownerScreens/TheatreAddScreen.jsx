@@ -159,7 +159,8 @@ function TheatreAddScreen() {
       toast.success("Theatre added successfully");
       navigate("/owner/theatres");
     } catch (error) {
-      console.error("Error submitting theatre:", error);
+      toast.error("Thatre already exist");
+      console.error(error);
     }
   };
 
@@ -167,7 +168,7 @@ function TheatreAddScreen() {
     <div className="d-flex">
       <SideBarOwner />
       <div className="content">
-        <FormContainer >
+        <FormContainer>
           <h1>Add Theatre</h1>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="name">

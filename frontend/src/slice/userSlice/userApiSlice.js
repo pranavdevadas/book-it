@@ -45,6 +45,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getShowDetails: builder.query({
+      query: () => ({
+        url: `${USER_URL}/get-show`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -54,5 +60,6 @@ export const {
   useRegisterMutation,
   useUpdateUserMutation,
   useVerifyOtpMutation,
-  useResendOtpMutation
+  useResendOtpMutation,
+  useGetShowDetailsQuery,
 } = userApiSlice;

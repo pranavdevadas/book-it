@@ -5,17 +5,17 @@ let theatreController = {
   addTheatre: expressAsyncHandler(async (req, res) => {
     try {
       const theatreData = req.body;
-      const savedTheatre = await theatreService.addTheatre(theatreData);
-      res.status(201).json(savedTheatre);
-    } catch (error) {
+      const savedTheatre = await theatreService.addTheatre(theatreData, req.owner.id);
+      res.status(200).json(savedTheatre);
+    } catch (error) {      
       res.status(400).json({ message: error.message });
     }
   }),
 
   getTheatres: expressAsyncHandler(async (req, res) => {
     try {
-      const theatres = await theatreService.getTheatres();
-      res.json(theatres);
+      const theatres = await theatreService.getTheatres(req.owner.id);
+      res.status(200).json(theatres);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -35,6 +35,15 @@ let theatreController = {
       const updateData = req.body;
       const updatedTheatre = await theatreService.editTheatre(req.params.id, updateData);
       res.status(200).json(updatedTheatre);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
+  getTheatresForAdmin: expressAsyncHandler(async (req, res) => {
+    try {
+      const theatres = await theatreService.getTheatresForAdmin()
+      res.status(200).json(theatres)
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

@@ -4,8 +4,8 @@ import Movie from "../model/movie.js";
 import Owner from "../model/owner.js";
 
 const showService = {
-  getAllShows: async () => {
-    return await showRepository.findAll();
+  getAllShows: async (ownerId) => {
+    return await showRepository.findAll(ownerId);
   },
 
   getAllMovies: async () => {
@@ -15,25 +15,22 @@ const showService = {
   addShow: async (showData, owner) => {
     const { movie, language, theatre, screen, showtime } = showData;
 
-    
-    
     if (!movie || !theatre || !screen || !showtime.length) {
       throw new Error("Please provide all required fields");
     }
 
     const theatres = await Theatre.findById(theatre);
     const movies = await Movie.findById(movie);
-    const ownerId = await Owner.findById(owner)
-    
+    const ownerId = await Owner.findById(owner);
+
     const existingShow = await showRepository.findOne({
-      movie: movies._id,
       theatre: theatres._id,
       screen,
       showtime: { $in: showtime },
     });
 
     if (existingShow) {
-      throw new Error("A show with the same details already exists.");
+      throw new Error("Alerady added this show");
     }
 
     const newShow = {
@@ -46,8 +43,6 @@ const showService = {
     };
 
     return await showRepository.create(newShow);
-
-    
   },
 
   toggleShowStatus: async (id) => {
@@ -57,6 +52,14 @@ const showService = {
     }
     show.isListed = !show.isListed;
     return await showRepository.update(show);
+  },
+
+  getShowForUser: async () => {
+    const show = await showRepository.findShowsForUser();
+    if (!show) {
+      throw new Error("No Shows currently playing");
+    }
+    return show;
   },
 };
 

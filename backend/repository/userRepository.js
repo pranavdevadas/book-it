@@ -18,7 +18,7 @@ let userRepository = {
   },
 
   findUsers: async () => {
-    return await User.find();
+    return await User.find().sort({ createdAt: -1 });
   },
   
 };

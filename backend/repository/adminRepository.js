@@ -1,6 +1,6 @@
 import Admin from "../model/admin.js";
 import City from "../model/city.js";
-import Movie from '../model/movie.js'
+import Movie from "../model/movie.js";
 
 let adminRepository = {
   findAdminByEmail: async (email) => {
@@ -16,7 +16,7 @@ let adminRepository = {
   },
 
   findCities: async () => {
-    return await City.find();
+    return await City.find().sort({ date: -1 });
   },
 
   findByMovieName: async (name) => {
@@ -29,11 +29,11 @@ let adminRepository = {
   },
 
   findMovies: async () => {
-    return await Movie.find()
+    return await Movie.find().sort({ date: -1 });
   },
 
   findMovieById: async (id) => {
-    return await Movie.findById(id)
+    return await Movie.findById(id);
   },
 
   updateMovie: async (id, updatedData) => {
@@ -44,11 +44,12 @@ let adminRepository = {
       updatedData.language = JSON.parse(updatedData.language);
     }
     if (updatedData.cast) {
-      updatedData.cast = updatedData.cast.split(',').map(actor => actor.trim());
+      updatedData.cast = updatedData.cast
+        .split(",")
+        .map((actor) => actor.trim());
     }
     return await Movie.findByIdAndUpdate(id, updatedData, { new: true });
   },
-  
 };
 
 export default adminRepository;

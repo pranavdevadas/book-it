@@ -5,6 +5,7 @@ import Loader from "../../components/userComponents/Loader.jsx";
 import FormContainer from "../../components/userComponents/FormContainer.jsx";
 import { Form, Button } from "react-bootstrap";
 import SideBarAdmin from "../../components/adminComponents/SideBar.jsx";
+import { useNavigate } from "react-router-dom";
 
 function MovieAddScreen() {
   const [name, setName] = useState("");
@@ -16,6 +17,8 @@ function MovieAddScreen() {
   const [preview, setPreview] = useState(null);
 
   const [addMovie, { isLoading }] = useAddMovieMutation();
+
+  const navigate = useNavigate()
 
   const handlePosterChange = (e) => {
     const file = e.target.files[0];
@@ -86,13 +89,7 @@ function MovieAddScreen() {
     try {
       await addMovie(formData).unwrap();
       toast.success("Movie added successfully");
-      setName("");
-      setDuration("00:00");
-      setCategories([]);
-      setLanguage([]);
-      setCast("");
-      setPoster(null);
-      setPreview(null);
+      navigate('/admin/movies')
     } catch (err) {
       toast.error(err?.data?.message || "Failed to add movie");
     }

@@ -1,20 +1,22 @@
 import React from "react";
 
-function Search() {
+function Search({ searchTerm, setSearchTerm }) {
   return (
-    <div class="input-group rounded mt-5 mb-5 shadow">
+    <div className="input-group rounded mt-5 mb-5 shadow mx-auto" style={{width: '75%'}}> 
       <input
         type="search"
-        class="form-control rounded border-0 bg-transparent border-dark text-dark"
-        placeholder="Search movies or theatres"
+        className="form-control rounded border-0 bg-transparent border-dark text-dark"
+        placeholder="   Search items..."
         aria-label="Search"
         aria-describedby="search-addon"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
       <span
-        class="input-group-text border-0 bg-dark text-dark"
+        className="input-group-text border-0 bg-dark text-dark"
         id="search-addon"
       >
-        <i class="fas fa-search text-light"></i>
+        <i className="fas fa-search text-light"></i>
       </span>
     </div>
   );

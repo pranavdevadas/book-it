@@ -1,33 +1,43 @@
-import theatreRepository from '../repository/theatreRepository.js';
+import theatreRepository from "../repository/theatreRepository.js";
+import Owner from "../model/owner.js";
 
 let theatreService = {
-  addTheatre: async (theatreData) => {
-    try {
-      const { name, city, location, ticketPrice, screens } = theatreData;
-      const theatre = {
-        name,
-        city,
-        location,
-        ticketPrice,
-        screens: screens.map(screen => ({
-          ...screen,
-          seats: screen.seats.map(seat => ({
-            seatNumber: seat.seatNumber,
-            isSelected: seat.isSelected,
-            isBooked: seat.isBooked,
-          })),
-        })),
-      };
+  addTheatre: async (theatreData, owner) => {
+    const { name, city, location, ticketPrice, screens } = theatreData;
+    const normalizeName =
+      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    const ownerId = await Owner.findById(owner);
 
-      return await theatreRepository.createTheatre(theatre);
-    } catch (error) {
-      throw new Error(error.message);
+    const existingTheatre = await theatreRepository.findTheatreByName(
+      normalizeName,
+      city
+    );
+
+    if (existingTheatre) {
+      throw new Error("Theatre already exist");
     }
+
+    const theatre = {
+      owner: ownerId._id,
+      name: normalizeName,
+      city,
+      location,
+      ticketPrice,
+      screens: screens.map((screen) => ({
+        ...screen,
+        seats: screen.seats.map((seat) => ({
+          seatNumber: seat.seatNumber,
+          isSelected: seat.isSelected,
+          isBooked: seat.isBooked,
+        })),
+      })),
+    };
+    return await theatreRepository.createTheatre(theatre);
   },
 
-  getTheatres: async () => {
+  getTheatres: async (ownerId) => {
     try {
-      return await theatreRepository.findAllTheatres();
+      return await theatreRepository.findAllTheatres(ownerId);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -71,7 +81,16 @@ let theatreService = {
     } catch (error) {
       throw new Error(error.message);
     }
-  }
+  },
+
+  getTheatresForAdmin: async () => {
+    const theatres = await theatreRepository.findTheatres()
+    if (!theatres) {
+      throw new Error('Theatres not found')
+    }
+    return theatres
+  },
+
 };
 
 export default theatreService;

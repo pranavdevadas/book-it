@@ -1,6 +1,6 @@
 import adminRepository from "../repository/adminRepository.js";
-import userRepository from '../repository/userRepository.js'
-import OwnerRepository from '../repository/ownerRepository.js'
+import userRepository from "../repository/userRepository.js";
+import OwnerRepository from "../repository/ownerRepository.js";
 
 let adminService = {
   authenticateAdmin: async (email, password) => {
@@ -20,13 +20,16 @@ let adminService = {
   },
 
   addCity: async (name) => {
-    let existingCity = await adminRepository.findCity(name);
+    const normalizedCityName =
+      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+      
+    const existingCity = await adminRepository.findCity(normalizedCityName);
 
     if (existingCity) {
       throw new Error("City already exist");
     }
 
-    let city = await adminRepository.createCity({ name });
+    const city = await adminRepository.createCity({name: normalizedCityName });
 
     return { city };
   },
@@ -43,22 +46,14 @@ let adminService = {
 
   addMovie: async (movieData) => {
     const { name } = movieData;
-
-    // const existingMovie = await adminRepository.findByMovieName(name);
-    // if (existingMovie) {
-    //   throw new Error("Movie already exists");
-    // }
-
-    // const createdMovie = await adminRepository.createMovie(movieData);
-    // return createdMovie;
+    
     const existingMovie = await adminRepository.findByMovieName(name);
-  if (existingMovie) {
-    throw new Error("Movie already exists");
-  }
+    if (existingMovie) {
+      throw new Error("Movie already exists");
+    }
 
-  // Create and return the new movie
-  const createdMovie = await adminRepository.createMovie(movieData);
-  return createdMovie;
+    const createdMovie = await adminRepository.createMovie(movieData);
+    return createdMovie;
   },
 
   getMovie: async () => {
@@ -85,18 +80,18 @@ let adminService = {
   editMovie: async (id, updatedData) => {
     const movie = await adminRepository.findMovieById(id);
 
-  if (!movie) {
-    throw new Error("Movie not found");
-  }
+    if (!movie) {
+      throw new Error("Movie not found");
+    }
 
-  const updatedMovie = await adminRepository.updateMovie(id, updatedData);
+    const updatedMovie = await adminRepository.updateMovie(id, updatedData);
 
-  return { updatedMovie };
+    return { updatedMovie };
   },
 
   getMovieById: async (id) => {
     const movie = await adminRepository.findMovieById(id);
-    
+
     if (!movie) {
       throw new Error("Movie not found");
     }
@@ -104,47 +99,46 @@ let adminService = {
   },
 
   getUsers: async () => {
-    let users = await userRepository.findUsers()
-    
+    let users = await userRepository.findUsers();
+
     if (!users) {
-      throw new Error('No User Found')
+      throw new Error("No User Found");
     }
 
-    return { users }
+    return { users };
   },
 
   blockUnblockUser: async (id) => {
-    let user = await userRepository.findUserById(id)
+    let user = await userRepository.findUserById(id);
     if (!user) {
-      throw new Error('User Not Found')
+      throw new Error("User Not Found");
     } else {
       user.isBlocked = !user.isBlocked;
       const updatedUser = await user.save();
-      return updatedUser ;
+      return updatedUser;
     }
   },
 
   getOwners: async () => {
-    let owners = await OwnerRepository.findOwners()
-    
+    let owners = await OwnerRepository.findOwners();
+
     if (!owners) {
-      throw new Error('No Owner Found')
+      throw new Error("No Owner Found");
     }
 
-    return { owners }
+    return { owners };
   },
 
   blockUnblockOwner: async (id) => {
-    let owner = await OwnerRepository.findOwnerById(id)
+    let owner = await OwnerRepository.findOwnerById(id);
     if (!owner) {
-      throw new Error('User Not Found')
+      throw new Error("User Not Found");
     } else {
       owner.isBlocked = !owner.isBlocked;
       const updatedOwner = await owner.save();
       return { updatedOwner };
     }
   },
-
 };
 
 export default adminService;

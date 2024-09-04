@@ -44,7 +44,7 @@ function SideBarOwner() {
           {/* <CDBSidebarHeader prefix={<i className="fa fa-bars" />}> */}
           <CDBSidebarHeader>Book It</CDBSidebarHeader>
           <CDBSidebarContent className="d-flex flex-column">
-          <Nav className="flex-fill">
+            <Nav className="flex-fill">
               <CDBSidebarMenu>
                 <CDBSidebarMenuItem>
                   <LinkContainer to="/owner/home">
@@ -70,37 +70,39 @@ function SideBarOwner() {
                   </LinkContainer>
                 </CDBSidebarMenuItem>
 
-                <LinkContainer to="/owner/users">
+                {/* <LinkContainer to="/owner/users">
                   <CDBSidebarMenuItem>
                     <Nav.Link>
                       <FaRegUserCircle /> &nbsp;Users
                     </Nav.Link>
                   </CDBSidebarMenuItem>
-                </LinkContainer>
+                </LinkContainer> */}
 
-                <LinkContainer to="/owner/owners">
+                {/* <LinkContainer to="/owner/owners">
                   <CDBSidebarMenuItem>
                     <Nav.Link>
                       <MdLocalMovies /> &nbsp;Owners
                     </Nav.Link>
                   </CDBSidebarMenuItem>
-                </LinkContainer>
+                </LinkContainer> */}
 
-                <LinkContainer to="/owner/city">
+                {/* <LinkContainer to="/owner/city">
                   <CDBSidebarMenuItem>
                     <Nav.Link>
                       <FaCity /> &nbsp;City Managment
                     </Nav.Link>
                   </CDBSidebarMenuItem>
-                </LinkContainer>
-
-                <CDBSidebarMenuItem>
-                  <Nav.Link onClick={logoutHandler}>
-                    <LuLogOut /> &nbsp;Logout
-                  </Nav.Link>
-                </CDBSidebarMenuItem>
+                </LinkContainer> */}
               </CDBSidebarMenu>
             </Nav>
+
+            <div className="mt-auto">
+              <CDBSidebarMenuItem>
+                <Nav.Link onClick={logoutHandler}>
+                  <LuLogOut /> &nbsp;Logout
+                </Nav.Link>
+              </CDBSidebarMenuItem>
+            </div>
           </CDBSidebarContent>
         </CDBSidebar>
       </div>

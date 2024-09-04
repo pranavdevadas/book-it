@@ -4,7 +4,7 @@ let showSchema = mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Owner",
-    required: true
+    required: true,
   },
   movie: {
     type: mongoose.Schema.Types.ObjectId,
@@ -13,7 +13,7 @@ let showSchema = mongoose.Schema({
   },
   language: {
     type: String,
-    required: true
+    required: true,
   },
   theatre: {
     type: mongoose.Schema.Types.ObjectId,
@@ -32,6 +32,10 @@ let showSchema = mongoose.Schema({
     type: Boolean,
     required: true,
     default: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 

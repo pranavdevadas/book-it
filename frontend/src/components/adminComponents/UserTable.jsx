@@ -2,15 +2,18 @@ import Table from "react-bootstrap/Table";
 import { Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useBlockUnblockUserMutation } from "../../slice/adminSlice/adminApiSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SideBarAdmin from "./SideBar";
+import Search from "../userComponents/Search";
 
 function UserTable({ users, refetch }) {
-  const tableStyle = {
-    width: "1000px",
-    marginLeft: "310px",
-    marginTop: "-484px",
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredItems = users.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const [blockUnblockUser] = useBlockUnblockUserMutation();
   useEffect(() => {}, [refetch]);
@@ -36,7 +39,14 @@ function UserTable({ users, refetch }) {
       <div className="content">
         <Container>
           <h1 className="text-center mb-3">User Managment</h1>
-          <Table striped bordered hover variant="dark"className="rounded overflow-hidden" >
+          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <Table
+            striped
+            bordered
+            hover
+            variant="dark"
+            className="rounded overflow-hidden"
+          >
             <thead>
               <tr>
                 <th>#</th>
@@ -47,8 +57,8 @@ function UserTable({ users, refetch }) {
               </tr>
             </thead>
             <tbody>
-              {users.length > 0 ? (
-                users.map((user, index) => (
+              {filteredItems.length > 0 ? (
+                filteredItems.map((user, index) => (
                   <tr key={user._id}>
                     <td>{index + 1}</td>
                     <td>{user.name}</td>

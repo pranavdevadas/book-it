@@ -125,9 +125,9 @@ function TheatreEditScreen() {
 
   return (
     <div className="d-flex">
-      <SideBarOwner />  
+      <SideBarOwner />
       <div className="content">
-        <FormContainer >
+        <FormContainer>
           <h1>Edit Theatre</h1>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="name">
@@ -228,10 +228,25 @@ function TheatreEditScreen() {
                   </Form.Group>
                 ))}
                 <br />
-                <Button
+                {/* <Button
                   variant="dark"
                   onClick={() => {
                     const updatedScreens = [...screens];
+                    updatedScreens[screenIndex].showTimes.push("");
+                    setScreens(updatedScreens);
+                  }}
+                  className="mb-3"
+                >
+                  Add Show Time
+                </Button> */}
+
+                <Button
+                  variant="dark"
+                  onClick={() => {
+                    const updatedScreens = screens.map((screen) => ({
+                      ...screen,
+                      showTimes: [...screen.showTimes],
+                    }));
                     updatedScreens[screenIndex].showTimes.push("");
                     setScreens(updatedScreens);
                   }}

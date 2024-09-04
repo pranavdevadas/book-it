@@ -1,43 +1,43 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
-const userSchema = mongoose.Schema({
-  name:{
-    type:String,
-    required:true
-  },
-  email:{
-    type:String,
-    required:true,
-    unique:true
-  },
-  otp:{
+const userSchema = mongoose.Schema(
+  {
+    name: {
       type: String,
-      default: null
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    otp: {
+      type: String,
+      default: null,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
   },
-  isVerified:{
-    type:Boolean,
-    default: false
-  },
-  phone:{
-    type:String,
-    required:true,
-    unique:true
-  },
-  password:{
-    type:String,
-    required:true
-  },
-  isBlocked:{
-    type:Boolean,
-    default: false
-  },  
-},
-{
-  timestamps:true
-})
+  {
+    timestamps: true,
+  }
+);
 
-
-
-const User = mongoose.model('User',userSchema)
-export default User
+const User = mongoose.model("User", userSchema);
+export default User;

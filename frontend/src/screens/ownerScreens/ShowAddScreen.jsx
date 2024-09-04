@@ -133,7 +133,7 @@ function ShowAddScreen() {
                 {theatres &&
                   theatres.map((t) => (
                     <option key={t._id} value={t._id}>
-                      {t.name}
+                      {t.name} ({t.city})
                     </option>
                   ))}
               </Form.Control>
@@ -170,7 +170,7 @@ function ShowAddScreen() {
                 <Form.Group controlId={`showTime-${index}`} key={index}>
                   <Row>
                     <Col>
-                      <Form.Label>Show Time {index + 1}</Form.Label>
+                      <Form.Label>Show Time {index + 1} (In 24hr)</Form.Label>
                       <Form.Control
                         as="select"
                         value={time}

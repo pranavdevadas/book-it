@@ -91,6 +91,7 @@ function SideBarAdmin() {
               </CDBSidebarMenuItem>
             </CDBSidebarMenu>
           </Nav>
+          
           <div className="mt-auto">
             <CDBSidebarMenuItem>
               <Nav.Link onClick={logoutHandler}>

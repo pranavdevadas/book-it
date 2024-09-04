@@ -1,9 +1,18 @@
 import React, { useEffect } from "react";
 import Card from "../../components/userComponents/Card.jsx";
 import { Container } from "react-bootstrap";
+import Loader from '../../components/userComponents/Loader.jsx'
 import Carousels from "../../components/userComponents/Carousels.jsx";
+import { useGetShowDetailsQuery } from "../../slice/userSlice/userApiSlice.js";
 
 function HomeScreen() {
+  const {
+    data: shows = [],
+    isLoading,
+    error,
+    refetch,
+  } = useGetShowDetailsQuery();
+
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
 
@@ -21,7 +30,13 @@ function HomeScreen() {
     <>
       <Container>
         <Carousels />
-        <Card />
+        {isLoading ? (
+          <Loader />
+        ) : error ? (
+          toast.error(error.message)
+        ) : (
+          <Card shows={shows} refetch={refetch} />
+        )}
       </Container>
     </>
   );

@@ -24,23 +24,31 @@ function TheatreTable({ theatres, refetch }) {
           </tr>
         </thead>
         <tbody>
-          {theatres.map((theatre, index) => (
-            <tr key={theatre._id}>
-              <td>{index + 1}</td>
-              <td>{theatre.name}</td>
-              <td>{theatre.city}</td>
-              <td>{theatre.screens.length}</td>
-              <td>
-                <Button
-                  variant="dark"
-                  style={{ marginRight: "10px" }}
-                  onClick={() => handleEdit(theatre._id)}
-                >
-                  Edit
-                </Button>
+          {theatres.length > 0 ? (
+            theatres.map((theatre, index) => (
+              <tr key={theatre._id}>
+                <td>{index + 1}</td>
+                <td>{theatre.name}</td>
+                <td>{theatre.city}</td>
+                <td>{theatre.screens.length}</td>
+                <td>
+                  <Button
+                    variant="dark"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => handleEdit(theatre._id)}
+                  >
+                    Edit
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center">
+                No theatres added
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
     </Container>

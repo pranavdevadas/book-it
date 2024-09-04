@@ -33,23 +33,31 @@ function NowShowingTable({ nowShowing, refetch }) {
           </tr>
         </thead>
         <tbody>
-          {nowShowing.map((show, index) => (
-            <tr key={show._id}>
-              <td>{index + 1}</td>
-              <td>{show.movie.name}</td>
-              <td>{show.theatre.name}</td>
-              <td>{show.screen}</td>
-              <td>{show.showtime.join(", ")}</td>
-              <td>
-                <Button
-                  variant={show.isListed ? "danger" : "success"}
-                  onClick={() => handleToggleStatus(show._id)}
-                >
-                  {show.isListed ? "Unlist" : "List"}
-                </Button>
+          {nowShowing.length > 0 ? (
+            nowShowing.map((show, index) => (
+              <tr key={show._id}>
+                <td>{index + 1}</td>
+                <td>{show.movie.name}</td>
+                <td>{show.theatre.name} ({show.theatre.city})</td>
+                <td>{show.screen}</td>
+                <td>{show.showtime.join(", ")}</td>
+                <td>
+                  <Button
+                    variant={show.isListed ? "danger" : "success"}
+                    onClick={() => handleToggleStatus(show._id)}
+                  >
+                    {show.isListed ? "Unlist" : "List"}
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" className="text-center">
+                Currently, no shows are playing
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
     </Container>
