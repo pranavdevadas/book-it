@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormContainer from "../../components/userComponents/FormContainer";
 import SeatSelection from "../../components/ownerComonents/SeatSelection";
@@ -9,17 +9,33 @@ import {
 } from "../../slice/ownerSlice/ownerApiSlice";
 import { useNavigate } from "react-router-dom";
 import SideBarOwner from "../../components/ownerComonents/SideBar";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import Loader from "../../components/userComponents/Loader.jsx";
+
+const mapContainerStyle = {
+  width: "100%",
+  height: "400px",
+};
+
+const center = {
+  lat: 10.8505,
+  lng: 76.2711,
+};
 
 function TheatreAddScreen() {
   const [screens, setScreens] = useState([]);
   const [theatreName, setTheatreName] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(null);
   const [city, setCity] = useState("");
   const [ticketPrice, setTicketPrice] = useState("");
 
   const [addTheatre] = useOwnerAddTheatreMutation();
   const { data: cities, error, isLoading } = useGetCitiesQuery();
   const navigate = useNavigate();
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "AIzaSyBz2qAAMtrAL8MgaGFGniY21_xkbeTMwwU",
+  });
 
   const handleAddScreen = () => {
     setScreens([...screens, { name: "", showTimes: [], seats: {} }]);
@@ -50,7 +66,6 @@ function TheatreAddScreen() {
     const updatedScreens = [...screens];
     const currentSeats = updatedScreens[screenIndex].seats;
 
-    // Toggle seat selection
     if (currentSeats[seatKey]) {
       delete currentSeats[seatKey];
     } else {
@@ -67,16 +82,13 @@ function TheatreAddScreen() {
 
   const validateForm = () => {
     const namePattern = /^[A-Za-z\s]{3,}$/;
-    const locationPattern =
-      /^https:\/\/maps\.app\.goo\.gl\/|^maps\.app\.goo\.gl\//;
-    const pricePattern = /^[0-9]{2,3}$/;
 
     if (!namePattern.test(theatreName)) {
       toast.error("Invalid theatre name.");
       return false;
     }
-    if (!locationPattern.test(location)) {
-      toast.error("Invalid location link.");
+    if (!location) {
+      toast.error("Please select location.");
       return false;
     }
     if (!city) {
@@ -164,6 +176,17 @@ function TheatreAddScreen() {
     }
   };
 
+  const onMapClick = useCallback((event) => {
+    setLocation({
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    });
+  }, []);  
+
+  console.log('location',location);
+  
+  
+
   return (
     <div className="d-flex">
       <SideBarOwner />
@@ -182,7 +205,7 @@ function TheatreAddScreen() {
               />
             </Form.Group>
 
-            <Form.Group controlId="location">
+            {/* <Form.Group controlId="location">
               <Form.Label>Location</Form.Label>
               <Form.Control
                 type="text"
@@ -191,6 +214,28 @@ function TheatreAddScreen() {
                 onChange={(e) => setLocation(e.target.value)}
                 required
               />
+            </Form.Group> */}
+
+            <Form.Group controlId="location">
+              <Form.Label>Location</Form.Label>
+              <div style={{ marginBottom: "10px" }}>
+                {isLoaded ? (
+                  <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={10}
+                    center={center}
+                    onClick={onMapClick}
+                  >
+                    {location && (
+                      <Marker
+                        position={{ lat: location.lat, lng: location.lng }}
+                      />
+                    )}
+                  </GoogleMap>
+                ) : (
+                  <Loader />
+                )}
+              </div>
             </Form.Group>
 
             <Form.Group controlId="city">

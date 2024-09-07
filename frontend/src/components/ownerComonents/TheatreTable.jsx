@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,8 @@ function TheatreTable({ theatres, refetch }) {
             <th>#</th>
             <th>Theatre</th>
             <th>City</th>
-            <th>Screens</th>
+            <th>No. of Screens</th>
+            <th>Available seats</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -31,6 +32,15 @@ function TheatreTable({ theatres, refetch }) {
                 <td>{theatre.name}</td>
                 <td>{theatre.city}</td>
                 <td>{theatre.screens.length}</td>
+                <td>
+                  {theatre.screens.map((screen, screenIndex) => (
+                    <div key={screenIndex}>
+                      Screen {screen.name}:{"  "}{"  "}
+                      {screen.seats.filter((seat) => seat.isSelected).length}
+                      seats
+                    </div>
+                  ))}
+                </td>
                 <td>
                   <Button
                     variant="dark"

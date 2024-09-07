@@ -4,6 +4,7 @@ import { Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useBlockUnblockOwnerMutation } from "../../slice/adminSlice/adminApiSlice";
 import Search from "../../components/userComponents/Search.jsx";
+import Swal from "sweetalert2";
 
 function OwnerTable({ owners, refetch }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,18 +19,33 @@ function OwnerTable({ owners, refetch }) {
   useEffect(() => {}, [refetch]);
 
   const handleBlockUnblock = async (id, isBlocked) => {
-    try {
-      await blockUnblockOwner(id).unwrap();
-      if (isBlocked) {
-        toast.success("Owner Unblocked");
-      } else {
-        toast.success("Owner Blocked");
+    const action = isBlocked ? "unblock" : "block";
+
+    Swal.fire({
+      title: `Are you sure you want to ${action} this owner?`,
+      text: `This owner will be ${isBlocked ? "unblocked" : "blocked"}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes, ${action} it!`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await blockUnblockOwner(id).unwrap();
+          Swal.fire({
+            title: isBlocked ? "Unblocked!" : "Blocked!",
+            text: `Owner has been ${isBlocked ? "unblocked" : "blocked"}.`,
+            icon: "success",
+          });
+          toast.success(isBlocked ? "Owner Unblocked" : "Owner Blocked");
+          refetch();
+        } catch (error) {
+          console.log(error);
+          toast.error("Failed to update owner status");
+        }
       }
-      refetch();
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to update owner status");
-    }
+    });
   };
 
   return (
@@ -73,7 +89,9 @@ function OwnerTable({ owners, refetch }) {
             ))
           ) : (
             <tr>
-              <td colSpan="2" className="text-center">No Users found</td>
+              <td colSpan="2" className="text-center">
+                No Users found
+              </td>
             </tr>
           )}
         </tbody>

@@ -21,7 +21,7 @@ let theatreService = {
       owner: ownerId._id,
       name: normalizeName,
       city,
-      location,
+      location: { lat: location.lat, lng: location.lng },
       ticketPrice,
       screens: screens.map((screen) => ({
         ...screen,
@@ -84,13 +84,12 @@ let theatreService = {
   },
 
   getTheatresForAdmin: async () => {
-    const theatres = await theatreRepository.findTheatres()
+    const theatres = await theatreRepository.findTheatres();
     if (!theatres) {
-      throw new Error('Theatres not found')
+      throw new Error("Theatres not found");
     }
-    return theatres
+    return theatres;
   },
-
 };
 
 export default theatreService;

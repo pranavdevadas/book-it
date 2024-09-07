@@ -4,9 +4,13 @@ import Search from "./Search";
 
 function HorizontalCards({ shows }) {
   const [searchTerm, setSearchTerm] = useState("");
-  
-  const filteredShows = shows.filter(show =>
-    show.name.toLowerCase().includes(searchTerm.toLowerCase())
+
+  const filteredShows = shows.filter(
+    (show) =>
+      show.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      show.language.join(", ").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      show.cast.join(", ").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      show.categories.join(", ").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

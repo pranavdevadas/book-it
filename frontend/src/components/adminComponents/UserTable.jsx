@@ -5,6 +5,7 @@ import { useBlockUnblockUserMutation } from "../../slice/adminSlice/adminApiSlic
 import { useEffect, useState } from "react";
 import SideBarAdmin from "./SideBar";
 import Search from "../userComponents/Search";
+import Swal from "sweetalert2";
 
 function UserTable({ users, refetch }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,18 +20,32 @@ function UserTable({ users, refetch }) {
   useEffect(() => {}, [refetch]);
 
   const handleBlockUnblock = async (id, isBlocked) => {
-    try {
-      await blockUnblockUser(id).unwrap();
-      if (isBlocked) {
-        toast.success("User Unblocked");
-      } else {
-        toast.success("User Blocked");
+    const action = isBlocked ? "unblock" : "block";
+
+    Swal.fire({
+      title: `Are you sure you want to ${action} this user?`,
+      text: `This user will be ${isBlocked ? "unblocked" : "blocked"}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes, ${action} it!`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await blockUnblockUser(id).unwrap();
+          Swal.fire({
+            title: isBlocked ? "Unblocked!" : "Blocked!",
+            text: `User has been ${isBlocked ? "unblocked" : "blocked"}.`,
+            icon: "success",
+          });
+          refetch();
+        } catch (error) {
+          console.log(error);
+          toast.error("Failed to update user status");
+        }
       }
-      refetch();
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to update user status");
-    }
+    });
   };
 
   return (
