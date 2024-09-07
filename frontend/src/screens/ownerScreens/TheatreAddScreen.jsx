@@ -38,13 +38,8 @@ function TheatreAddScreen() {
   })  
   
   const handleAddScreen = () => {
-    setScreens([...screens, { name: "", showTimes: [], seats: {} }]);
-  };
-
-  const handleScreenNameChange = (index, value) => {
-    const updatedScreens = [...screens];
-    updatedScreens[index].name = value;
-    setScreens(updatedScreens);
+    const nextScreenNumber = screens.length + 1;
+    setScreens([...screens, { name: nextScreenNumber, showTimes: [], seats: {} }]);
   };
 
   const handleAddShowTime = (screenIndex) => {
@@ -260,7 +255,8 @@ function TheatreAddScreen() {
 
             {screens.map((screen, screenIndex) => (
               <div key={screenIndex} className="mt-3">
-                <Form.Group controlId={`screenName-${screenIndex}`}>
+                <p>Screen No: {screen.name}</p>
+                {/* <Form.Group controlId={`screenName-${screenIndex}`}>
                   <Form.Label>Screen No.</Form.Label>
                   <Form.Control
                     type="number"
@@ -271,7 +267,7 @@ function TheatreAddScreen() {
                     }
                     required
                   />
-                </Form.Group>
+                </Form.Group> */}
 
                 {screen.showTimes.map((showTime, showTimeIndex) => (
                   <Form.Group
