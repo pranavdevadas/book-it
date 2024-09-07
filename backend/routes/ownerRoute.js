@@ -25,6 +25,7 @@ router.post('/owner-addtheatre', ownerProtect, theatreController.addTheatre)
 router.route('/theatre/:id')
                             .get(ownerProtect, theatreController.getTheatreById)
                             .put(ownerProtect, theatreController.editTheatre)
+router.patch('/theatre/:id/toggle-status', ownerProtect, theatreController.toggleTheatreStatus)
 
 //city managment
 router.get('/owner-city',ownerProtect, ownerController.getCities)

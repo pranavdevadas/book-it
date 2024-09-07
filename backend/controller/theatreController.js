@@ -49,6 +49,17 @@ let theatreController = {
       res.status(400).json({ message: error.message });
     }
   }),
+
+  toggleTheatreStatus: expressAsyncHandler(async (req, res) => {
+    try {
+      const {updatedTheatre} = await theatreService.toggleTheatreStatus(req.params.id)
+      res.status(200).json(updatedTheatre)
+    } catch (error) {
+      console.log(error);
+      
+      res.status(400).json({ message: error.message });
+    }
+  })
 };
 
 export default theatreController;

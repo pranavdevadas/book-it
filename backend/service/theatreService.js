@@ -90,6 +90,17 @@ let theatreService = {
     }
     return theatres;
   },
+
+  toggleTheatreStatus: async (id) => {
+    let theatre = await theatreRepository.findTheatreById(id)
+    if (!theatre) {
+      throw new Error("Theatre Not Found");
+    } else {
+      theatre.isListed = !theatre.isListed
+      let updatedTheatre = await theatre.save()
+      return {updatedTheatre}
+    }
+  },
 };
 
 export default theatreService;

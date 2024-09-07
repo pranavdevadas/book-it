@@ -102,6 +102,12 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
       }),
     }),
+    toggleTheatreStatus: builder.mutation({
+      query: (id) => ({
+        url: `${OWNER_URL}/theatre/${id}/toggle-status`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -120,5 +126,6 @@ export const {
   useGetNowShowingQuery,
   useGetAllMoviesQuery,
   useAddShowMutation,
-  useToggleStatusMutation
+  useToggleStatusMutation,
+  useToggleTheatreStatusMutation
 } = ownerApiSlice;

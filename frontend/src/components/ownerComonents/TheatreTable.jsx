@@ -3,9 +3,24 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import { useToggleTheatreStatusMutation } from "../../slice/ownerSlice/ownerApiSlice";
+import { toast } from "react-toastify";
 
 function TheatreTable({ theatres, refetch }) {
   const navigate = useNavigate();
+
+  const [toggleListStatus] = useToggleTheatreStatusMutation();
+
+  const handleToggleStatus = async (id) => {
+    try {
+      
+      await toggleListStatus(id).unwrap();
+      toast.success("Theatre status updated");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to update theatre status");
+    }
+  };
 
   const handleEdit = (id) => {
     navigate(`/owner/edit-theatre/${id}`);
@@ -35,7 +50,8 @@ function TheatreTable({ theatres, refetch }) {
                 <td>
                   {theatre.screens.map((screen, screenIndex) => (
                     <div key={screenIndex}>
-                      Screen {screen.name}:{"  "}{"  "}
+                      Screen {screen.name}:{"  "}
+                      {"  "}
                       {screen.seats.filter((seat) => seat.isSelected).length}
                       seats
                     </div>
@@ -48,6 +64,12 @@ function TheatreTable({ theatres, refetch }) {
                     onClick={() => handleEdit(theatre._id)}
                   >
                     Edit
+                  </Button>
+                  <Button
+                    variant={theatre.isListed ? "danger" : "success"}
+                    onClick={() => handleToggleStatus(theatre._id)}
+                  >
+                    {theatre.isListed ? "Unlist" : "List"}
                   </Button>
                 </td>
               </tr>

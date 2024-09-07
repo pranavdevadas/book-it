@@ -62,6 +62,10 @@ const theatreSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  isListed: {
+    type: Boolean,
+    default: true
+  }
 });
 
 const Theatre = mongoose.model("Theatre", theatreSchema);
