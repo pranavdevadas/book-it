@@ -12,6 +12,7 @@ import {
 import SideBarOwner from "../../components/ownerComonents/SideBar";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import Loader from "../../components/userComponents/Loader.jsx";
+import { IoIosRemoveCircle } from "react-icons/io";
 
 const mapContainerStyle = {
   width: "100%",
@@ -149,8 +150,25 @@ function TheatreEditScreen() {
     }
   };
 
-  if (isLoading) return <Loader/>
+  if (isLoading) return <Loader />;
   if (error) return <p>Error loading theatre</p>;
+
+  const handleRemoveShowTime = (screenIndex, showTimeIndex) => {
+    const updatedScreens = screens.map((screen, i) => {
+      if (i === screenIndex) {
+        return {
+          ...screen,
+          showTimes: screen.showTimes.filter((_, idx) => idx !== showTimeIndex),
+        };
+      }
+      return screen;
+    });
+    setScreens(updatedScreens);
+  };
+
+  const handleRemoveScreen = (screenIndex) => {
+    setScreens(screens.filter((_, index) => index !== screenIndex));
+  };
 
   return (
     <div className="d-flex">
@@ -235,48 +253,53 @@ function TheatreEditScreen() {
                   <Form.Control
                     type="text"
                     style={{ width: "15%" }}
-                    value={screen.name}
-                    onChange={(e) => {
-                      const updatedScreens = [...screens];
-                      updatedScreens[screenIndex].name = e.target.value;
-                      setScreens(updatedScreens);
-                    }}
-                    required
+                    value={`${screenIndex + 1}`}
+                    readOnly
                   />
                 </Form.Group>
+                <div
+                  onClick={() => handleRemoveScreen(screenIndex)}
+                  style={{ color: "red", cursor: "pointer", marginLeft: '290px'}}
+                >
+                  <IoIosRemoveCircle />
+                   Remove Screen
+                </div>
 
                 {screen.showTimes.map((showTime, showTimeIndex) => (
                   <Form.Group
                     controlId={`showTime-${screenIndex}-${showTimeIndex}`}
                     key={showTimeIndex}
                   >
-                    <Form.Label>Show Time</Form.Label>
+                    <Form.Label>Show Time {showTimeIndex + 1} </Form.Label>
                     <Form.Control
                       type="time"
                       style={{ width: "22%" }}
                       value={showTime}
                       onChange={(e) => {
-                        const updatedScreens = [...screens];
-                        updatedScreens[screenIndex].showTimes[showTimeIndex] =
-                          e.target.value;
+                        const updatedScreens = screens.map((screen, i) => {
+                          if (i === screenIndex) {
+                            return {
+                              ...screen,
+                              showTimes: screen.showTimes.map((time, idx) =>
+                                idx === showTimeIndex ? e.target.value : time
+                              ),
+                            };
+                          }
+                          return screen;
+                        });
                         setScreens(updatedScreens);
                       }}
                       required
                     />
+                    <IoIosRemoveCircle
+                      style={{ color: "red", cursor: "pointer" }}
+                      onClick={() =>
+                        handleRemoveShowTime(screenIndex, showTimeIndex)
+                      }
+                    />
                   </Form.Group>
                 ))}
                 <br />
-                {/* <Button
-                  variant="dark"
-                  onClick={() => {
-                    const updatedScreens = [...screens];
-                    updatedScreens[screenIndex].showTimes.push("");
-                    setScreens(updatedScreens);
-                  }}
-                  className="mb-3"
-                >
-                  Add Show Time
-                </Button> */}
 
                 <Button
                   variant="dark"
@@ -289,6 +312,7 @@ function TheatreEditScreen() {
                     setScreens(updatedScreens);
                   }}
                   className="mb-3"
+                  disabled={screen.showTimes.length >= 4}
                 >
                   Add Show Time
                 </Button>

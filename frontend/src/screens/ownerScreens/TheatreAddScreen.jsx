@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Form, Button } from "react-bootstrap";
+import { IoIosRemoveCircle } from "react-icons/io";
 import FormContainer from "../../components/userComponents/FormContainer";
 import SeatSelection from "../../components/ownerComonents/SeatSelection";
 import { toast } from "react-toastify";
@@ -35,11 +36,14 @@ function TheatreAddScreen() {
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-  })  
-  
+  });
+
   const handleAddScreen = () => {
     const nextScreenNumber = screens.length + 1;
-    setScreens([...screens, { name: nextScreenNumber, showTimes: [], seats: {} }]);
+    setScreens([
+      ...screens,
+      { name: nextScreenNumber, showTimes: [], seats: {} },
+    ]);
   };
 
   const handleAddShowTime = (screenIndex) => {
@@ -177,8 +181,24 @@ function TheatreAddScreen() {
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
     });
-  }, []);  
-  
+  }, []);
+
+  const handleRemoveShowTime = (screenIndex, showTimeIndex) => {
+    const updatedScreens = screens.map((screen, i) => {
+      if (i === screenIndex) {
+        return {
+          ...screen,
+          showTimes: screen.showTimes.filter((_, idx) => idx !== showTimeIndex),
+        };
+      }
+      return screen;
+    });
+    setScreens(updatedScreens);
+  };
+
+  const handleRemoveScreen = (screenIndex) => {
+    setScreens(screens.filter((_, index) => index !== screenIndex));
+  };
 
   return (
     <div className="d-flex">
@@ -256,19 +276,13 @@ function TheatreAddScreen() {
             {screens.map((screen, screenIndex) => (
               <div key={screenIndex} className="mt-3">
                 <p>Screen No: {screen.name}</p>
-                {/* <Form.Group controlId={`screenName-${screenIndex}`}>
-                  <Form.Label>Screen No.</Form.Label>
-                  <Form.Control
-                    type="number"
-                    style={{ width: "12%" }}
-                    value={screen.name}
-                    onChange={(e) =>
-                      handleScreenNameChange(screenIndex, e.target.value)
-                    }
-                    required
-                  />
-                </Form.Group> */}
-
+                <div
+                  onClick={() => handleRemoveScreen(screenIndex)}
+                  style={{ color: "red", cursor: "pointer", marginLeft: '290px'}}
+                >
+                  <IoIosRemoveCircle />
+                   Remove Screen
+                </div>
                 {screen.showTimes.map((showTime, showTimeIndex) => (
                   <Form.Group
                     controlId={`showTime-${screenIndex}-${showTimeIndex}`}
@@ -287,6 +301,12 @@ function TheatreAddScreen() {
                         )
                       }
                       required
+                    />
+                    <IoIosRemoveCircle
+                      style={{ color: "red", cursor: "pointer" }}
+                      onClick={() =>
+                        handleRemoveShowTime(screenIndex, showTimeIndex)
+                      }
                     />
                   </Form.Group>
                 ))}
