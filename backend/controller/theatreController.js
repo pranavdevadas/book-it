@@ -21,6 +21,15 @@ let theatreController = {
     }
   }),
 
+  getListedTheatres: expressAsyncHandler(async (req,res) => {
+    try {
+      const theatres = await theatreService.getListedTheatres(req.owner.id);
+      res.status(200).json(theatres);
+    } catch (error) {
+      res.status(400).json({message : error.message})
+    }
+  }),
+
   getTheatreById: expressAsyncHandler(async (req, res) => {
     try {
       const theatre = await theatreService.getTheatreById(req.params.id);

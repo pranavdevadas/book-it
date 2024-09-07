@@ -4,7 +4,7 @@ import showService from "../service/showService.js";
 const showController = {
   getShows: expressAsyncHandler(async (req, res) => {
     try {
-      const shows = await showService.getAllShows(req.owner.id);      
+      const shows = await showService.getAllShows(req.owner.id);
       res.status(200).json(shows);
     } catch (error) {
       res.status(400);

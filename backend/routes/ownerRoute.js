@@ -21,6 +21,7 @@ router.route('/owner-profile')
 
 //Theatre managmant           
 router.get('/owner-theatres', ownerProtect, theatreController.getTheatres) 
+router.get('/owner-listedtheatres', ownerProtect, theatreController.getListedTheatres) 
 router.post('/owner-addtheatre', ownerProtect, theatreController.addTheatre)
 router.route('/theatre/:id')
                             .get(ownerProtect, theatreController.getTheatreById)

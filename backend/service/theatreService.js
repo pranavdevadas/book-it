@@ -43,6 +43,14 @@ let theatreService = {
     }
   },
 
+  getListedTheatres: async (ownerId) => {
+    try {
+      return await theatreRepository.findListedTheatres(ownerId);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+
   getTheatreById: async (id) => {
     try {
       const theatre = await theatreRepository.findTheatreById(id);

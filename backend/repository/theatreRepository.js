@@ -7,7 +7,13 @@ let theatreRepository = {
   },
 
   findAllTheatres: async (ownerId) => {
-    return await Theatre.find({owner : ownerId}).sort({date : -1});
+    return await Theatre.find({ owner: ownerId }).sort({ date: -1 });
+  },
+
+  findListedTheatres: async (ownerId) => {
+    return await Theatre.find({ owner: ownerId, isListed: true }).sort({
+      date: -1,
+    });
   },
 
   findTheatreById: async (id) => {
@@ -23,8 +29,7 @@ let theatreRepository = {
   },
 
   findTheatres: async () => {
-    return await Theatre.find()
-                    .populate("owner", "name").sort({date : -1})
+    return await Theatre.find().populate("owner", "name").sort({ date: -1 });
   },
 };
 

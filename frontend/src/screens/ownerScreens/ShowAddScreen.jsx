@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import FormContainer from "../../components/ownerComonents/FormContainer";
 import {
-  useGetTheatresQuery,
+  useGetListedTheatresQuery,
   useGetAllMoviesQuery,
   useAddShowMutation,
 } from "../../slice/ownerSlice/ownerApiSlice";
@@ -21,9 +21,9 @@ function ShowAddScreen() {
   let navigate = useNavigate();
 
   const { data: movies } = useGetAllMoviesQuery();
-  const { data: theatres } = useGetTheatresQuery();
+  const { data: theatres } = useGetListedTheatresQuery();
   const [addShow, { isLoading, isError, error }] = useAddShowMutation();
-
+  
   useEffect(() => {
     if (screen) {
       const selectedScreen = theatres
