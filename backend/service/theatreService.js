@@ -60,7 +60,7 @@ let theatreService = {
       const updatedTheatreData = {
         name: name || undefined,
         city: city || undefined,
-        location: location || undefined,
+        location: { lat: location.lat, lng: location.lng } || undefined,
         ticketPrice: ticketPrice || undefined,
         screens: screens.map((screen) => {
           const updatedSeats = screen.seats.map((seat) => ({

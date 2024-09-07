@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormContainer from "../../components/userComponents/FormContainer";
 import EditSeatSelection from "../../components/ownerComonents/EditSeatSEction";
@@ -10,17 +10,29 @@ import {
   useGetCitiesQuery,
 } from "../../slice/ownerSlice/ownerApiSlice";
 import SideBarOwner from "../../components/ownerComonents/SideBar";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import Loader from "../../components/userComponents/Loader.jsx";
+
+const mapContainerStyle = {
+  width: "100%",
+  height: "400px",
+};
 
 function TheatreEditScreen() {
   const { id } = useParams();
   const [theatre, setTheatre] = useState(null);
   const [screens, setScreens] = useState([]);
+  const [location, setLocation] = useState(null);
 
   let navigate = useNavigate();
 
   const { data, error, isLoading, refetch } = useGetTheatreByIdQuery(id);
   const [editTheatre] = useOwnerEditTheatreMutation();
   const { data: cities = [] } = useGetCitiesQuery();
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  });
 
   useEffect(() => {
     if (data) {
@@ -49,15 +61,13 @@ function TheatreEditScreen() {
 
   const validateForm = () => {
     const namePattern = /^[A-Za-z\s]{3,}$/;
-    const locationPattern =
-      /^https:\/\/maps\.app\.goo\.gl\/|^maps\.app\.goo\.gl\//;
     const pricePattern = /^[0-9]{2,3}$/;
 
     if (!namePattern.test(theatre?.name || "")) {
       toast.error("Invalid theatre name.");
       return false;
     }
-    if (!locationPattern.test(theatre?.location || "")) {
+    if (!location) {
       toast.error("Invalid location link.");
       return false;
     }
@@ -106,13 +116,32 @@ function TheatreEditScreen() {
     return true;
   };
 
+  useEffect(() => {
+    if (theatre?.location) {
+      setLocation({
+        lat: theatre.location.lat,
+        lng: theatre.location.lng,
+      });
+    }
+  }, [theatre]);
+
+  const onMapClick = useCallback((event) => {
+    setLocation({
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    });
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
     try {
-      await editTheatre({ id, formData: { ...theatre, screens } }).unwrap();
+      await editTheatre({
+        id,
+        formData: { ...theatre, location, screens },
+      }).unwrap();
       toast.success("Theatre updated successfully");
       navigate("/owner/theatres");
     } catch (error) {
@@ -120,7 +149,7 @@ function TheatreEditScreen() {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader/>
   if (error) return <p>Error loading theatre</p>;
 
   return (
@@ -145,15 +174,24 @@ function TheatreEditScreen() {
 
             <Form.Group controlId="location">
               <Form.Label>Location</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter location"
-                value={theatre?.location || ""}
-                onChange={(e) =>
-                  setTheatre({ ...theatre, location: e.target.value })
-                }
-                required
-              />
+              <div style={{ marginBottom: "10px" }}>
+                {isLoaded ? (
+                  <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={10}
+                    center={location || { lat: 10.8505, lng: 76.2711 }}
+                    onClick={onMapClick}
+                  >
+                    {location && (
+                      <Marker
+                        position={{ lat: location.lat, lng: location.lng }}
+                      />
+                    )}
+                  </GoogleMap>
+                ) : (
+                  <Loader />
+                )}
+              </div>
             </Form.Group>
 
             <Form.Group controlId="city">

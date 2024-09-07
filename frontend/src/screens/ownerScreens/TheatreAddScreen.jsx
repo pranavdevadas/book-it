@@ -34,9 +34,9 @@ function TheatreAddScreen() {
   const navigate = useNavigate();
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyBz2qAAMtrAL8MgaGFGniY21_xkbeTMwwU",
-  });
-
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  })  
+  
   const handleAddScreen = () => {
     setScreens([...screens, { name: "", showTimes: [], seats: {} }]);
   };
@@ -82,6 +82,7 @@ function TheatreAddScreen() {
 
   const validateForm = () => {
     const namePattern = /^[A-Za-z\s]{3,}$/;
+    const pricePattern = /^[1-9][0-9]*$/;
 
     if (!namePattern.test(theatreName)) {
       toast.error("Invalid theatre name.");
@@ -182,9 +183,6 @@ function TheatreAddScreen() {
       lng: event.latLng.lng(),
     });
   }, []);  
-
-  console.log('location',location);
-  
   
 
   return (
@@ -204,17 +202,6 @@ function TheatreAddScreen() {
                 required
               />
             </Form.Group>
-
-            {/* <Form.Group controlId="location">
-              <Form.Label>Location</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                required
-              />
-            </Form.Group> */}
 
             <Form.Group controlId="location">
               <Form.Label>Location</Form.Label>

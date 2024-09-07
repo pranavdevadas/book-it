@@ -33,6 +33,7 @@ let theatreController = {
   editTheatre: expressAsyncHandler(async (req, res) => {
     try {
       const updateData = req.body;
+      
       const updatedTheatre = await theatreService.editTheatre(req.params.id, updateData);
       res.status(200).json(updatedTheatre);
     } catch (error) {
