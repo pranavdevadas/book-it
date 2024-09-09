@@ -1,17 +1,17 @@
 import React from "react";
 import HorizontalCards from "../../components/userComponents/HorizontalCards.jsx";
 import { Container } from "react-bootstrap";
-import Search from "../../components/userComponents/Search.jsx";
 import Loader from "../../components/userComponents/Loader.jsx";
-import { useGetShowDetailsQuery } from "../../slice/userSlice/userApiSlice.js";
+import { useGetAllmoviesQuery } from "../../slice/userSlice/userApiSlice.js";
+import { toast } from "react-toastify";
 
 function MovieScreen() {
   const {
-    data: shows = [],
+    data: movies = [],
     isLoading,
     error,
     refetch,
-  } = useGetShowDetailsQuery();
+  } = useGetAllmoviesQuery();
 
   return (
     <>
@@ -23,7 +23,7 @@ function MovieScreen() {
           toast.error(error.message)
         ) : (
           <>
-          <HorizontalCards shows={shows} refetch={refetch} />
+            <HorizontalCards movies={movies} refetch={refetch} />
           </>
         )}
       </Container>

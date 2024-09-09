@@ -18,7 +18,6 @@ function Header() {
   let { userInfo } = useSelector((state) => state.auth);
   const { data: cities = [], isLoading, error, refetch } = useGetCitiesQuery();
 
-  // State to hold the selected city
   const [selectedCity, setSelectedCity] = useState("Select city");
 
   useEffect(() => {
@@ -37,10 +36,6 @@ function Header() {
       navigate("/login");
       toast.success("Logout Success");
     } catch (error) {}
-  };
-
-  const handleCitySelect = (cityName) => {
-    setSelectedCity(cityName);
   };
 
   return (
@@ -63,24 +58,6 @@ function Header() {
             <Nav className="ms-auto">
               {userInfo ? (
                 <>
-                  <NavDropdown
-                    title={selectedCity}
-                    className="mx-2"
-                    id="citySelect"
-                  >
-                    {cities.length > 0 ? (
-                      cities.map((city) => (
-                        <NavDropdown.Item 
-                          key={city._id}
-                          onClick={() => handleCitySelect(city.name)}
-                        >
-                          {city.name}
-                        </NavDropdown.Item>
-                      ))
-                    ) : (
-                      <NavDropdown.Item>No Cities Found</NavDropdown.Item>
-                    )}
-                  </NavDropdown>
                   <NavDropdown title={userInfo.name} id="userName">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>

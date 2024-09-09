@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Container, Spinner, Alert, Button } from "react-bootstrap";
+import {
+  Container,
+  Alert,
+  Button,
+  NavDropdown,
+} from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import Loader from '../../components/userComponents/Loader'
 import {
   useMoveDetailsByIdQuery,
   useGetAvailableShowsQuery,
 } from "../../slice/userSlice/userApiSlice";
 import { format } from "date-fns";
+import { useGetCitiesQuery } from '../../slice/adminSlice/adminApiSlice'
 import "./style.css";
 
 function MovieDetails() {
   const { id } = useParams();
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [locationError, setLocationError] = useState("");
+
+  const { data: cities = [], isLoading, error, refetch } = useGetCitiesQuery();
+
+  const [selectedCity, setSelectedCity] = useState("Select city");
 
   const {
     data: movie,
@@ -51,7 +62,7 @@ function MovieDetails() {
   }, []);
 
   if (movieLoading || showsLoading) {
-    return <Spinner animation="border" variant="primary" />;
+    return <Loader />
   }
 
   if (movieError || showsError) {
@@ -66,6 +77,10 @@ function MovieDetails() {
     date.setDate(today.getDate() + i);
     return date;
   });
+
+  const handleCitySelect = (cityName) => {
+    setSelectedCity(cityName);
+  };
 
   return (
     <>
@@ -101,6 +116,22 @@ function MovieDetails() {
           </div>
         </div>
         <h2 className="text-center mt-5 mb-4 fw-bold">Select Theatres</h2>
+        <div className="ms-auto">
+        <NavDropdown title={selectedCity} className="mx-2" id="citySelect">
+          {cities.length > 0 ? (
+            cities.map((city) => (
+              <NavDropdown.Item
+                key={city._id}
+                onClick={() => handleCitySelect(city.name)}
+              >
+                {city.name}
+              </NavDropdown.Item>
+            ))
+          ) : (
+            <NavDropdown.Item>No Cities Found</NavDropdown.Item>
+          )}
+        </NavDropdown>
+        </div>
         {locationError && <Alert variant="danger">{locationError}</Alert>}
         {shows && shows.length > 0 ? (
           shows.map((show, index) => (
@@ -124,22 +155,6 @@ function MovieDetails() {
           <Alert variant="info">No nearby theatres available.</Alert>
         )}
       </Container>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
       <br />
       <br />
       <br />

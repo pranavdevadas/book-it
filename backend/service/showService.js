@@ -2,6 +2,7 @@ import showRepository from "../repository/showRepository.js";
 import Theatre from "../model/theatre.js";
 import Movie from "../model/movie.js";
 import Owner from "../model/owner.js";
+import { getDistance } from "geolib";
 
 const showService = {
   getAllShows: async (ownerId) => {
@@ -77,6 +78,24 @@ const showService = {
     }
     return show;
   },
+
+  getAvailableShows : async (movieId, userLat, userLng) => {
+    const shows = await showRepository.getShowsByMovieId(movieId);
+    if (!shows || shows.length === 0) {
+      throw new Error("No shows found for this movie");
+    }
+  
+    const filteredShows = shows.filter((show) => {
+      const { lat: theatreLat, lng: theatreLng } = show.theatre.location;
+      const distance = getDistance(
+        { latitude: userLat, longitude: userLng },
+        { latitude: theatreLat, longitude: theatreLng }
+      );
+      return distance <= 20000;
+    });
+    return filteredShows;
+  },
+
 };
 
 export default showService;
