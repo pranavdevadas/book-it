@@ -13,6 +13,7 @@ import SideBarOwner from "../../components/ownerComonents/SideBar";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import Loader from "../../components/userComponents/Loader.jsx";
 import { IoIosRemoveCircle } from "react-icons/io";
+import Swal from "sweetalert2";
 
 const mapContainerStyle = {
   width: "100%",
@@ -167,6 +168,10 @@ function TheatreEditScreen() {
   };
 
   const handleRemoveScreen = (screenIndex) => {
+    if (screens.length <= 1) {
+      toast.error("At least one screen must be present.");
+      return;
+    }
     setScreens(screens.filter((_, index) => index !== screenIndex));
   };
 
@@ -258,11 +263,41 @@ function TheatreEditScreen() {
                   />
                 </Form.Group>
                 <div
-                  onClick={() => handleRemoveScreen(screenIndex)}
-                  style={{ color: "red", cursor: "pointer", marginLeft: '290px'}}
+                  onClick={() => {
+                    // Check if only one screen is left
+                    if (screens.length <= 1) {
+                      toast.error("At least one screen must be present.");
+                      return;
+                    }
+
+                    // Show the SweetAlert confirmation
+                    Swal.fire({
+                      title: "Are you sure?",
+                      text: "You won't be able to revert this!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes, remove it!",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        handleRemoveScreen(screenIndex); // Remove the screen if confirmed
+                        Swal.fire({
+                          title: "Removed!",
+                          text: "The screen has been removed.",
+                          icon: "success",
+                        });
+                      }
+                    });
+                  }}
+                  style={{
+                    color: "red",
+                    cursor: "pointer",
+                    marginLeft: "290px",
+                  }}
                 >
                   <IoIosRemoveCircle />
-                   Remove Screen
+                  Remove Screen
                 </div>
 
                 {screen.showTimes.map((showTime, showTimeIndex) => (
@@ -276,18 +311,45 @@ function TheatreEditScreen() {
                       style={{ width: "22%" }}
                       value={showTime}
                       onChange={(e) => {
-                        const updatedScreens = screens.map((screen, i) => {
-                          if (i === screenIndex) {
-                            return {
-                              ...screen,
-                              showTimes: screen.showTimes.map((time, idx) =>
-                                idx === showTimeIndex ? e.target.value : time
-                              ),
-                            };
+                        const newShowTime = e.target.value;
+                        const selectedTime = new Date(
+                          `1970-01-01T${newShowTime}:00`
+                        );
+
+                        const isValidTime = screen.showTimes.every(
+                          (time, idx) => {
+                            if (idx !== showTimeIndex && time) {
+                              const existingTime = new Date(
+                                `1970-01-01T${time}:00`
+                              );
+                              const timeDifference =
+                                Math.abs(selectedTime - existingTime) /
+                                (1000 * 60 * 60);
+
+                              return timeDifference >= 4;
+                            }
+                            return true;
                           }
-                          return screen;
-                        });
-                        setScreens(updatedScreens);
+                        );
+
+                        if (isValidTime) {
+                          const updatedScreens = screens.map((screen, i) => {
+                            if (i === screenIndex) {
+                              return {
+                                ...screen,
+                                showTimes: screen.showTimes.map((time, idx) =>
+                                  idx === showTimeIndex ? newShowTime : time
+                                ),
+                              };
+                            }
+                            return screen;
+                          });
+                          setScreens(updatedScreens);
+                        } else {
+                          toast.error(
+                            "Showtimes must be at least 4 hours apart."
+                          );
+                        }
                       }}
                       required
                     />

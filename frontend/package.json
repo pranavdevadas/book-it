@@ -19,6 +19,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "cdbreact": "^1.5.19",
+    "date-fns": "^3.6.0",
     "firebase": "^10.13.0",
     "flowbite-react": "^0.10.1",
     "primereact": "^10.8.2",

@@ -1,26 +1,27 @@
 import expressAsyncHandler from "express-async-handler";
 import userService from "../service/userService.js";
 import userGenerateToken from "../utils/userGenerateToken.js";
-
+import showService from "../service/showService.js";
 
 const userController = {
   authUser: expressAsyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     try {
-      const { user, isVerified, otp, isBlocked } = await userService.authenticateUser(
-        email,
-        password
-      );      
+      const { user, isVerified, otp, isBlocked } =
+        await userService.authenticateUser(email, password);
 
-      if (isBlocked) {        
-        res.status(403).json({ message: "User is blocked. For more details, contact admin." });
+      if (isBlocked) {
+        res
+          .status(403)
+          .json({
+            message: "User is blocked. For more details, contact admin.",
+          });
         return;
       }
 
       if (!isVerified) {
         res.status(200).json({ message: "User Not Verified", otp, email });
-        
       } else {
         userGenerateToken(res, user._id);
         res.status(200).json({
@@ -139,8 +140,17 @@ const userController = {
 
   fetchData: expressAsyncHandler(async (req, res) => {
     try {
-      let user = await userService.getUserById(req.user._id)
+      let user = await userService.getUserById(req.user._id);
       res.json(user);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
+  getAllmovies: expressAsyncHandler(async (req, res) => {
+    try {
+      let movies = await showService.getAllMovies();
+      res.status(200).json(movies);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

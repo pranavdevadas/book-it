@@ -29,6 +29,7 @@ import MovieEditScreen from "./screens/adminScreens/MovieEditScreen.jsx";
 import UserScreen from './screens/adminScreens/UserScreen.jsx'
 import OwnerScreen from './screens/adminScreens/OwnerScreen.jsx'
 import TheatreScreen from "./screens/adminScreens/TheatreScreen.jsx";
+import MovieDetails from './screens/userScreens/MovieDetails.jsx'
 
 import OwnerLoginScreen from './screens/ownerScreens/LoginScreen.jsx'
 import OwnerPrivateRoute from './components/ownerComonents/PrivateRoute.jsx'
@@ -42,6 +43,7 @@ import TheatreEditScreen from './screens/ownerScreens/TheatreEditScreen.jsx'
 import NowShowingScreen from "./screens/ownerScreens/NowShowingScreen.jsx";
 import ShowAddScreen from "./screens/ownerScreens/ShowAddScreen.jsx";
 
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -54,6 +56,7 @@ const router = createBrowserRouter(
       <Route path="/movie" element={<MovieScreen />} />
       <Route path="" element={<PrivateRoute />} >
         <Route path="/profile" element={<ProfileScreen />} />
+        <Route path="/movie/:id" element={<MovieDetails />} />
       </Route>
       
       {/* Admin Routes */}

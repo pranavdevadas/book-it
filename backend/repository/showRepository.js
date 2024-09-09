@@ -5,7 +5,7 @@ const showRepository = {
   findAll: async (owner) => {
     return await Show.find({ owner: owner })
       .populate("movie", "name duration categories language")
-      .populate("theatre", "name city location");
+      .populate("theatre", "name city location").sort({date : -1})
   },
 
   findAllMovies: async () => {
@@ -33,35 +33,18 @@ const showRepository = {
     // return await Show.find({isListed : true})
     //   .populate("movie", "name duration cast categories language")
     //   .populate("theatre", "owner name city location").sort({date : -1})
-    const uniqueMovies = await Show.aggregate([
-      {
-        $match: { isListed: true }, 
-      },
-      {
-        $group: {
-          _id: "$movie", 
-        },
-      },
-      {
-        $lookup: {
-          from: "movies", 
-          localField: "_id",
-          foreignField: "_id",
-          as: "movieDetails",
-        },
-      },
-      {
-        $unwind: "$movieDetails", 
-      },
-      {
-        $project: {
-          _id: 0, 
-          movieDetails: 1,
-        },
-      },
-    ]);
+    const shows = await Show.find({ isListed: true })
+    .populate('movie', 'name duration categories language poster') 
+    .populate('theatre', 'name city screens');
 
-    return uniqueMovies.map((item) => item.movieDetails);
+  return shows.map(show => ({
+    showId: show._id,
+    movie: show.movie,  
+    theatre: show.theatre,
+    screen: show.screen,
+    showtime: show.showtime,
+    language: show.language,
+  }));
   },
 };
 

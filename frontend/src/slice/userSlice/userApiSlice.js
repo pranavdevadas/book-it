@@ -51,6 +51,28 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getAllmovies: builder.query({
+      query: () => ({
+        url: `${USER_URL}/get-movies`,
+        method: "GET",
+      }),
+    }),
+    getAvailableShows: builder.query({
+      query: ({ id, lat, lng }) => ({
+        url: `${USER_URL}/get-available-shows/${id}`,
+        method: "GET",
+        params: {
+          lat,
+          lng,
+        },
+      }),
+    }),
+    moveDetailsById: builder.query({
+      query: (id) => ({
+        url: `${USER_URL}/movie/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -62,4 +84,7 @@ export const {
   useVerifyOtpMutation,
   useResendOtpMutation,
   useGetShowDetailsQuery,
+  useGetAllmoviesQuery,
+  useMoveDetailsByIdQuery,
+  useGetAvailableShowsQuery,
 } = userApiSlice;

@@ -3,15 +3,16 @@ import Card from "../../components/userComponents/Card.jsx";
 import { Container } from "react-bootstrap";
 import Loader from '../../components/userComponents/Loader.jsx'
 import Carousels from "../../components/userComponents/Carousels.jsx";
-import { useGetShowDetailsQuery } from "../../slice/userSlice/userApiSlice.js";
+import { useGetAllmoviesQuery } from "../../slice/userSlice/userApiSlice.js";
+import { toast } from 'react-toastify'
 
 function HomeScreen() {
   const {
-    data: shows = [],
+    data: movies = [],
     isLoading,
     error,
     refetch,
-  } = useGetShowDetailsQuery();
+  } = useGetAllmoviesQuery();    
 
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
@@ -35,7 +36,7 @@ function HomeScreen() {
         ) : error ? (
           toast.error(error.message)
         ) : (
-          <Card shows={shows} refetch={refetch} />
+          <Card movies={movies} refetch={refetch} />
         )}
       </Container>
     </>

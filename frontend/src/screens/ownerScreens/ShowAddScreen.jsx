@@ -23,7 +23,7 @@ function ShowAddScreen() {
   const { data: movies } = useGetAllMoviesQuery();
   const { data: theatres } = useGetListedTheatresQuery();
   const [addShow, { isLoading, isError, error }] = useAddShowMutation();
-  
+
   useEffect(() => {
     if (screen) {
       const selectedScreen = theatres
@@ -58,8 +58,8 @@ function ShowAddScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
-    if (movie && language && theatre && screen && showTimes.length > 0) {
+    const filteredShowTimes = showTimes.filter((time) => time !== "");
+    if (movie && language && theatre && screen && filteredShowTimes.length > 0) {
       try {
         await addShow({
           movie,
@@ -72,7 +72,6 @@ function ShowAddScreen() {
         navigate("/owner/now-showing");
       } catch (err) {
         console.error("Failed to add show:", err);
-        toast.error("Failed to add show. Please try again.");
       }
     } else {
       toast.error("Please fill in all fields.");
@@ -121,7 +120,6 @@ function ShowAddScreen() {
               </Form.Control>
             </Form.Group>
 
-            {/* Theatre Selection */}
             <Form.Group controlId="theatre">
               <Form.Label>Theatre</Form.Label>
               <Form.Control
@@ -139,7 +137,6 @@ function ShowAddScreen() {
               </Form.Control>
             </Form.Group>
 
-            {/* Screen Selection */}
             <Form.Group controlId="screen">
               <Form.Label>Screen</Form.Label>
               <Form.Control
@@ -160,7 +157,6 @@ function ShowAddScreen() {
             </Form.Group>
 
             <br />
-            {/* Show Time Selection */}
             {showTimes.map((time, index) => {
               const currentAvailableShowTimes = availableShowTimes.filter(
                 (st) => !showTimes.includes(st) || st === time

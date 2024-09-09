@@ -11,11 +11,10 @@ function NowShowingTable({ nowShowing, refetch }) {
   const handleToggleStatus = async (id) => {
     try {
       await toggleListStatus(id).unwrap();
-
       toast.success("Show status updated");
       refetch();
     } catch (error) {
-      toast.error("Failed to update show status");
+      toast.error(error.data.message);
     }
   };
 
@@ -28,7 +27,7 @@ function NowShowingTable({ nowShowing, refetch }) {
             <th>Movie</th>
             <th>Theatre</th>
             <th>Screen</th>
-            <th>Time (In hr)</th>
+            <th>Time (In 24hr)</th>
             <th>Action</th>
           </tr>
         </thead>

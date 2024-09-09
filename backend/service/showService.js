@@ -9,13 +9,13 @@ const showService = {
   },
 
   getAllMovies: async () => {
-    return await showRepository.findAllMovies();
+    return await showRepository.findAllMovies({isListed: true});
   },
 
   addShow: async (showData, owner) => {
     const { movie, language, theatre, screen, showtime } = showData;
-
-    if (!movie || !theatre || !screen || !showtime.length) {
+    
+    if (!movie || !theatre || !screen || !showtime.length ) {
       throw new Error("Please provide all required fields");
     }
 
@@ -27,6 +27,7 @@ const showService = {
       theatre: theatres._id,
       screen,
       showtime: { $in: showtime },
+      isListed: true
     });
 
     if (existingShow) {
@@ -46,12 +47,27 @@ const showService = {
   },
 
   toggleShowStatus: async (id) => {
-    const show = await showRepository.findById(id);
-    if (!show) {
-      throw new Error("Show Not Found");
+  const show = await showRepository.findById(id);    
+  if (!show) {
+    throw new Error("Show Not Found");
+  }  
+
+  if (!show.isListed) {
+    const existingListedShow = await showRepository.findOne({
+      theatre: show.theatre,
+      screen: show.screen,
+      showtime: { $in: show.showtime },
+      isListed: true
+    });
+
+    if (existingListedShow) {
+      throw new Error("Another show is already listed at this time for the same screen.");
     }
-    show.isListed = !show.isListed;
-    return await showRepository.update(show);
+  }
+
+  show.isListed = !show.isListed;
+
+  return await showRepository.update(show);
   },
 
   getShowForUser: async () => {

@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import SideBarOwner from "../../components/ownerComonents/SideBar";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import Loader from "../../components/userComponents/Loader.jsx";
+import Swal from "sweetalert2";
 
 const mapContainerStyle = {
   width: "100%",
@@ -56,8 +57,28 @@ function TheatreAddScreen() {
 
   const handleShowTimeChange = (screenIndex, showTimeIndex, value) => {
     const updatedScreens = [...screens];
-    updatedScreens[screenIndex].showTimes[showTimeIndex] = value;
-    setScreens(updatedScreens);
+    const selectedTime = new Date(`1970-01-01T${value}:00`);
+
+    // Check if the time is at least 4 hours apart from other showtimes
+    const isTimeValid = updatedScreens[screenIndex].showTimes.every(
+      (showTime, idx) => {
+        if (idx !== showTimeIndex && showTime) {
+          const existingTime = new Date(`1970-01-01T${showTime}:00`);
+          const timeDifference =
+            Math.abs(selectedTime - existingTime) / (1000 * 60 * 60); // difference in hours
+
+          return timeDifference >= 4;
+        }
+        return true;
+      }
+    );
+
+    if (isTimeValid) {
+      updatedScreens[screenIndex].showTimes[showTimeIndex] = value;
+      setScreens(updatedScreens);
+    } else {
+      toast.error("Showtimes must be at least 4 hours apart.");
+    }
   };
 
   const handleSeatChange = (screenIndex, row, col) => {
@@ -197,6 +218,10 @@ function TheatreAddScreen() {
   };
 
   const handleRemoveScreen = (screenIndex) => {
+    if (screens.length <= 1) {
+      toast.error("At least one screen must be present.");
+      return;
+    }
     setScreens(screens.filter((_, index) => index !== screenIndex));
   };
 
@@ -251,7 +276,7 @@ function TheatreAddScreen() {
                 <option value="" disabled>
                   Select a city
                 </option>
-                {isLoading && <option>Loading cities...</option>}
+                {isLoading && <Loader />}
                 {error && <option>Error loading cities</option>}
                 {cities &&
                   cities.map((city) => (
@@ -277,12 +302,41 @@ function TheatreAddScreen() {
               <div key={screenIndex} className="mt-3">
                 <p>Screen No: {screen.name}</p>
                 <div
-                  onClick={() => handleRemoveScreen(screenIndex)}
-                  style={{ color: "red", cursor: "pointer", marginLeft: '290px'}}
+                  onClick={() => {
+                    if (screens.length <= 1) {
+                      toast.error("At least one screen must be present.");
+                      return;
+                    }
+
+                    Swal.fire({
+                      title: "Are you sure?",
+                      text: "You won't be able to revert this!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes, remove it!",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        handleRemoveScreen(screenIndex);
+                        Swal.fire({
+                          title: "Removed!",
+                          text: "The screen has been removed.",
+                          icon: "success",
+                        });
+                      }
+                    });
+                  }}
+                  style={{
+                    color: "red",
+                    cursor: "pointer",
+                    marginLeft: "290px",
+                  }}
                 >
                   <IoIosRemoveCircle />
-                   Remove Screen
+                  Remove Screen
                 </div>
+                
                 {screen.showTimes.map((showTime, showTimeIndex) => (
                   <Form.Group
                     controlId={`showTime-${screenIndex}-${showTimeIndex}`}
