@@ -74,10 +74,10 @@ function MovieDetails() {
     return date;
   });
 
-  // const filteredTheatres = shows.filter((show) => {
-  //   const searchLower = searchTerm.toLowerCase();
-  //   return show.theatre.name.toLowerCase().includes(searchLower)
-  // });
+  const filteredTheatres = shows ? shows.filter((show) => {
+    const searchLower = searchTerm.toLowerCase();
+    return show.theatre.name.toLowerCase().includes(searchLower);
+  }) : []
 
   const handleCitySelect = (cityName) => {
     setSelectedCity(cityName);
@@ -117,7 +117,7 @@ function MovieDetails() {
           </div>
         </div>
         <h2 className="text-center mt-5 mb-4 fw-bold">Select Theatres</h2>
-        {/* <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <div className="ms-auto">
           <NavDropdown title={selectedCity} className="mx-2" id="citySelect">
             {cities.length > 0 ? (
@@ -135,8 +135,8 @@ function MovieDetails() {
           </NavDropdown>
         </div>
         {locationError && <Alert variant="danger">{locationError}</Alert>}
-        {shows.length > 0 ? (
-          shows.map((show, index) => (
+        {filteredTheatres && filteredTheatres.length > 0 ? (
+          filteredTheatres.map((show, index) => (
             <div
               key={index}
               className="d-flex justify-content-between align-items-center mt-4"
