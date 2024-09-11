@@ -6,6 +6,7 @@ import OwnerHeader from "./components/ownerComonents/Header.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './App.css'
+import Footer from "./components/userComponents/Footer.jsx";
 
 function App() {
   let location = useLocation();
@@ -36,6 +37,7 @@ function App() {
       )}
       <ToastContainer />
       <Outlet className={containerClass} />
+      {!isAdminPage && !isOwnerPage && <Footer/>}
     </>
   );
 }

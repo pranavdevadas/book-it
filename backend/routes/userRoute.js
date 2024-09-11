@@ -27,5 +27,8 @@ router.get('/get-available-shows/:id', showController.getAvailableShow)
 router.get('/get-movies', userController.getAllmovies)
 router.get('/movie/:id', userProtect, movieController.getMovieById)
 
+//Saved Movies
+router.post('/add-saved-movie', userProtect, userController.addSavedMovie)
+
 
 export default router

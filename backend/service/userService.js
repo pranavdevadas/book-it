@@ -142,7 +142,6 @@ let userService = {
     let user = await userRepository.findUserByEmail(email);
 
     if (user) {
-
       userGenerateToken(res, user._id);
 
       return {
@@ -150,9 +149,7 @@ let userService = {
         name: user.name,
         email: user.email,
       };
-
     } else {
-
       let generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
@@ -163,7 +160,7 @@ let userService = {
         name: name,
         email,
         isVerified: true,
-        phone: '565775757',
+        phone: "565775757",
         password: hashedPassword,
       });
 
@@ -178,18 +175,27 @@ let userService = {
   },
 
   isBlocked: async (id) => {
-    let user = await userRepository.findUserById(id)
+    let user = await userRepository.findUserById(id);
 
     if (!user) {
-      throw new Error('User Not Found')
+      throw new Error("User Not Found");
     }
-    return user.isBlocked
+    return user.isBlocked;
   },
 
   getUserById: async (id) => {
-    let user = await userRepository.findUserById(id)
-    return user
-  }
+    let user = await userRepository.findUserById(id);
+    return user;
+  },
+
+  addSavedMovieService: async (userId, movieId) => {
+    const savedMovie = await userRepository.findSavedMovie(userId, movieId);
+    if (savedMovie) {
+      throw new Error("Movie already saved");
+    }
+    await userRepository.updateSavedMovie(userId, movieId);
+    return;
+  },
 };
 
 export default userService;

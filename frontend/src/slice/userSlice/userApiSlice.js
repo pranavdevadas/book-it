@@ -73,6 +73,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    addSavedMovies: builder.mutation({
+      query: (movieId) => ({
+        url: `${USER_URL}/add-saved-movie`,
+        method: "POST",
+        body: { movieId },
+      }),
+    }),
   }),
 });
 
@@ -87,4 +94,5 @@ export const {
   useGetAllmoviesQuery,
   useMoveDetailsByIdQuery,
   useGetAvailableShowsQuery,
+  useAddSavedMoviesMutation
 } = userApiSlice;

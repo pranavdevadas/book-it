@@ -1,47 +1,98 @@
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebookSquare, faTwitterSquare, faInstagramSquare } from '@fortawesome/free-brands-svg-icons';
+import React from 'react';
+import {
+  MDBFooter,
+  MDBContainer,
+  MDBCol,
+  MDBRow,
+  MDBIcon,
+  MDBBtn
+} from 'mdb-react-ui-kit';
 
-const Footer = () => {
-  const [year] = useState(new Date().getFullYear());
-
+export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div>
-          <p className="text-lg font-bold mb-1">Bookit</p>
-          <p className="text-sm">&copy; {year} Bookit. All rights reserved.</p>
-        </div>
-        <div className="flex items-center">
-          <p className="text-sm mr-4">Follow us:</p>
-          <a
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition duration-300 mr-4"
+    <MDBFooter className='text-center text-white' style={{ backgroundColor: "rgb(17, 24, 39)" }}>
+      <MDBContainer className='pt-4'>
+        <section className='mb-4'>
+          <MDBBtn
+            rippleColor="light"
+            color='link'
+            floating
+            size="lg"
+            className='text-light m-1'
+            href='#!'
+            role='button'
           >
-            <FontAwesomeIcon icon={faFacebookSquare} size="lg" />
-          </a>
-          <a
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition duration-300 mr-4"
-          >
-            <FontAwesomeIcon icon={faTwitterSquare} size="lg" />
-          </a>
-          <a
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition duration-300"
-          >
-            <FontAwesomeIcon icon={faInstagramSquare} size="lg" />
-          </a>
-        </div>
-      </div>
-    </footer>
-  );
-};
+            <MDBIcon fab className='fab fa-facebook-f' />
+          </MDBBtn>
 
-export default Footer;
+          <MDBBtn
+            rippleColor="dark"
+            color='link'
+            floating
+            size="lg"
+            className='text-light m-1'
+            href='#!'
+            role='button'
+          >
+            <MDBIcon fab className='fa-twitter' />
+          </MDBBtn>
+
+          <MDBBtn
+            rippleColor="light"
+            color='link'
+            floating
+            size="lg"
+            className='text-light m-1'
+            href='#!'
+            role='button'
+          >
+            <MDBIcon fab className='fa-google' />
+          </MDBBtn>
+
+          <MDBBtn
+            rippleColor="dark"
+            color='link'
+            floating
+            size="lg"
+            className='text-light m-1'
+            href='#!'
+            role='button'
+          >
+            <MDBIcon fab className='fa-instagram' />
+          </MDBBtn>
+
+          <MDBBtn
+            rippleColor="light"
+            color='link'
+            floating
+            size="lg"
+            className='text-light m-1'
+            href='#!'
+            role='button'
+          >
+            <MDBIcon fab className='fa-linkedin' />
+          </MDBBtn>
+
+          <MDBBtn
+            rippleColor="dark"
+            color='link'
+            floating
+            size="lg"
+            className='text-light m-1'
+            href='#!'
+            role='button'
+          >
+            <MDBIcon fab className='fa-github' />
+          </MDBBtn>
+        </section>
+      </MDBContainer>
+
+      <div className='text-center text-light p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+        © 2024 Copyright:
+        <a className='text-light' href='/'>
+           Bookit.com
+        </a>
+      </div>
+    </MDBFooter>
+  );
+}

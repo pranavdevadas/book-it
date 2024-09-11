@@ -2,13 +2,32 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
+import { FaRegBookmark } from "react-icons/fa6";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import { useAddSavedMoviesMutation } from "../../slice/userSlice/userApiSlice";
+import { toast } from "react-toastify";
 
 function UserCard({ movies }) {
   const navigate = useNavigate();
+  const [addSavedMovie] = useAddSavedMoviesMutation();
+
+  const handleSaveMovie = async (movieId) => {
+    try {
+      console.log("Movie ID:", movieId);  // Debugging line
+      const response = await addSavedMovie(movieId).unwrap();
+      console.log("Response:", response);  // Log the actual response from the API
+      toast.success("Movie saved successfully!");
+    } catch (error) {
+      console.error("Error saving movie:", error);  // Log the error message
+      toast.error(error?.data?.message || "Error: This movie is already saved.");
+    }
+  };
 
   const movieDetails = (id) => {
     navigate(`/movie/${id}`);
   };
+
   return (
     <>
       <h1 className="mt-4 text-center fw-bold">Trending Movies</h1>
@@ -34,12 +53,26 @@ function UserCard({ movies }) {
                     <br />
                     Cast: {movie.cast.join(", ")}
                   </Card.Text>
-                  <Button
-                    variant="dark"
-                    onClick={() => movieDetails(movie._id)}
-                  >
-                    Book Now
-                  </Button>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <Button
+                      variant="dark"
+                      onClick={() => movieDetails(movie._id)}
+                    >
+                      Book Now
+                    </Button>
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={<Tooltip>Save the movie</Tooltip>}
+                    >
+                      <span>
+                        <FaRegBookmark
+                          className="ms-3"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleSaveMovie(movie._id)}
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </div>
                 </Card.Body>
               </Card>
             </div>

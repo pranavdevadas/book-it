@@ -1,9 +1,4 @@
-import {
-  Navbar,
-  Nav,
-  Container,
-  NavDropdown,
-} from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
@@ -11,8 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { useLogoutMutation } from "../../slice/userSlice/userApiSlice";
 import { clearCredentials } from "../../slice/userSlice/userAuthSlice";
-import { useGetCitiesQuery } from '../../slice/adminSlice/adminApiSlice'
+import { useGetCitiesQuery } from "../../slice/adminSlice/adminApiSlice";
 import { toast } from "react-toastify";
+import { FaRegBookmark } from "react-icons/fa6";
 
 function Header() {
   let { userInfo } = useSelector((state) => state.auth);
@@ -22,7 +18,7 @@ function Header() {
 
   useEffect(() => {
     refetch();
-  }, [refetch]);  
+  }, [refetch]);
 
   let dispatch = useDispatch();
   let navigate = useNavigate();
@@ -40,7 +36,12 @@ function Header() {
 
   return (
     <header>
-      <Navbar style={{backgroundColor:'rgb(17, 24, 39)'}} variant="dark" expand="lg" collapseOnSelect >        
+      <Navbar
+        style={{ backgroundColor: "rgb(17, 24, 39)" }}
+        variant="dark"
+        expand="lg"
+        collapseOnSelect
+      >
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>Book it</Navbar.Brand>
@@ -58,6 +59,11 @@ function Header() {
             <Nav className="ms-auto">
               {userInfo ? (
                 <>
+                  <LinkContainer to="/saved-movies">
+                    <Nav.Link>
+                      <FaRegBookmark variant="light" /> Saved Movies
+                    </Nav.Link>
+                  </LinkContainer>
                   <NavDropdown title={userInfo.name} id="userName">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>

@@ -12,11 +12,9 @@ const userController = {
         await userService.authenticateUser(email, password);
 
       if (isBlocked) {
-        res
-          .status(403)
-          .json({
-            message: "User is blocked. For more details, contact admin.",
-          });
+        res.status(403).json({
+          message: "User is blocked. For more details, contact admin.",
+        });
         return;
       }
 
@@ -73,7 +71,6 @@ const userController = {
         phone,
         password,
       });
-      // userGenerateToken(res, user._id);
 
       res.status(201).json({
         _id: user._id,
@@ -156,6 +153,21 @@ const userController = {
     }
   }),
 
+  addSavedMovie: expressAsyncHandler(async (req, res) => {
+    try {
+      const { movieId } = req.body;
+      const userId = req.user._id;
+
+      if (!movieId) {
+        return res.status(400).json({ message: "Movie ID is required" });
+      }
+      const result = await userService.addSavedMovieService(userId, movieId);
+
+      res.status(200).json({ message: 'Movie added Successfully' });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
 };
 
 export default userController;
