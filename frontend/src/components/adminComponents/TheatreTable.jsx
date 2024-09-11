@@ -1,16 +1,29 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
 import Search from "../userComponents/Search";
-import { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { useState } from "react";
+import { Container, Pagination } from "react-bootstrap";
 
 function TheatreTable({ theatres }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const filteredItems = theatres.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  const paginatedTheatres = filteredItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <Container>
       <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -31,10 +44,10 @@ function TheatreTable({ theatres }) {
           </tr>
         </thead>
         <tbody>
-          {filteredItems.length > 0 ? (
-            filteredItems.map((theatre, index) => (
+          {paginatedTheatres.length > 0 ? (
+            paginatedTheatres.map((theatre, index) => (
               <tr key={theatre._id}>
-                <td>{index + 1}</td>
+                <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                 <td>{theatre.name}</td>
                 <td>{theatre.city}</td>
                 <td>{theatre.owner.name}</td>
@@ -43,13 +56,43 @@ function TheatreTable({ theatres }) {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center">
+              <td colSpan="5" className="text-center">
                 No theatres found
               </td>
             </tr>
           )}
         </tbody>
       </Table>
+
+      {totalPages > 1 && (
+        <Pagination className="justify-content-center mt-4">
+          <Pagination.First
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+          />
+          <Pagination.Prev
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          />
+          {[...Array(totalPages).keys()].map((page) => (
+            <Pagination.Item
+              key={page + 1}
+              active={currentPage === page + 1}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          />
+          <Pagination.Last
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      )}
     </Container>
   );
 }

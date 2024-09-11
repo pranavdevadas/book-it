@@ -1,6 +1,6 @@
 import Table from "react-bootstrap/Table";
 import { useState, useEffect } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Pagination } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useBlockUnblockOwnerMutation } from "../../slice/adminSlice/adminApiSlice";
 import Search from "../../components/userComponents/Search.jsx";
@@ -8,12 +8,24 @@ import Swal from "sweetalert2";
 
 function OwnerTable({ owners, refetch }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const filteredItems = owners.filter(
     (item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const paginatedOwners = filteredItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const [blockUnblockOwner] = useBlockUnblockOwnerMutation();
   useEffect(() => {}, [refetch]);
@@ -68,8 +80,8 @@ function OwnerTable({ owners, refetch }) {
           </tr>
         </thead>
         <tbody>
-          {filteredItems.length > 0 ? (
-            filteredItems.map((owner, index) => (
+          {paginatedOwners.length > 0 ? (
+            paginatedOwners.map((owner, index) => (
               <tr key={owner._id}>
                 <td>{index + 1}</td>
                 <td>{owner.name}</td>
@@ -96,6 +108,35 @@ function OwnerTable({ owners, refetch }) {
           )}
         </tbody>
       </Table>
+      {totalPages > 1 && (
+        <Pagination className="justify-content-center mt-4">
+          <Pagination.First
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+          />
+          <Pagination.Prev
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          />
+          {[...Array(totalPages).keys()].map((page) => (
+            <Pagination.Item
+              key={page + 1}
+              active={currentPage === page + 1}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          />
+          <Pagination.Last
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      )}
     </Container>
   );
 }

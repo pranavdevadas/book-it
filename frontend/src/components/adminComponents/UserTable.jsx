@@ -1,5 +1,5 @@
 import Table from "react-bootstrap/Table";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Pagination } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useBlockUnblockUserMutation } from "../../slice/adminSlice/adminApiSlice";
 import { useEffect, useState } from "react";
@@ -9,6 +9,8 @@ import Swal from "sweetalert2";
 
 function UserTable({ users, refetch }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const filteredItems = users.filter(
     (item) =>
@@ -16,8 +18,18 @@ function UserTable({ users, refetch }) {
       item.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  const paginatedUsers = filteredItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   const [blockUnblockUser] = useBlockUnblockUserMutation();
-  useEffect(() => {}, [refetch]);
 
   const handleBlockUnblock = async (id, isBlocked) => {
     const action = isBlocked ? "unblock" : "block";
@@ -53,7 +65,7 @@ function UserTable({ users, refetch }) {
       <SideBarAdmin />
       <div className="content">
         <Container>
-          <h1 className="text-center mb-3">User Managment</h1>
+          <h1 className="text-center mb-3">User Management</h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           <Table
             striped
@@ -72,10 +84,10 @@ function UserTable({ users, refetch }) {
               </tr>
             </thead>
             <tbody>
-              {filteredItems.length > 0 ? (
-                filteredItems.map((user, index) => (
+              {paginatedUsers.length > 0 ? (
+                paginatedUsers.map((user, index) => (
                   <tr key={user._id}>
-                    <td>{index + 1}</td>
+                    <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.isVerified.toString()}</td>
@@ -93,11 +105,41 @@ function UserTable({ users, refetch }) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2">No Users found</td>
+                  <td colSpan="5">No Users found</td>
                 </tr>
               )}
             </tbody>
           </Table>
+
+          {totalPages > 1 && (
+            <Pagination className="justify-content-center mt-4">
+              <Pagination.First
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              />
+              <Pagination.Prev
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              />
+              {[...Array(totalPages).keys()].map((page) => (
+                <Pagination.Item
+                  key={page + 1}
+                  active={currentPage === page + 1}
+                  onClick={() => handlePageChange(page + 1)}
+                >
+                  {page + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              />
+              <Pagination.Last
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              />
+            </Pagination>
+          )}
         </Container>
       </div>
     </div>

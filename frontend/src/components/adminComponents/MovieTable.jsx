@@ -1,21 +1,31 @@
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import {
-  useToggleListStatusMutation,
-  useEditMovieMutation,
-} from "../../slice/adminSlice/adminApiSlice";
+import { useToggleListStatusMutation } from "../../slice/adminSlice/adminApiSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import { Container, Pagination } from "react-bootstrap";
 import Search from "../userComponents/Search";
 import { useState } from "react";
 
 function MovieTable({ movies, refetch }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const filteredMovies = movies.filter((movie) =>
     movie.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredMovies.length / itemsPerPage);
+
+  const paginatedMovies = filteredMovies.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const [toggleListStatus] = useToggleListStatusMutation();
   const navigate = useNavigate();
@@ -37,7 +47,7 @@ function MovieTable({ movies, refetch }) {
   return (
     <>
       <Container>
-      <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <Table
           striped
           bordered
@@ -56,10 +66,10 @@ function MovieTable({ movies, refetch }) {
             </tr>
           </thead>
           <tbody>
-            {filteredMovies.length > 0 ? (
-              filteredMovies.map((movie, index) => (
+            {paginatedMovies.length > 0 ? (
+              paginatedMovies.map((movie, index) => (
                 <tr key={movie._id}>
-                  <td>{index + 1}</td>
+                  <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td>{movie.name}</td>
                   <td>{movie.categories.join(", ")}</td>
                   <td>{movie.language.join(", ")}</td>
@@ -90,6 +100,37 @@ function MovieTable({ movies, refetch }) {
             )}
           </tbody>
         </Table>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <Pagination className="justify-content-center mt-4">
+            <Pagination.First
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+            />
+            <Pagination.Prev
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            />
+            {[...Array(totalPages).keys()].map((page) => (
+              <Pagination.Item
+                key={page + 1}
+                active={currentPage === page + 1}
+                onClick={() => handlePageChange(page + 1)}
+              >
+                {page + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            />
+            <Pagination.Last
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+            />
+          </Pagination>
+        )}
       </Container>
     </>
   );

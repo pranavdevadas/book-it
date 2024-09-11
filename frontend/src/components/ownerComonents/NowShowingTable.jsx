@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 import { useToggleStatusMutation } from "../../slice/ownerSlice/ownerApiSlice.js";
-import { Container } from "react-bootstrap";
+import { Container, Pagination } from "react-bootstrap";
 
 function NowShowingTable({ nowShowing, refetch }) {
   const [toggleListStatus] = useToggleStatusMutation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const totalPages = Math.ceil(nowShowing.length / itemsPerPage);
+
+  const currentShows = nowShowing.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleToggleStatus = async (id) => {
     try {
@@ -16,6 +25,10 @@ function NowShowingTable({ nowShowing, refetch }) {
     } catch (error) {
       toast.error(error.data.message);
     }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -32,10 +45,10 @@ function NowShowingTable({ nowShowing, refetch }) {
           </tr>
         </thead>
         <tbody>
-          {nowShowing.length > 0 ? (
-            nowShowing.map((show, index) => (
+          {currentShows.length > 0 ? (
+            currentShows.map((show, index) => (
               <tr key={show._id}>
-                <td>{index + 1}</td>
+                <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                 <td>{show.movie.name}</td>
                 <td>{show.theatre.name} ({show.theatre.city})</td>
                 <td>{show.screen}</td>
@@ -59,6 +72,26 @@ function NowShowingTable({ nowShowing, refetch }) {
           )}
         </tbody>
       </Table>
+
+      {totalPages > 1 && (
+        <Pagination className="justify-content-center mt-4">
+          <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
+          <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
+          
+          {[...Array(totalPages).keys()].map((page) => (
+            <Pagination.Item
+              key={page + 1}
+              active={currentPage === page + 1}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+
+          <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} />
+          <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages} />
+        </Pagination>
+      )}
     </Container>
   );
 }

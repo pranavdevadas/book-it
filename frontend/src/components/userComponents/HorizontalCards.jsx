@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Card, Button, Container, Dropdown } from "react-bootstrap";
+import { Card, Button, Container, Dropdown, Pagination } from "react-bootstrap";
 import Search from "./Search";
 import { useNavigate } from "react-router-dom";
 
 function HorizontalCards({ movies }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSort = (criteria) => {
     setSortOrder(criteria);
@@ -44,6 +46,17 @@ function HorizontalCards({ movies }) {
     )
   );
 
+  const totalPages = Math.ceil(filteredShows.length / itemsPerPage);
+
+  const currentShows = filteredShows.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   const movieDetails = (id) => {
     navigate(`/movie/${id}`);
   };
@@ -59,20 +72,16 @@ function HorizontalCards({ movies }) {
         <Dropdown.Menu>
           <Dropdown.Item onClick={() => handleSort("A-Z")}>A-Z</Dropdown.Item>
           <Dropdown.Item onClick={() => handleSort("Z-A")}>Z-A</Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSort("new")}>
-            Newest First
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSort("old")}>
-            Oldest First
-          </Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSort("new")}>Newest - Asc</Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSort("old")}>Newest - Desc</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
       <Container className="my-3">
-        {filteredShows.length === 0 ? (
+        {currentShows.length === 0 ? (
           <p className="text-center">No items found</p>
         ) : (
-          filteredShows.map((show, index) => (
+          currentShows.map((show, index) => (
             <Card
               key={index}
               style={{ display: "flex", flexDirection: "row", height: "250px" }}
@@ -100,6 +109,38 @@ function HorizontalCards({ movies }) {
               </Card.Body>
             </Card>
           ))
+        )}
+
+        {totalPages > 1 && (
+          <Pagination className="justify-content-center mt-4 pagination-dark">
+            <Pagination.First
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+            />
+            <Pagination.Prev
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            />
+            
+            {[...Array(totalPages).keys()].map((page) => (
+              <Pagination.Item
+                key={page + 1}
+                active={currentPage === page + 1}
+                onClick={() => handlePageChange(page + 1)}
+              >
+                {page + 1}
+              </Pagination.Item>
+            ))}
+
+            <Pagination.Next
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            />
+            <Pagination.Last 
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+            />
+          </Pagination>
         )}
       </Container>
     </>
