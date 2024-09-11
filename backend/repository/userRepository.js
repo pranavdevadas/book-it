@@ -25,8 +25,9 @@ let userRepository = {
   findSavedMovie: async (userId, movieId) => {
     return await Savedmovielist.findOne({
       user: userId,
-      "items.movie": movieId,
-    });
+      items: { $elemMatch: { movie: movieId } }, 
+    })
+    .sort({ "items.date": -1 }) 
   },
 
   updateSavedMovie: async (userId, movieId) => {
@@ -34,7 +35,22 @@ let userRepository = {
       { user: userId },
       { $push: { items: { movie: movieId } } },
       { upsert: true }
+    )
+  },
+
+  findSavedMovieByUserId: async (userId) => {
+    return await Savedmovielist.findOne({ user: userId }).populate(
+      "items.movie",
+      "name duration categories language poster"
     );
+  },
+
+  deleteSavedMovieById: async (movieId, userId) => {
+    return await Savedmovielist.findOneAndUpdate(
+      { user: userId, "items.movie": movieId },
+      { $pull: { items: { movie: movieId } } },
+      { new: true }
+    )
   },
 };
 

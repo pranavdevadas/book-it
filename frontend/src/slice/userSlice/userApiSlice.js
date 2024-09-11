@@ -80,6 +80,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: { movieId },
       }),
     }),
+    getSavedMovies: builder.query({
+      query: () => ({
+        url: `${USER_URL}/get-savedmovies`,
+        method: "GET",
+      }),
+    }),
+    removeSavedMovie: builder.mutation({
+      query: (id) => ({
+        url: `${USER_URL}/remove-savedmovie/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -94,5 +106,7 @@ export const {
   useGetAllmoviesQuery,
   useMoveDetailsByIdQuery,
   useGetAvailableShowsQuery,
-  useAddSavedMoviesMutation
+  useAddSavedMoviesMutation,
+  useGetSavedMoviesQuery,
+  useRemoveSavedMovieMutation
 } = userApiSlice;

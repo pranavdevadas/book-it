@@ -1,37 +1,139 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Popover,
+  OverlayTrigger,
+  NavDropdown,
+} from "react-bootstrap";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt, FaRegBookmark } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-import { useLogoutMutation } from "../../slice/userSlice/userApiSlice";
+import {
+  useLogoutMutation,
+  useGetSavedMoviesQuery,
+  useRemoveSavedMovieMutation,
+  useAddSavedMoviesMutation
+} from "../../slice/userSlice/userApiSlice";
 import { clearCredentials } from "../../slice/userSlice/userAuthSlice";
-import { useGetCitiesQuery } from "../../slice/adminSlice/adminApiSlice";
 import { toast } from "react-toastify";
-import { FaRegBookmark } from "react-icons/fa6";
+import Loader from "./Loader";
+import { IoCloseSharp } from "react-icons/io5";
 
 function Header() {
-  let { userInfo } = useSelector((state) => state.auth);
-  const { data: cities = [], isLoading, error, refetch } = useGetCitiesQuery();
+  const { userInfo } = useSelector((state) => state.auth);
+  const {
+    data: initialMoviesList = { items: [] },
+    isLoading,
+    refetch,
+  } = useGetSavedMoviesQuery();
+  const [moviesList, setMoviesList] = useState(initialMoviesList);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [clearCredentialsApiCall] = useLogoutMutation();
+  const [showPopover, setShowPopover] = useState(false);
 
-  const [selectedCity, setSelectedCity] = useState("Select city");
+  const [removesavedmovie] = useRemoveSavedMovieMutation();
+  const [addsavedmovie] = useAddSavedMoviesMutation();
 
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    setMoviesList(initialMoviesList);
+  }, [initialMoviesList]);
 
-  let dispatch = useDispatch();
-  let navigate = useNavigate();
-
-  let [clearCredentialsApiCall] = useLogoutMutation();
-
-  let logoutHandler = async () => {
+  const logoutHandler = async () => {
     try {
       await clearCredentialsApiCall().unwrap();
       dispatch(clearCredentials());
       navigate("/login");
       toast.success("Logout Success");
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Logout failed");
+    }
+  };
+
+  const popover = (
+    <Popover variant="dark" id="saved-movies-popover">
+      <Popover.Body>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div
+            style={{ maxHeight: "300px", width: "250px", overflowY: "auto" }}
+          >
+            {moviesList.items.length > 0 ? (
+              moviesList.items.map((item) => (
+                <div
+                  key={item.movie._id}
+                  onClick={() => navigate(`/movie/${item.movie._id}`)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "5px",
+                    cursor: "pointer",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {item.movie.poster && (
+                      <img
+                        src={`http://localhost:5000/moviePoster/${item.movie.poster}`}
+                        alt={item.movie.name}
+                        style={{
+                          width: "50px",
+                          height: "75px",
+                          marginRight: "10px",
+                        }}
+                      />
+                    )}
+                    <span>{item.movie.name}</span>
+                  </div>
+                  <IoCloseSharp
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click event from propagating to parent div
+                      handleRemoveMovie(item.movie._id);
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      color: "red",
+                      marginLeft: "-120px",
+                    }}
+                  />
+                </div>
+              ))
+            ) : (
+              <div>No saved movies</div>
+            )}
+          </div>
+        )}
+      </Popover.Body>
+    </Popover>
+  );
+
+  const handleRemoveMovie = async (movieId) => {
+    try {
+      await removesavedmovie(movieId).unwrap();
+      toast.success("Movie removed Successfully");
+      // Remove the movie from local state
+      setMoviesList((prevList) => ({
+        ...prevList,
+        items: prevList.items.filter((item) => item.movie._id !== movieId),
+      }));
+    } catch (error) {
+      toast.error("Failed to remove movie");
+    }
+  };
+
+  const handleAddMovie = async (movieId) => {
+    try {
+      await addsavedmovie(movieId).unwrap();
+      toast.success("Movie added Successfully");
+      // Optionally refetch to get the updated list from the server
+      refetch();
+    } catch (error) {
+      toast.error("Failed to add movie");
+    }
   };
 
   return (
@@ -59,11 +161,16 @@ function Header() {
             <Nav className="ms-auto">
               {userInfo ? (
                 <>
-                  <LinkContainer to="/saved-movies">
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={popover}
+                    show={showPopover}
+                    onToggle={() => setShowPopover(!showPopover)}
+                  >
                     <Nav.Link>
                       <FaRegBookmark variant="light" /> Saved Movies
                     </Nav.Link>
-                  </LinkContainer>
+                  </OverlayTrigger>
                   <NavDropdown title={userInfo.name} id="userName">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>

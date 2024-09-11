@@ -5,22 +5,29 @@ import { useNavigate } from "react-router-dom";
 import { FaRegBookmark } from "react-icons/fa6";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import { useAddSavedMoviesMutation } from "../../slice/userSlice/userApiSlice";
+import {
+  useAddSavedMoviesMutation,
+  useGetSavedMoviesQuery,
+} from "../../slice/userSlice/userApiSlice";
 import { toast } from "react-toastify";
 
 function UserCard({ movies }) {
   const navigate = useNavigate();
   const [addSavedMovie] = useAddSavedMoviesMutation();
+  const { refetch: refetchSavedMovies } = useGetSavedMoviesQuery();
 
   const handleSaveMovie = async (movieId) => {
     try {
-      console.log("Movie ID:", movieId);  // Debugging line
+      console.log("Movie ID:", movieId); 
       const response = await addSavedMovie(movieId).unwrap();
-      console.log("Response:", response);  // Log the actual response from the API
+      console.log("Response:", response); 
       toast.success("Movie saved successfully!");
+      refetchSavedMovies()
     } catch (error) {
-      console.error("Error saving movie:", error);  // Log the error message
-      toast.error(error?.data?.message || "Error: This movie is already saved.");
+      console.error("Error saving movie:", error);
+      toast.error(
+        error?.data?.message || "Error: This movie is already saved."
+      );
     }
   };
 

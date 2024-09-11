@@ -196,6 +196,23 @@ let userService = {
     await userRepository.updateSavedMovie(userId, movieId);
     return;
   },
+
+  savedMovies: async (userId) => {
+    const moviesList = await userRepository.findSavedMovieByUserId(userId);
+    if (!moviesList) {
+      throw new Error("Movie already saved");
+    }
+    moviesList.items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return moviesList
+  },
+
+  removeSavedMovie: async (movieId, userId) => {
+    const result = await userRepository.deleteSavedMovieById(movieId, userId);
+    if (!result) {
+      throw new Error('Movie not found in saved list');
+    }
+    return result;
+  },
 };
 
 export default userService;

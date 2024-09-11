@@ -168,6 +168,28 @@ const userController = {
       res.status(400).json({ message: error.message });
     }
   }),
+
+  savedMovies: expressAsyncHandler(async (req,res) => {
+    try {
+      const userId = req.user._id;
+      const moviesList = await userService.savedMovies(userId)
+      res.status(200).json(moviesList)
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
+  removeSavedMovie: expressAsyncHandler(async (req,res) => {    
+    const movieId = req.params.id;
+    const userId = req.user._id;
+    try {
+      const result = await userService.removeSavedMovie(movieId, userId);
+      res.status(200).json({ message: 'Movie removed from saved list', data: result });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
 };
 
 export default userController;
