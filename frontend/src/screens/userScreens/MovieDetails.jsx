@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Container, Alert, Button, NavDropdown } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/userComponents/Loader";
 import {
   useMoveDetailsByIdQuery,
   useGetAvailableShowsQuery,
 } from "../../slice/userSlice/userApiSlice";
 import { format } from "date-fns";
-import { useGetCitiesQuery } from "../../slice/adminSlice/adminApiSlice";
 import "./style.css";
 import Search from "../../components/userComponents/Search";
 
@@ -16,9 +15,8 @@ function MovieDetails() {
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [locationError, setLocationError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
-  const { data: cities = [], isLoading, error, refetch } = useGetCitiesQuery();
-  const [selectedCity, setSelectedCity] = useState("Select city");
+  
+  const navigate = useNavigate()
 
   const {
     data: movie,
@@ -74,14 +72,16 @@ function MovieDetails() {
     return date;
   });
 
-  const filteredTheatres = shows ? shows.filter((show) => {
-    const searchLower = searchTerm.toLowerCase();
-    return show.theatre.name.toLowerCase().includes(searchLower);
-  }) : []
+  const filteredTheatres = shows
+    ? shows.filter((show) => {
+        const searchLower = searchTerm.toLowerCase();
+        return show.theatre.name.toLowerCase().includes(searchLower);
+      })
+    : [];
 
-  const handleCitySelect = (cityName) => {
-    setSelectedCity(cityName);
-  };
+    const handleBooking = (id) => {
+      navigate(`/theatre/select-seat/${id}`);
+    };
 
   return (
     <>
@@ -118,22 +118,6 @@ function MovieDetails() {
         </div>
         <h2 className="text-center mt-5 mb-4 fw-bold">Select Theatres</h2>
         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <div className="ms-auto">
-          <NavDropdown title={selectedCity} className="mx-2" id="citySelect">
-            {cities.length > 0 ? (
-              cities.map((city) => (
-                <NavDropdown.Item
-                  key={city._id}
-                  onClick={() => handleCitySelect(city.name)}
-                >
-                  {city.name}
-                </NavDropdown.Item>
-              ))
-            ) : (
-              <NavDropdown.Item>No Cities Found</NavDropdown.Item>
-            )}
-          </NavDropdown>
-        </div>
         {locationError && <Alert variant="danger">{locationError}</Alert>}
         {filteredTheatres && filteredTheatres.length > 0 ? (
           filteredTheatres.map((show, index) => (
@@ -163,7 +147,7 @@ function MovieDetails() {
       <br />
       <br />
       <div className="d-flex justify-content-center">
-        <Button variant="dark">Book Now</Button>
+        <Button variant="dark" onClick={() => handleBooking(show.theatre._id)}>Continue</Button>
       </div>
       <br />
       <br />

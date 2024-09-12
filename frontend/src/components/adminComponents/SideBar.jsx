@@ -18,6 +18,8 @@ import { useDispatch } from "react-redux";
 import { useAdminLogoutMutation } from "../../slice/adminSlice/adminApiSlice";
 import { clearAdminCredentials } from "../../slice/adminSlice/adminAuthSlice";
 import { toast } from "react-toastify";
+import { MdOutlineStyle } from "react-icons/md";
+
 
 function SideBarAdmin() {
   const dispatch = useDispatch();
@@ -70,6 +72,14 @@ function SideBarAdmin() {
                 <LinkContainer to="/admin/cities">
                   <Nav.Link>
                     <FaCity /> &nbsp;City Management
+                  </Nav.Link>
+                </LinkContainer>
+              </CDBSidebarMenuItem>
+
+              <CDBSidebarMenuItem>
+                <LinkContainer to="/admin/banner">
+                  <Nav.Link>
+                    <MdOutlineStyle /> &nbsp;Banner Managment
                   </Nav.Link>
                 </LinkContainer>
               </CDBSidebarMenuItem>

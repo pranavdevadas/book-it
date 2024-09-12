@@ -4,6 +4,7 @@ import adminController from '../controller/adminController.js'
 import { adminProtect } from '../middleware/adminAuthMiddleware.js'
 import movieController from '../controller/movieController.js'
 import theatreController from '../controller/theatreController.js'
+import { uploadBanner } from '../config/multer.js'
 
 
 //Admin Autherisation
@@ -34,5 +35,10 @@ router.patch('/:id/blockUnblockOwner', adminProtect, adminController.blockUnbloc
 
 //Theatre Operations
 router.get('/admin-theatres', adminProtect, theatreController.getTheatresForAdmin)
+
+//Banner Operations
+router.route('/banner') 
+                        .patch(adminProtect, uploadBanner, adminController.bannerManagment)
+                        .get(adminProtect, adminController.getBanner)
 
 export default router

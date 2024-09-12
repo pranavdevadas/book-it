@@ -32,5 +32,8 @@ router.post('/add-saved-movie', userProtect, userController.addSavedMovie)
 router.get('/get-savedmovies', userProtect, userController.savedMovies)
 router.delete('/remove-savedmovie/:id', userProtect, userController.removeSavedMovie)
 
+//Banner
+router.get('/banner-display', userController.bannerDisplay)
+
 
 export default router

@@ -1,5 +1,6 @@
 import User from "../model/user.js";
 import Savedmovielist from "../model/savedmovielist.js";
+import Banner from '../model/banner.js'
 
 let userRepository = {
   findUserByEmail: async (email) => {
@@ -52,6 +53,10 @@ let userRepository = {
       { new: true }
     )
   },
+
+  findBanner: async () => {
+    return await Banner.findOne()
+  }
 };
 
 export default userRepository;

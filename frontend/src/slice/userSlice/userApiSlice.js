@@ -92,6 +92,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    getSeatsForBooking: builder.query({
+      query: (id) => ({
+        url: `${USER_URL}/select-seats/${id}`,
+        method: "GET",
+      }),
+    }),
+    bannerDisplay: builder.query({
+      query: () => ({
+        url: `${USER_URL}/banner-display`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -108,5 +120,7 @@ export const {
   useGetAvailableShowsQuery,
   useAddSavedMoviesMutation,
   useGetSavedMoviesQuery,
-  useRemoveSavedMovieMutation
+  useRemoveSavedMovieMutation,
+  useGetSeatsForBookingQuery,
+  useBannerDisplayQuery
 } = userApiSlice;

@@ -92,6 +92,19 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    bannerManagment: builder.mutation({
+      query: (formData) => ({
+        url: `${ADMIN_URL}/banner`,
+        method: "PATCH",
+        body: formData,
+      }),
+    }),
+    getBanner: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/banner`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -109,5 +122,7 @@ export const {
   useBlockUnblockUserMutation,
   useGetOwnersQuery,
   useBlockUnblockOwnerMutation,
-  useGetTheatresQuery
+  useGetTheatresQuery,
+  useBannerManagmentMutation,
+  useGetBannerQuery
 } = adminApiSlice;

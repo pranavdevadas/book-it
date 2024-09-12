@@ -1,6 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import adminGenerateToken from "../utils/adminGenerateToken.js";
 import adminService from "../service/adminService.js";
+import Banner from '../model/banner.js'
 
 let adminController = {
   authAdmin: expressAsyncHandler(async (req, res) => {
@@ -99,6 +100,48 @@ let adminController = {
     } catch (error) {
       res.status(400);
       throw new Error(error.message);
+    }
+  }),
+
+  bannerManagment: expressAsyncHandler(async (req, res) => {
+    try {
+      console.log(req.files);
+      let banner = await Banner.findOne();
+      if (!banner) {
+        banner = new Banner();
+      }
+      const { files } = req;
+
+      if (files.banner1) {
+        banner.banner1 = `/banner/${files.banner1[0].filename}`;
+      }
+      if (files.banner2) {
+        banner.banner2 = `/banner/${files.banner2[0].filename}`;
+      }
+      if (files.banner3) {
+        banner.banner3 = `/banner/${files.banner3[0].filename}`;
+      }
+      await banner.save();
+
+      res.status(200).json({ message: "Banners updated successfully", banner });
+    } catch (error) {
+      res.status(400)
+      throw new Error(error.message)
+    }
+  }),
+
+  getBanner: expressAsyncHandler(async (req, res) => {
+    try {
+      const banner = await Banner.findOne();
+
+      if (!banner) {
+        return res.status(404).json({ message: "No banners found" });
+      }
+  
+      res.status(200).json(banner);
+    } catch (error) {
+      res.status(400)
+      throw new Error(error.message)
     }
   }),
 };

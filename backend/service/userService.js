@@ -213,6 +213,14 @@ let userService = {
     }
     return result;
   },
+
+  bannerDisplay: async () => {
+    const banners = await userRepository.findBanner()
+    if (!banners) {
+      throw new Error('Banner not found')
+    }
+    return banners
+  }
 };
 
 export default userService;

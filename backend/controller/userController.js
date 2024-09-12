@@ -190,6 +190,15 @@ const userController = {
     }
   }),
 
+  bannerDisplay: expressAsyncHandler(async (req, res) => {
+    try {
+      const banners = await userService.bannerDisplay()
+      res.status(200).json(banners)
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
 };
 
 export default userController;

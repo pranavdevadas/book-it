@@ -30,6 +30,7 @@ import UserScreen from './screens/adminScreens/UserScreen.jsx'
 import OwnerScreen from './screens/adminScreens/OwnerScreen.jsx'
 import TheatreScreen from "./screens/adminScreens/TheatreScreen.jsx";
 import MovieDetails from './screens/userScreens/MovieDetails.jsx'
+import BannerScreen from "./screens/adminScreens/BannerScreen.jsx";
 
 import OwnerLoginScreen from './screens/ownerScreens/LoginScreen.jsx'
 import OwnerPrivateRoute from './components/ownerComonents/PrivateRoute.jsx'
@@ -71,6 +72,7 @@ const router = createBrowserRouter(
         <Route path="users" element={<UserScreen />} />
         <Route path="owners" element={<OwnerScreen />} />
         <Route path="theatres" element={<TheatreScreen />} />
+        <Route path="banner" element={<BannerScreen />} />
       </Route>
 
       {/* Owner Routes */}
