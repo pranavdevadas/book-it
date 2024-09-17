@@ -20,10 +20,15 @@ function SelectSeatsScreen() {
   } = useGetSeatsssQuery({ theatreId, screen });
 
   const {
-    data : bookedSeats = [], 
+    data: bookedSeats = [],
     refetch,
     error: seatsError,
-  } = useGetAvailableSeatsForBookingQuery({theatreId, screen, selectedDate, selectedTime})
+  } = useGetAvailableSeatsForBookingQuery({
+    theatreId,
+    screen,
+    selectedDate,
+    selectedTime,
+  });
 
   useEffect(() => {
     refetch();

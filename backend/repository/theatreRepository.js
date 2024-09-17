@@ -31,6 +31,10 @@ let theatreRepository = {
   findTheatres: async () => {
     return await Theatre.find().populate("owner", "name").sort({ date: -1 });
   },
+
+  saveTheatre: async (theatre) => {
+    return await theatre.save();
+  },
 };
 
 export default theatreRepository;
