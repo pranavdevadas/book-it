@@ -91,8 +91,10 @@ const showService = {
         { latitude: userLat, longitude: userLng },
         { latitude: theatreLat, longitude: theatreLng }
       );
-      return distance <= 20000;
+      return distance <= 26000;
     });
+
+
     return filteredShows;
   },
 

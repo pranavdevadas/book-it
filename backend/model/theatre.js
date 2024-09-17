@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const theatreSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -12,7 +11,7 @@ const theatreSchema = new mongoose.Schema({
     required: true,
   },
   city: {
-    type: String,
+    type: String, 
     required: true,
   },
   ticketPrice: {
@@ -46,17 +45,29 @@ const theatreSchema = new mongoose.Schema({
             required: true,
             default: false,
           },
-          isBooked: {
-            type: Boolean,
-            required: true,
-            default: false,
-          },
         },
       ],
-      showTimes: {
-        type: [String],
-        required: true,
-      },
+      showTimes: [
+        {
+          time: {
+            type: String,
+            required: true,
+          },
+          seatStatus: [
+            {
+              seatNumber: {
+                type: Number,
+                required: true,
+              },
+              isBooked: {
+                type: Boolean,
+                required: true,
+                default: false,
+              },
+            },
+          ],
+        },
+      ],
     },
   ],
   date: {
@@ -65,8 +76,8 @@ const theatreSchema = new mongoose.Schema({
   },
   isListed: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 });
 
 const Theatre = mongoose.model("Theatre", theatreSchema);

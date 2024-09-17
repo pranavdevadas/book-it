@@ -4,6 +4,8 @@ import userController from '../controller/userController.js'
 import { userProtect } from '../middleware/userAuthMiddleware.js'
 import showController from '../controller/showController.js'
 import movieController from '../controller/movieController.js'
+import bookingController from '../controller/bookingController.js'
+import theatreController from '../controller/theatreController.js'
 
 // Autherisation
 router.post('/', userController.registerUser)
@@ -32,8 +34,15 @@ router.post('/add-saved-movie', userProtect, userController.addSavedMovie)
 router.get('/get-savedmovies', userProtect, userController.savedMovies)
 router.delete('/remove-savedmovie/:id', userProtect, userController.removeSavedMovie)
 
+
 //Banner
 router.get('/banner-display', userController.bannerDisplay)
+
+//Booking
+router.get('/get-seats/:theatreId/:screen', bookingController.getSeatsForBooking);
+router.get('/theatre/:id', userProtect, theatreController.getTheatreById)
+router.post('/create-booking', userProtect, bookingController.createBooking)
+router.get('/get-availableseats', userProtect, bookingController.getBookingForSeats)
 
 
 export default router

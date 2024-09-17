@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useGetTheatresQuery } from "../../slice/adminSlice/adminApiSlice";
+import { useGetTheatressQuery } from "../../slice/adminSlice/adminApiSlice";
 import Loader from "../../components/userComponents/Loader";
 import TheatreTable from "../../components/adminComponents/TheatreTable";
 import SideBarAdmin from "../../components/adminComponents/SideBar";
@@ -11,7 +11,7 @@ function TheatreScreen() {
     isLoading,
     error,
     refetch,
-  } = useGetTheatresQuery();
+  } = useGetTheatressQuery();
 
   useEffect(() => {
     refetch();

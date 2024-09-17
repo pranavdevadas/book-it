@@ -86,7 +86,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
       }),
     }),
-    getTheatres: builder.query({
+    getTheatress: builder.query({
       query: () => ({
         url: `${ADMIN_URL}/admin-theatres`,
         method: "GET",
@@ -122,7 +122,7 @@ export const {
   useBlockUnblockUserMutation,
   useGetOwnersQuery,
   useBlockUnblockOwnerMutation,
-  useGetTheatresQuery,
+  useGetTheatressQuery,
   useBannerManagmentMutation,
   useGetBannerQuery
 } = adminApiSlice;

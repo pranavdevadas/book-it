@@ -60,6 +60,8 @@ const showController = {
       const { id } = req.params;
       const { lat, lng } = req.query;
 
+
+
       if (!lat || !lng) {
         res
           .status(400)
@@ -69,6 +71,7 @@ const showController = {
 
       const userLat = parseFloat(lat);
       const userLng = parseFloat(lng);
+
 
       const filteredShows = await showService.getAvailableShows(
         id,

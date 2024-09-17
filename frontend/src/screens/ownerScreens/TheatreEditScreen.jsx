@@ -134,15 +134,70 @@ function TheatreEditScreen() {
     });
   }, []);
 
+  const handleShowTimeChange = (screenIndex, showTimeIndex, newShowTime) => {
+    const selectedTime = new Date(`1970-01-01T${newShowTime}:00`);
+
+    const isValidTime = screens[screenIndex].showTimes.every((time, idx) => {
+      if (idx !== showTimeIndex && time.time) {
+        const existingTime = new Date(`1970-01-01T${time.time}:00`);
+        const timeDifference =
+          Math.abs(selectedTime - existingTime) / (1000 * 60 * 60); // Difference in hours
+        return timeDifference >= 4;
+      }
+      return true;
+    });
+
+    if (isValidTime) {
+      const updatedScreens = screens.map((screen, i) => {
+        if (i === screenIndex) {
+          return {
+            ...screen,
+            showTimes: screen.showTimes.map((time, idx) =>
+              idx === showTimeIndex ? { time: newShowTime } : time
+            ),
+          };
+        }
+        return screen;
+      });
+      setScreens(updatedScreens);
+    } else {
+      toast.error("Showtimes must be at least 4 hours apart.");
+    }
+  };
+
+  const validateShowTimes = () => {
+    return screens.every((screen) => {
+      const showTimes = screen.showTimes.map(
+        (showTime) => new Date(`1970-01-01T${showTime.time}:00`)
+      );
+      return showTimes.every((time, idx) =>
+        showTimes.every(
+          (otherTime, otherIdx) =>
+            idx === otherIdx ||
+            Math.abs(time - otherTime) / (1000 * 60 * 60) >= 4
+        )
+      );
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validateForm() || !validateShowTimes()) return;
 
     try {
       await editTheatre({
         id,
-        formData: { ...theatre, location, screens },
+        formData: {
+          ...theatre,
+          location,
+          screens: screens.map((screen) => ({
+            ...screen,
+            showTimes: screen.showTimes.map((showTime) => ({
+              time: showTime.time, // Ensure `time` is correctly formatted as a string
+            })),
+          })),
+        },
       }).unwrap();
       toast.success("Theatre updated successfully");
       navigate("/owner/theatres");
@@ -306,10 +361,10 @@ function TheatreEditScreen() {
                     key={showTimeIndex}
                   >
                     <Form.Label>Show Time {showTimeIndex + 1} </Form.Label>
-                    <Form.Control
+                    {/* <Form.Control
                       type="time"
                       style={{ width: "22%" }}
-                      value={showTime}
+                      value={showTime.time}
                       onChange={(e) => {
                         const newShowTime = e.target.value;
                         const selectedTime = new Date(
@@ -332,24 +387,38 @@ function TheatreEditScreen() {
                           }
                         );
 
-                        if (isValidTime) {
-                          const updatedScreens = screens.map((screen, i) => {
-                            if (i === screenIndex) {
-                              return {
-                                ...screen,
-                                showTimes: screen.showTimes.map((time, idx) =>
-                                  idx === showTimeIndex ? newShowTime : time
-                                ),
-                              };
-                            }
-                            return screen;
-                          });
-                          setScreens(updatedScreens);
-                        } else {
-                          toast.error(
-                            "Showtimes must be at least 4 hours apart."
-                          );
-                        }
+                        // if (isValidTime) {
+                        //   const updatedScreens = screens.map((screen, i) => {
+                        //     if (i === screenIndex) {
+                        //       return {
+                        //         ...screen,
+                        //         showTimes: screen.showTimes.map((time, idx) =>
+                        //           idx === showTimeIndex ? newShowTime : time
+                        //         ),
+                        //       };
+                        //     }
+                        //     return screen;
+                        //   });
+                        //   setScreens(updatedScreens);
+                        // } else {
+                        //   toast.error(
+                        //     "Showtimes must be at least 4 hours apart."
+                        //   );
+                        // }
+                      }}
+                      required
+                    /> */}
+                    <Form.Control
+                      type="time"
+                      style={{ width: "22%" }}
+                      value={showTime.time}
+                      onChange={(e) => {
+                        const newShowTime = e.target.value;
+                        handleShowTimeChange(
+                          screenIndex,
+                          showTimeIndex,
+                          newShowTime
+                        );
                       }}
                       required
                     />

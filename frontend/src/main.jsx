@@ -31,6 +31,9 @@ import OwnerScreen from './screens/adminScreens/OwnerScreen.jsx'
 import TheatreScreen from "./screens/adminScreens/TheatreScreen.jsx";
 import MovieDetails from './screens/userScreens/MovieDetails.jsx'
 import BannerScreen from "./screens/adminScreens/BannerScreen.jsx";
+import SelectSeatsScreen from "./screens/userScreens/SelectSeatsScreen.jsx";
+import CheckoutScreen from './screens/userScreens/CheckoutScreen.jsx'
+import ThankyouScreen from "./screens/userScreens/ThankyouScreen.jsx";
 
 import OwnerLoginScreen from './screens/ownerScreens/LoginScreen.jsx'
 import OwnerPrivateRoute from './components/ownerComonents/PrivateRoute.jsx'
@@ -58,6 +61,9 @@ const router = createBrowserRouter(
       <Route path="" element={<PrivateRoute />} >
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/select-seats/:theatreId/:screen" element={<SelectSeatsScreen />} />
+        <Route path="/checkout" element={<CheckoutScreen />} />
+        <Route path="/thank-you" element={<ThankyouScreen />} />
       </Route>
       
       {/* Admin Routes */}

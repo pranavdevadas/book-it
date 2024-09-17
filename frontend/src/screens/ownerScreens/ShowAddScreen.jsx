@@ -30,7 +30,9 @@ function ShowAddScreen() {
         .find((t) => t._id === theatre)
         ?.screens.find((s) => s.name === screen);
 
-      setAvailableShowTimes(selectedScreen ? selectedScreen.showTimes : []);
+      if (selectedScreen) {
+        setAvailableShowTimes(selectedScreen.showTimes.map((st) => st.time));
+      }
     }
   }, [screen, theatre, theatres]);
 
@@ -59,19 +61,26 @@ function ShowAddScreen() {
   const submitHandler = async (e) => {
     e.preventDefault();
     const filteredShowTimes = showTimes.filter((time) => time !== "");
-    if (movie && language && theatre && screen && filteredShowTimes.length > 0) {
+    if (
+      movie &&
+      language &&
+      theatre &&
+      screen &&
+      filteredShowTimes.length > 0
+    ) {
       try {
         await addShow({
           movie,
           language,
           theatre,
           screen,
-          showtime: showTimes,
+          showtime: filteredShowTimes, // Ensure this is an array of strings
         }).unwrap();
         toast.success("Show added successfully!");
         navigate("/owner/now-showing");
       } catch (err) {
         console.error("Failed to add show:", err);
+        toast.error("Failed to add show.");
       }
     } else {
       toast.error("Please fill in all fields.");

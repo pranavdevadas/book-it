@@ -28,7 +28,13 @@ let theatreService = {
         seats: screen.seats.map((seat) => ({
           seatNumber: seat.seatNumber,
           isSelected: seat.isSelected,
-          isBooked: seat.isBooked,
+        })),
+        showTimes: screen.showTimes.map((showTime) => ({
+          time: showTime,
+          seatStatus: screen.seats.map((seat) => ({
+            seatNumber: seat.seatNumber,
+            isBooked: seat.isBooked || false, // Assuming 'isBooked' should default to false initially
+          })),
         })),
       })),
     };
@@ -74,13 +80,18 @@ let theatreService = {
           const updatedSeats = screen.seats.map((seat) => ({
             seatNumber: seat.seatNumber,
             isSelected: seat.isSelected || false,
-            isBooked: seat.isBooked || false,
           }));
 
           return {
             name: screen.name || "",
             seats: updatedSeats,
-            showTimes: screen.showTimes || [],
+            showTimes: screen.showTimes.map((showTime) => ({
+              time: showTime.time,
+              seatStatus: screen.seats.map((seat) => ({
+                seatNumber: seat.seatNumber,
+                isBooked: seat.isBooked || false,
+              })),
+            })),
           };
         }),
       };
@@ -100,13 +111,13 @@ let theatreService = {
   },
 
   toggleTheatreStatus: async (id) => {
-    let theatre = await theatreRepository.findTheatreById(id)
+    let theatre = await theatreRepository.findTheatreById(id);
     if (!theatre) {
       throw new Error("Theatre Not Found");
     } else {
-      theatre.isListed = !theatre.isListed
-      let updatedTheatre = await theatre.save()
-      return {updatedTheatre}
+      theatre.isListed = !theatre.isListed;
+      let updatedTheatre = await theatre.save();
+      return { updatedTheatre };
     }
   },
 };

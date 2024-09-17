@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Alert, Button, NavDropdown } from "react-bootstrap";
+import { Container, Alert, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/userComponents/Loader";
 import {
@@ -15,8 +15,10 @@ function MovieDetails() {
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [locationError, setLocationError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  
-  const navigate = useNavigate()
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const navigate = useNavigate();
 
   const {
     data: movie,
@@ -34,6 +36,14 @@ function MovieDetails() {
       skip: !location.lat || !location.lng,
     }
   );
+
+  if (movieError) {
+    console.log("Movie Error:", movieError);
+  }
+  
+  if (showsError) {
+    console.log("Shows Error:", showsError);
+  }
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -59,18 +69,18 @@ function MovieDetails() {
     return <Loader />;
   }
 
-  if (movieError || showsError) {
-    return <Alert variant="danger">Failed to load data.</Alert>;
-  }
-
   const poster = `http://localhost:5000/moviePoster/${movie.poster}`;
 
-  const today = new Date();
+  const today = new Date(); // Get today's date
+  const currentTime = format(today, "HH:mm"); // Get current time in 'HH:mm' format
+
   const dates = Array.from({ length: 5 }, (_, i) => {
     const date = new Date(today);
     date.setDate(today.getDate() + i);
     return date;
   });
+
+  const isToday = selectedDate === format(today, "yyyy-MM-dd"); // Check if the selected date is today
 
   const filteredTheatres = shows
     ? shows.filter((show) => {
@@ -79,18 +89,26 @@ function MovieDetails() {
       })
     : [];
 
-    const handleBooking = (id) => {
-      navigate(`/theatre/select-seat/${id}`);
-    };
+  const handleBooking = (theatreId, screen, date, time) => {
+    navigate(`/select-seats/${theatreId}/${screen}`, {
+      state: {
+        selectedDate: date,
+        selectedTime: time,
+        screen,
+        theatreId,
+        movieId : movie._id
+      },
+    });
+  };
 
   return (
     <>
       <div className="posterBackground">
         <div className="backgroundOverlay">
-          <img src={poster} className="backgroundPoster" />
+          <img src={poster} className="backgroundPoster" alt="Movie Poster" />
         </div>
         <div className="movie-details">
-          <img src={poster} className="posterImage" />
+          <img src={poster} className="posterImage" alt="Movie Poster" />
           <div className="movie-info">
             <h2 className="shadow">
               <b>{movie.name}</b>
@@ -106,13 +124,27 @@ function MovieDetails() {
         <div className="d-flex justify-content-center mb-4">
           <div style={{ width: "40%" }}>
             <div className="d-flex justify-content-between align-items-center">
-              {dates.map((date, index) => (
-                <Button key={index} variant="dark">
-                  {format(date, "dd")}
-                  <br />
-                  {format(date, "MMM")}
-                </Button>
-              ))}
+              {dates.map((date, index) => {
+                const formattedDate = format(date, "yyyy-MM-dd");
+                const isSelected = formattedDate === selectedDate;
+
+                return (
+                  <Button
+                    key={index}
+                    variant={isSelected ? "danger" : "dark"}
+                    onClick={() => setSelectedDate(formattedDate)}
+                    style={
+                      isSelected
+                        ? { backgroundColor: "red", borderColor: "red" }
+                        : {}
+                    }
+                  >
+                    {format(date, "dd")}
+                    <br />
+                    {format(date, "MMM")}
+                  </Button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -129,11 +161,30 @@ function MovieDetails() {
                 {show.theatre.name} Screen {show.screen} ({show.theatre.city})
               </h5>
               <div className="d-flex gap-4">
-                {show.showtime.map((time, idx) => (
-                  <Button key={idx} variant="secondary">
-                    {time}
-                  </Button>
-                ))}
+                {show.showtime
+                  .filter((time) => {
+                    if (isToday) {
+                      return time > currentTime;
+                    }
+                    return true;
+                  })
+                  .map((time, idx) => (
+                    <Button
+                      key={idx}
+                      variant="secondary"
+                      onClick={() =>
+                        handleBooking(
+                          show.theatre._id,
+                          show.screen,
+                          selectedDate,
+                          time,
+                        )
+                      }
+                      disabled={!selectedDate}
+                    >
+                      {time}
+                    </Button>
+                  ))}
               </div>
             </div>
           ))
@@ -141,17 +192,6 @@ function MovieDetails() {
           <p className="text-center">No nearby theatres available</p>
         )}
       </Container>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <div className="d-flex justify-content-center">
-        <Button variant="dark" onClick={() => handleBooking(show.theatre._id)}>Continue</Button>
-      </div>
-      <br />
-      <br />
-      <br />
     </>
   );
 }

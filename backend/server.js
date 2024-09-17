@@ -5,6 +5,7 @@ let port = process.env.PORT
 import userRoutes from './routes/userRoute.js'
 import adminRoutes from './routes/adminRoute.js'
 import ownerRoutes from './routes/ownerRoute.js'
+import { router as paymentRoutes } from './routes/payment.js';
 import path from 'path'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import connectDB from './config/db.js'
@@ -27,6 +28,7 @@ app.use(cookieParser())
 app.use('/api/users', userRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/owner', ownerRoutes)
+app.use('/api/payment', paymentRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => res.send('server is ready'))
 app.use(notFound)

@@ -92,7 +92,6 @@ function TheatreAddScreen() {
       currentSeats[seatKey] = {
         seatNumber: parseInt(seatKey.replace("-", ""), 10),
         isSelected: true,
-        isBooked: false,
       };
     }
 
@@ -168,7 +167,6 @@ function TheatreAddScreen() {
           const seat = screen.seats[seatKey] || {
             seatNumber: parseInt(seatKey.replace("-", ""), 10),
             isSelected: false,
-            isBooked: false,
           };
           seatObjects.push(seat);
         }
@@ -336,7 +334,7 @@ function TheatreAddScreen() {
                   <IoIosRemoveCircle />
                   Remove Screen
                 </div>
-                
+
                 {screen.showTimes.map((showTime, showTimeIndex) => (
                   <Form.Group
                     controlId={`showTime-${screenIndex}-${showTimeIndex}`}

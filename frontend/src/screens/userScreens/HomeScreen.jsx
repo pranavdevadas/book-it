@@ -19,8 +19,6 @@ function HomeScreen() {
     refetch: bannerRefetch
   } = useBannerDisplayQuery()
 
-  console.log(banners)
-
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
 

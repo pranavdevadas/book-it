@@ -92,16 +92,36 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
     }),
-    getSeatsForBooking: builder.query({
-      query: (id) => ({
-        url: `${USER_URL}/select-seats/${id}`,
-        method: "GET",
-      }),
-    }),
     bannerDisplay: builder.query({
       query: () => ({
         url: `${USER_URL}/banner-display`,
         method: "GET",
+      }),
+    }),
+    getSeatsss: builder.query({
+      query: ({screen, theatreId}) => ({
+        url: `${USER_URL}/get-seats/${theatreId}/${screen}`,
+        method: "GET",
+      }),
+    }),
+    theatreDetailsById: builder.query({
+      query: (id) => ({
+        url: `${USER_URL}/theatre/${id}`,
+        method: "GET",
+      }),
+    }), 
+    getAvailableSeatsForBooking: builder.query({
+      query: ({theatreId, screen, selectedTime, selectedDate}) => ({
+        url: `${USER_URL}/get-availableseats`,
+        method: "GET",
+        params: { theatreId, screen, selectedTime, selectedDate },
+      }),
+    }), 
+    createBooking: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/create-booking`,
+        method: "POST",
+        body: data,
       }),
     }),
   }),
@@ -121,6 +141,9 @@ export const {
   useAddSavedMoviesMutation,
   useGetSavedMoviesQuery,
   useRemoveSavedMovieMutation,
-  useGetSeatsForBookingQuery,
-  useBannerDisplayQuery
+  useBannerDisplayQuery,
+  useGetSeatsssQuery,
+  useTheatreDetailsByIdQuery,
+  useCreateBookingMutation,
+  useGetAvailableSeatsForBookingQuery
 } = userApiSlice;
