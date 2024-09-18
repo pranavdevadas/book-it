@@ -84,20 +84,22 @@ const showService = {
     if (!shows || shows.length === 0) {
       throw new Error("No shows found for this movie");
     }
+    
     const filteredShows = shows.filter((show) => {
       const { lat: theatreLat, lng: theatreLng } = show.theatre.location;
       const distance = getDistance(
         { latitude: userLat, longitude: userLng },
         { latitude: theatreLat, longitude: theatreLng }
       );
-      return distance <= 26000;
+      return distance <= 260000;
     });
 
-    if(filteredShows.length === 0) {
-      return shows
-    } else {
-      return filteredShows
-    }
+    // if(filteredShows.length === 0) {
+    //   return shows
+    // } else {
+    //   return filteredShows
+    // }
+    return filteredShows
   },
 
 };

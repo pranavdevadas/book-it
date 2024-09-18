@@ -45,5 +45,9 @@ router.post('/create-booking', userProtect, bookingController.createBooking)
 router.get('/get-availableseats', userProtect, bookingController.getBookingForSeats)
 router.get('/ticket', userProtect, bookingController.getTickets)
 
+//Rating
+router.post('/rating-review', userProtect, movieController.addRatingAndReview)
+router.get('/get-review/:movieId', userProtect, movieController.getAllReview)
+
 
 export default router

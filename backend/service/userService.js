@@ -220,6 +220,28 @@ let userService = {
       throw new Error('Banner not found')
     }
     return banners
+  },
+
+  addRatingAndReview : async (movie, rating, review, user) => {
+
+    if (!rating || !review) {
+      throw new Error("All fields are required");
+    }
+
+    const existingRating = await userRepository.findRatingByUser(user, movie)
+
+    if (existingRating) {
+      throw new Error("You have already reviewed this movie");
+    }
+
+    const createRatingAndReview = await userRepository.createRatingAndReview(user, movie, rating, review)
+
+    return createRatingAndReview
+  },
+
+  getAllReview: async(movie) => {
+    const reviews = await userRepository.findReviews(movie)
+    return reviews
   }
 };
 

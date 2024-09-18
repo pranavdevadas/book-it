@@ -1,23 +1,29 @@
 import expressAsyncHandler from "express-async-handler";
 import upload from "../config/multer.js";
 import adminService from "../service/adminService.js";
+import userService from "../service/userService.js";
 
 let movieController = {
   addMovie: [
     upload.single("poster"),
     expressAsyncHandler(async (req, res) => {
       const { name, duration, categories, language, cast } = req.body;
-      const normalizeName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+      const normalizeName =
+        name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
       try {
         const movieData = {
-          name : normalizeName,
+          name: normalizeName,
           duration,
-          categories: Array.isArray(categories) ? categories.map(cat => cat.trim()) : categories.split(",").map(cat => cat.trim()),
-          language: Array.isArray(language) ? language.map(lang => lang.trim()) : language.split(",").map(lang => lang.trim()),
-          cast: cast.split(",").map(actor => actor.trim()),
+          categories: Array.isArray(categories)
+            ? categories.map((cat) => cat.trim())
+            : categories.split(",").map((cat) => cat.trim()),
+          language: Array.isArray(language)
+            ? language.map((lang) => lang.trim())
+            : language.split(",").map((lang) => lang.trim()),
+          cast: cast.split(",").map((actor) => actor.trim()),
           poster: req.file ? req.file.filename : null,
         };
-  
+
         const createdMovie = await adminService.addMovie(movieData);
         res.status(201).json(createdMovie);
       } catch (error) {
@@ -54,12 +60,12 @@ let movieController = {
         if (req.file) {
           updatedData.poster = req.file.filename;
         }
-  
+
         let { updatedMovie } = await adminService.editMovie(
           req.params.id,
           updatedData
         );
-  
+
         res.status(200).json(updatedMovie);
       } catch (error) {
         res.status(400);
@@ -72,6 +78,37 @@ let movieController = {
     try {
       let { movie } = await adminService.getMovieById(req.params.id);
       res.status(200).json(movie);
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  addRatingAndReview: expressAsyncHandler(async (req, res) => {
+    try {
+      const { movieId, rating, review } = req.body;
+
+      const savedRating = await userService.addRatingAndReview(
+        movieId,
+        rating,
+        review,
+        req.user._id
+      );
+
+      res.status(200).json({
+        message: "Review added successfully",
+        rating: savedRating,
+      });
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
+  getAllReview: expressAsyncHandler(async (req, res) => {
+    try {
+      const reviews = await userService.getAllReview(req.params.movieId)
+      res.status(200).json(reviews)
     } catch (error) {
       res.status(400);
       throw new Error(error.message);
