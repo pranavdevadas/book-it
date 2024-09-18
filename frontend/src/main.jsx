@@ -46,6 +46,7 @@ import TheatreAddScreen from "./screens/ownerScreens/TheatreAddScreen.jsx";
 import TheatreEditScreen from './screens/ownerScreens/TheatreEditScreen.jsx'
 import NowShowingScreen from "./screens/ownerScreens/NowShowingScreen.jsx";
 import ShowAddScreen from "./screens/ownerScreens/ShowAddScreen.jsx";
+import BookingScreen from "./screens/ownerScreens/BookingScreen.jsx";
 
 
 const router = createBrowserRouter(
@@ -93,6 +94,7 @@ const router = createBrowserRouter(
         <Route path="edit-theatre/:id" element={<TheatreEditScreen />} />
         <Route path="now-showing" element={<NowShowingScreen />} />
         <Route path="add-show" element={<ShowAddScreen />} />
+        <Route path="booking" element={<BookingScreen />} />
       </Route>
       
 

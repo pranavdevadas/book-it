@@ -20,6 +20,7 @@ const bookingService = {
     userId,
     movieId,
     theatreId,
+    owner,
     screen,
     selectedSeats,
     selectedDate,
@@ -31,6 +32,7 @@ const bookingService = {
       userId,
       movieId,
       theatreId,
+      owner,
       screen,
       selectedSeats,
       selectedDate,
@@ -84,6 +86,14 @@ const bookingService = {
 
     return bookings.flatMap((booking) => booking.seats);
   },
+
+  findOwnerBookings: async(ownerId) => {
+    const bookings = await bookingRepository.findBookingByOwnerId(ownerId)
+    if (!bookings) {
+      throw new Error('Bookings not found')
+    }
+    return bookings
+  }
 };
 
 export default bookingService;

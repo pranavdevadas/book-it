@@ -37,6 +37,8 @@ function CheckoutScreen() {
     error: theatreError,
   } = useTheatreDetailsByIdQuery(theatreId);
 
+  console.log(theatre)
+
   const [createBooking] = useCreateBookingMutation();
 
   if (movieLoading || theatreLoading) {
@@ -45,6 +47,7 @@ function CheckoutScreen() {
 
   const totalTickets = selectedSeats.length;
   const totalPrice = totalTickets * theatre.ticketPrice;
+  const owner = theatre.owner
 
   const handlePayment = () => {
     const options = {
@@ -60,6 +63,7 @@ function CheckoutScreen() {
             movieId,
             theatreId,
             screen,
+            owner,
             selectedSeats,
             selectedDate,
             selectedTime,

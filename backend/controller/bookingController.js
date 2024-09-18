@@ -17,6 +17,7 @@ const bookingController = {
       const {
         movieId,
         theatreId,
+        owner,
         screen,
         selectedSeats,
         selectedDate,
@@ -25,10 +26,13 @@ const bookingController = {
         totalPrice,
       } = req.body;
 
+      console.log(owner)
+
       const createdBooking = await bookingService.createBooking(
         req.user._id,
         movieId,
         theatreId,
+        owner,
         screen,
         selectedSeats,
         selectedDate,
@@ -64,6 +68,15 @@ const bookingController = {
       res.status(400).json({ message: error.message });
     }
   }),
+
+  OwnerBookings: expressAsyncHandler(async (req, res) => {
+    try {
+      const bookings = await bookingService.findOwnerBookings(req.owner._id)
+      res.status(200).json(bookings)
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  })
 };
 
 export default bookingController;

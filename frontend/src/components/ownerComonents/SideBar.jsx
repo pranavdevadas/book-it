@@ -7,7 +7,8 @@ import {
   CDBSidebarMenu,
   CDBSidebarMenuItem,
 } from "cdbreact";
-import { FaRegUserCircle, FaHome, FaCity } from "react-icons/fa";
+import { IoTicketOutline } from "react-icons/io5";
+import { FaHome, FaCity } from "react-icons/fa";
 import { MdLocalMovies, MdOutlineTheaters } from "react-icons/md";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import { LuLogOut } from "react-icons/lu";
@@ -70,13 +71,13 @@ function SideBarOwner() {
                   </LinkContainer>
                 </CDBSidebarMenuItem>
 
-                {/* <LinkContainer to="/owner/users">
-                  <CDBSidebarMenuItem>
+                <CDBSidebarMenuItem>
+                  <LinkContainer to="/owner/booking">
                     <Nav.Link>
-                      <FaRegUserCircle /> &nbsp;Users
+                      <IoTicketOutline /> &nbsp;Booking
                     </Nav.Link>
-                  </CDBSidebarMenuItem>
-                </LinkContainer> */}
+                  </LinkContainer>
+                </CDBSidebarMenuItem>
 
                 {/* <LinkContainer to="/owner/owners">
                   <CDBSidebarMenuItem>

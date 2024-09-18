@@ -114,6 +114,12 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
       }),
     }),
+    getAllBookings: builder.query({
+      query: () => ({
+        url: `${OWNER_URL}/owner-getbookings`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -134,5 +140,6 @@ export const {
   useAddShowMutation,
   useToggleStatusMutation,
   useToggleTheatreStatusMutation,
-  useGetListedTheatresQuery
+  useGetListedTheatresQuery,
+  useGetAllBookingsQuery
 } = ownerApiSlice;

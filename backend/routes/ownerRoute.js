@@ -4,6 +4,7 @@ import { ownerProtect } from '../middleware/ownerAuthMiddleware.js'
 import ownerController from '../controller/ownerController.js'
 import theatreController from '../controller/theatreController.js'
 import showController from '../controller/showController.js'
+import bookingController from '../controller/bookingController.js'
 
 //Authentication
 router.post('/owner-auth', ownerController.authOwner)
@@ -36,5 +37,8 @@ router.get('/owner-nowshowing', ownerProtect, showController.getShows)
 router.get('/owner-getmovies', ownerProtect, showController.getAllMovies)
 router.post('/owner-addshow', ownerProtect, showController.addShow)
 router.patch('/show/:id/toggle-status', ownerProtect, showController.toggleStatus)
+
+//Booking
+router.get('/owner-getbookings', ownerProtect, bookingController.OwnerBookings)
 
 export default router

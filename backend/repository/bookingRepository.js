@@ -5,6 +5,7 @@ const bookingRepository = {
     userId,
     movieId,
     theatreId,
+    owner,
     screen,
     selectedSeats,
     selectedDate,
@@ -16,6 +17,7 @@ const bookingRepository = {
       user: userId,
       movie: movieId,
       theatre: theatreId,
+      owner,
       screen,
       seats: selectedSeats,
       showDate: selectedDate,
@@ -33,6 +35,22 @@ const bookingRepository = {
 
   getBookingsByCriteria: async (criteria) => {
     return await Booking.find(criteria);
+  },
+
+  findBookingByOwnerId: async (ownerId) => {
+    return await Booking.find({ owner: ownerId })
+      .populate({
+        path: "theatre",
+        select: "name city",
+      })
+      .populate({
+        path: "user",
+        select: "name",
+      })
+      .populate({
+        path: "movie",
+        select: "name",
+      });
   },
 };
 
