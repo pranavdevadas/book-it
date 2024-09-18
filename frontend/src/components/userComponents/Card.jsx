@@ -18,9 +18,7 @@ function UserCard({ movies }) {
 
   const handleSaveMovie = async (movieId) => {
     try {
-      console.log("Movie ID:", movieId); 
       const response = await addSavedMovie(movieId).unwrap();
-      console.log("Response:", response); 
       toast.success("Movie saved successfully!");
       refetchSavedMovies()
     } catch (error) {

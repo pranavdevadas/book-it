@@ -137,6 +137,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getAllReviews: builder.query({
+      query: ({movieId}) => ({
+        url: `${USER_URL}/get-review/${movieId}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -160,5 +166,6 @@ export const {
   useCreateBookingMutation,
   useGetAvailableSeatsForBookingQuery,
   useGetTicketsQuery,
-  useAddRatingAndReviewMutation
+  useAddRatingAndReviewMutation,
+  useGetAllReviewsQuery
 } = userApiSlice;
