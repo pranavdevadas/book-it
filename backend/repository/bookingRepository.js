@@ -1,4 +1,5 @@
 import Booking from "../model/booking.js";
+import Ticket from "../model/ticket.js";
 
 const bookingRepository = {
   createBooking: async ({
@@ -51,6 +52,16 @@ const bookingRepository = {
         path: "movie",
         select: "name",
       });
+  },
+
+  findBookingById: async (id) => {
+    return await Booking.findById(id);
+  },
+
+  createTicket: async (data) => {
+    const ticket = new Ticket(data);
+    await ticket.save();
+    return ticket;
   },
 };
 

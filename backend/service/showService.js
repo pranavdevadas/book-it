@@ -84,7 +84,6 @@ const showService = {
     if (!shows || shows.length === 0) {
       throw new Error("No shows found for this movie");
     }
-  
     const filteredShows = shows.filter((show) => {
       const { lat: theatreLat, lng: theatreLng } = show.theatre.location;
       const distance = getDistance(
@@ -94,8 +93,11 @@ const showService = {
       return distance <= 26000;
     });
 
-
-    return filteredShows;
+    if(filteredShows.length === 0) {
+      return shows
+    } else {
+      return filteredShows
+    }
   },
 
 };

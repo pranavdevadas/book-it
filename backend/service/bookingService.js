@@ -1,5 +1,7 @@
 import bookingRepository from "../repository/bookingRepository.js";
 import theatreRepository from "../repository/theatreRepository.js";
+import QRCode from "qrcode";
+import Ticket from '../model/ticket.js'
 
 const bookingService = {
   getSeatsForBooking: async (theatreId, screen) => {
@@ -41,33 +43,47 @@ const bookingService = {
       totalPrice,
     });
 
-    const theatre = await theatreRepository.findTheatreById(theatreId);
-    if (!theatre) {
-      throw new Error("Theatre not found");
-    }
+    if (booking.status === "confirmed") {
 
-    const selectedScreen = theatre.screens.find((s) => s.name === screen);
-    if (!selectedScreen) {
-      throw new Error("Screen not found");
-    }
+      try {
+        const generateUniqueTicketNumber = async () => {
+          let ticketNumber;
+          let isUnique = false;
+          while (!isUnique) {
+            ticketNumber = Math.floor(100000 + Math.random() * 900000).toString(); // Generates a random 6-digit number
+            const existingTicket = await Ticket.findOne({ ticketNumber });
+            if (!existingTicket) isUnique = true; // Ensures uniqueness
+          }
+          return ticketNumber;
+        };
+  
+        const ticketNumber = await generateUniqueTicketNumber();
+  
+        // Generate a QR code for the ticket
+        const qrCodeData = `Booking ID: ${booking._id}, Ticket No: ${ticketNumber}, Movie: ${movieId}, Seats: ${selectedSeats.join(",")}`;
+        const qrCode = await QRCode.toDataURL(qrCodeData);
+  
+        const tiket = await bookingRepository.createTicket({
+          booking: booking._id,
+          user: userId,
+          movie: movieId,
+          theatre: theatreId,
+          screen,
+          seats: selectedSeats,
+          showDate: selectedDate,
+          showTime: selectedTime,
+          ticketNumber,
+          qrCode, 
+        });
 
-    const showTime = selectedScreen.showTimes.find(
-      (time) => time.time === selectedTime
-    );
-    if (!showTime) {
-      throw new Error("Showtime not found");
-    }
-
-    selectedSeats.forEach((seatNumber) => {
-      const seat = showTime.seatStatus.find(
-        (seat) => seat.seatNumber === parseInt(seatNumber)
-      );
-      if (seat) {
-        seat.isBooked = true;
+        console.log(tiket)
+      } catch (error) {
+        console.log(error)
       }
-    });
 
-    await theatreRepository.saveTheatre(theatre);
+      
+    }
+
     return booking;
   },
 
@@ -87,13 +103,13 @@ const bookingService = {
     return bookings.flatMap((booking) => booking.seats);
   },
 
-  findOwnerBookings: async(ownerId) => {
-    const bookings = await bookingRepository.findBookingByOwnerId(ownerId)
+  findOwnerBookings: async (ownerId) => {
+    const bookings = await bookingRepository.findBookingByOwnerId(ownerId);
     if (!bookings) {
-      throw new Error('Bookings not found')
+      throw new Error("Bookings not found");
     }
-    return bookings
-  }
+    return bookings;
+  },
 };
 
 export default bookingService;

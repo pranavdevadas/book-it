@@ -22,12 +22,12 @@ const ticketSchema = new mongoose.Schema({
     required: true,
   },
   screen: {
-    type: String, 
+    type: String,
     required: true,
   },
   seats: [
     {
-      type: String, 
+      type: String,
       required: true,
     },
   ],
@@ -52,6 +52,7 @@ const ticketSchema = new mongoose.Schema({
     type: String,
   },
 });
+
 
 const Ticket = mongoose.model("Ticket", ticketSchema);
 export default Ticket;
