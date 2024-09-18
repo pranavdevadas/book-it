@@ -47,7 +47,7 @@ function ProfileScreen() {
         name,
         email,
         phone,
-        password: password || undefined // Send password only if it's provided
+        password: password || undefined
       }).unwrap();
       dispatch(setCredentials(result));
       toast.success("Profile Updated");

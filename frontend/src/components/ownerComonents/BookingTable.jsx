@@ -17,7 +17,6 @@ function BookingTable({ bookings, refetch }) {
     setCurrentPage(pageNumber);
   };
 
-  console.log(bookings);
 
   return (
     <Container>

@@ -130,6 +130,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    addRatingAndReview: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/rating-review`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -152,5 +159,6 @@ export const {
   useTheatreDetailsByIdQuery,
   useCreateBookingMutation,
   useGetAvailableSeatsForBookingQuery,
-  useGetTicketsQuery
+  useGetTicketsQuery,
+  useAddRatingAndReviewMutation
 } = userApiSlice;

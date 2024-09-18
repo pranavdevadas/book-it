@@ -9,6 +9,7 @@ import {
 import { format } from "date-fns";
 import "./style.css";
 import Search from "../../components/userComponents/Search";
+import RatingForm from "../../components/userComponents/RatingReview";
 
 function MovieDetails() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ function MovieDetails() {
   if (movieError) {
     console.log("Movie Error:", movieError);
   }
-  
+
   if (showsError) {
     console.log("Shows Error:", showsError);
   }
@@ -71,8 +72,8 @@ function MovieDetails() {
 
   const poster = `http://localhost:5000/moviePoster/${movie.poster}`;
 
-  const today = new Date(); // Get today's date
-  const currentTime = format(today, "HH:mm"); // Get current time in 'HH:mm' format
+  const today = new Date();
+  const currentTime = format(today, "HH:mm");
 
   const dates = Array.from({ length: 5 }, (_, i) => {
     const date = new Date(today);
@@ -80,7 +81,7 @@ function MovieDetails() {
     return date;
   });
 
-  const isToday = selectedDate === format(today, "yyyy-MM-dd"); // Check if the selected date is today
+  const isToday = selectedDate === format(today, "yyyy-MM-dd");
 
   const filteredTheatres = shows
     ? shows.filter((show) => {
@@ -96,7 +97,7 @@ function MovieDetails() {
         selectedTime: time,
         screen,
         theatreId,
-        movieId : movie._id
+        movieId: movie._id,
       },
     });
   };
@@ -177,7 +178,7 @@ function MovieDetails() {
                           show.theatre._id,
                           show.screen,
                           selectedDate,
-                          time,
+                          time
                         )
                       }
                       disabled={!selectedDate}
@@ -191,6 +192,13 @@ function MovieDetails() {
         ) : (
           <p className="text-center">No nearby theatres available</p>
         )}
+        <h2
+          className="fw-bold text-center mt-3 mb-4"
+          style={{ color: "orange" }}
+        >
+          Add Your Rating & Review
+        </h2>
+        <RatingForm movieId={movie._id} />
       </Container>
     </>
   );

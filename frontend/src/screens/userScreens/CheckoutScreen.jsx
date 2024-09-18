@@ -37,7 +37,6 @@ function CheckoutScreen() {
     error: theatreError,
   } = useTheatreDetailsByIdQuery(theatreId);
 
-  console.log(theatre)
 
   const [createBooking] = useCreateBookingMutation();
 

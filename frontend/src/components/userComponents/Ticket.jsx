@@ -7,7 +7,6 @@ function Ticket({ tickets }) {
   const ticketsPerPage = 4;
   const totalPages = Math.ceil(tickets.length / ticketsPerPage);
 
-  // Calculate the start and end index of the tickets to be displayed
   const startIndex = (currentPage - 1) * ticketsPerPage;
   const endIndex = startIndex + ticketsPerPage;
   const currentTickets = tickets.slice(startIndex, endIndex);
