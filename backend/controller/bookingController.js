@@ -76,6 +76,15 @@ const bookingController = {
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
+  }),
+
+  getTickets: expressAsyncHandler(async (req, res) => {
+    try {
+      const tickets = await bookingService.getTickets(req.user._id)
+      res.status(200).json(tickets)
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
   })
 };
 

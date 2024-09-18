@@ -15,7 +15,7 @@ import {
   useLogoutMutation,
   useGetSavedMoviesQuery,
   useRemoveSavedMovieMutation,
-  useAddSavedMoviesMutation
+  useAddSavedMoviesMutation,
 } from "../../slice/userSlice/userApiSlice";
 import { clearCredentials } from "../../slice/userSlice/userAuthSlice";
 import { toast } from "react-toastify";
@@ -91,7 +91,7 @@ function Header() {
                   </div>
                   <IoCloseSharp
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent click event from propagating to parent div
+                      e.stopPropagation(); 
                       handleRemoveMovie(item.movie._id);
                     }}
                     style={{
@@ -115,7 +115,6 @@ function Header() {
     try {
       await removesavedmovie(movieId).unwrap();
       toast.success("Movie removed Successfully");
-      // Remove the movie from local state
       setMoviesList((prevList) => ({
         ...prevList,
         items: prevList.items.filter((item) => item.movie._id !== movieId),
@@ -129,7 +128,6 @@ function Header() {
     try {
       await addsavedmovie(movieId).unwrap();
       toast.success("Movie added Successfully");
-      // Optionally refetch to get the updated list from the server
       refetch();
     } catch (error) {
       toast.error("Failed to add movie");
@@ -156,6 +154,9 @@ function Header() {
               </LinkContainer>
               <LinkContainer to="/movie">
                 <Nav.Link>Movie</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/ticket">
+                <Nav.Link>Ticket</Nav.Link>
               </LinkContainer>
             </Nav>
             <Nav className="ms-auto">

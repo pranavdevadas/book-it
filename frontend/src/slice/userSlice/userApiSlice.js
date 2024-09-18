@@ -124,7 +124,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    
+    getTickets: builder.query({
+      query: () => ({
+        url: `${USER_URL}/ticket`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -146,5 +151,6 @@ export const {
   useGetSeatsssQuery,
   useTheatreDetailsByIdQuery,
   useCreateBookingMutation,
-  useGetAvailableSeatsForBookingQuery
+  useGetAvailableSeatsForBookingQuery,
+  useGetTicketsQuery
 } = userApiSlice;

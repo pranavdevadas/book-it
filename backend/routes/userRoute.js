@@ -43,6 +43,7 @@ router.get('/get-seats/:theatreId/:screen', bookingController.getSeatsForBooking
 router.get('/theatre/:id', userProtect, theatreController.getTheatreById)
 router.post('/create-booking', userProtect, bookingController.createBooking)
 router.get('/get-availableseats', userProtect, bookingController.getBookingForSeats)
+router.get('/ticket', userProtect, bookingController.getTickets)
 
 
 export default router

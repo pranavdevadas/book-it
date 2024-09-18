@@ -63,6 +63,18 @@ const bookingRepository = {
     await ticket.save();
     return ticket;
   },
+
+  findTicketByUserId: async (user) => {
+    return await Ticket.find({ user })
+      .populate({
+        path: "theatre",
+        select: "name city",
+      })
+      .populate({
+        path: "movie",
+        select: "name poster",
+      }).sort({issuedDate: -1})
+  },
 };
 
 export default bookingRepository;

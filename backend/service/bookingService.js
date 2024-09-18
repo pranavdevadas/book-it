@@ -1,7 +1,7 @@
 import bookingRepository from "../repository/bookingRepository.js";
 import theatreRepository from "../repository/theatreRepository.js";
 import QRCode from "qrcode";
-import Ticket from '../model/ticket.js'
+import Ticket from "../model/ticket.js";
 
 const bookingService = {
   getSeatsForBooking: async (theatreId, screen) => {
@@ -44,44 +44,38 @@ const bookingService = {
     });
 
     if (booking.status === "confirmed") {
+      const generateUniqueTicketNumber = async () => {
+        let ticketNumber;
+        let isUnique = false;
+        while (!isUnique) {
+          ticketNumber = Math.floor(100000 + Math.random() * 900000).toString();
+          const existingTicket = await Ticket.findOne({ ticketNumber });
+          if (!existingTicket) isUnique = true;
+        }
+        return ticketNumber;
+      };
 
-      try {
-        const generateUniqueTicketNumber = async () => {
-          let ticketNumber;
-          let isUnique = false;
-          while (!isUnique) {
-            ticketNumber = Math.floor(100000 + Math.random() * 900000).toString(); // Generates a random 6-digit number
-            const existingTicket = await Ticket.findOne({ ticketNumber });
-            if (!existingTicket) isUnique = true; // Ensures uniqueness
-          }
-          return ticketNumber;
-        };
-  
-        const ticketNumber = await generateUniqueTicketNumber();
-  
-        // Generate a QR code for the ticket
-        const qrCodeData = `Booking ID: ${booking._id}, Ticket No: ${ticketNumber}, Movie: ${movieId}, Seats: ${selectedSeats.join(",")}`;
-        const qrCode = await QRCode.toDataURL(qrCodeData);
-  
-        const tiket = await bookingRepository.createTicket({
-          booking: booking._id,
-          user: userId,
-          movie: movieId,
-          theatre: theatreId,
-          screen,
-          seats: selectedSeats,
-          showDate: selectedDate,
-          showTime: selectedTime,
-          ticketNumber,
-          qrCode, 
-        });
+      const ticketNumber = await generateUniqueTicketNumber();
 
-        console.log(tiket)
-      } catch (error) {
-        console.log(error)
-      }
+      const qrCodeData = `Booking ID: ${
+        booking._id
+      }, Ticket No: ${ticketNumber}, Movie: ${movieId}, Seats: ${selectedSeats.join(
+        ","
+      )}`;
+      const qrCode = await QRCode.toDataURL(qrCodeData);
 
-      
+      await bookingRepository.createTicket({
+        booking: booking._id,
+        user: userId,
+        movie: movieId,
+        theatre: theatreId,
+        screen,
+        seats: selectedSeats,
+        showDate: selectedDate,
+        showTime: selectedTime,
+        ticketNumber,
+        qrCode,
+      });
     }
 
     return booking;
@@ -109,6 +103,14 @@ const bookingService = {
       throw new Error("Bookings not found");
     }
     return bookings;
+  },
+
+  getTickets: async (id) => {
+    const tickets = await bookingRepository.findTicketByUserId(id)
+    if (!tickets) {
+      throw new Error('No Tickets found')
+    }
+    return tickets
   },
 };
 
