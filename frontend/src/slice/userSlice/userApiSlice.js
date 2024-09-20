@@ -143,6 +143,20 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    sendOtpToMobile: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/send-mob-otp`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    confirmOtpAndChangePassword: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/confirm-otp`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -167,5 +181,7 @@ export const {
   useGetAvailableSeatsForBookingQuery,
   useGetTicketsQuery,
   useAddRatingAndReviewMutation,
-  useGetAllReviewsQuery
+  useGetAllReviewsQuery,
+  useSendOtpToMobileMutation,
+  useConfirmOtpAndChangePasswordMutation
 } = userApiSlice;

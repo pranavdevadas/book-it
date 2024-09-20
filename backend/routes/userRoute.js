@@ -15,6 +15,8 @@ router.post('/verify-otp', userController.verifyOtp)
 router.post('/resend-otp', userController.resendOtp)
 router.post('/google', userController.google)
 router.get('/fetchData', userProtect, userController.fetchData)
+router.post('/send-mob-otp', userController.sendOtpToMobile)
+router.post('/confirm-otp', userController.confirmOtpAndChangePassword)
 
 // Profile
 router.route('/profile')

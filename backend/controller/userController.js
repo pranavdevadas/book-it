@@ -2,6 +2,13 @@ import expressAsyncHandler from "express-async-handler";
 import userService from "../service/userService.js";
 import userGenerateToken from "../utils/userGenerateToken.js";
 import showService from "../service/showService.js";
+import twilio from "twilio";
+import User from "../model/user.js";
+import bcrypt from 'bcryptjs'
+
+const accountSid = "AC66b973cbe90e01dd00b797b46a78f82f";
+const authToken = "5d5b206cb9e096e895d816bd0c983e56";
+const client = new twilio(accountSid, authToken);
 
 const userController = {
   authUser: expressAsyncHandler(async (req, res) => {
@@ -163,28 +170,30 @@ const userController = {
       }
       const result = await userService.addSavedMovieService(userId, movieId);
 
-      res.status(200).json({ message: 'Movie added Successfully' });
+      res.status(200).json({ message: "Movie added Successfully" });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   }),
 
-  savedMovies: expressAsyncHandler(async (req,res) => {
+  savedMovies: expressAsyncHandler(async (req, res) => {
     try {
       const userId = req.user._id;
-      const moviesList = await userService.savedMovies(userId)
-      res.status(200).json(moviesList)
+      const moviesList = await userService.savedMovies(userId);
+      res.status(200).json(moviesList);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   }),
 
-  removeSavedMovie: expressAsyncHandler(async (req,res) => {    
+  removeSavedMovie: expressAsyncHandler(async (req, res) => {
     const movieId = req.params.id;
     const userId = req.user._id;
     try {
       const result = await userService.removeSavedMovie(movieId, userId);
-      res.status(200).json({ message: 'Movie removed from saved list', data: result });
+      res
+        .status(200)
+        .json({ message: "Movie removed from saved list", data: result });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -192,15 +201,66 @@ const userController = {
 
   bannerDisplay: expressAsyncHandler(async (req, res) => {
     try {
-      const banners = await userService.bannerDisplay()
-      res.status(200).json(banners)
+      const banners = await userService.bannerDisplay();
+      res.status(200).json(banners);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   }),
 
-  
+  sendOtpToMobile: expressAsyncHandler(async (req, res) => {
+    try {
+      const { phone } = req.body;
 
+      const user = await User.findOne({ phone });
+      if (!user) {
+        return res.status(400).json({ message: "You are not registered." });
+      }
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+      user.otp = otp;
+      await user.save();
+
+      await client.messages.create({
+        body: `Your OTP is ${otp}`,
+        from: "+14233015018",
+        to: `+91${phone}`,
+      });
+
+      res.status(200).json({ message: "OTP sent successfully." });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
+  confirmOtpAndChangePassword: expressAsyncHandler(async (req, res) => {
+    try {
+      const { phone, otp, newPassword } = req.body;
+
+      const user = await User.findOne({ phone });
+      if (!user) {
+        return res.status(400).json({ message: "User not found." });
+      }
+
+      if (user.otp !== otp) {
+        return res.status(400).json({ message: "Invalid OTP." });
+      }
+
+      if (newPassword.length < 6) {
+        return res
+          .status(400)
+          .json({ message: "Password must be at least 6 characters long." });
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      
+      await user.save();
+
+      res.status(200).json({ message: "Password changed successfully." });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
 };
 
 export default userController;

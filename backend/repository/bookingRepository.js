@@ -51,11 +51,11 @@ const bookingRepository = {
       .populate({
         path: "movie",
         select: "name",
-      });
+      }).sort({ bookingDate: -1 })
   },
 
   findBookingById: async (id) => {
-    return await Booking.findById(id);
+    return await Booking.findById(id)
   },
 
   createTicket: async (data) => {
@@ -73,7 +73,8 @@ const bookingRepository = {
       .populate({
         path: "movie",
         select: "name poster",
-      }).sort({issuedDate: -1})
+      })
+      .sort({ issuedDate: -1 });
   },
 };
 

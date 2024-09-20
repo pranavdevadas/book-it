@@ -39,8 +39,10 @@ function Header() {
   const [addsavedmovie] = useAddSavedMoviesMutation();
 
   useEffect(() => {
-    setMoviesList(initialMoviesList);
-  }, [initialMoviesList]);
+    if (moviesList.items.length !== initialMoviesList.items.length) {
+      setMoviesList(initialMoviesList);
+    }
+  }, [initialMoviesList, moviesList.items.length]);
 
   const logoutHandler = async () => {
     try {

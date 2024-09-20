@@ -16,6 +16,7 @@ function HomeScreen() {
 
   const {
     data: banners = [],
+    isLoading: bannerLoading,
     refetch: bannerRefetch
   } = useBannerDisplayQuery()
 
@@ -36,7 +37,7 @@ function HomeScreen() {
     <>
       <Container>
         <Carousels banner={banners} bannerRefetch={bannerRefetch} />
-        {isLoading ? (
+        {isLoading || bannerLoading ? (
           <Loader />
         ) : error ? (
           toast.error(error.message)

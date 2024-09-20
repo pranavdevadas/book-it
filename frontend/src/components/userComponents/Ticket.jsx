@@ -53,7 +53,6 @@ function Ticket({ tickets }) {
                       <img
                         src={`http://localhost:5000/moviePoster/${ticket.movie.poster}`}
                         alt="Movie Poster"
-                        className=""
                         style={{ width: "120px", filter: expired ? "grayscale(100%)" : "none" }}
                       />
                       <h2 style={{ margin: "10px 0" }}>{ticket.movie.name}</h2>

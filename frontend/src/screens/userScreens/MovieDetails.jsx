@@ -192,15 +192,13 @@ function MovieDetails() {
         ) : (
           <p className="text-center">No nearby theatres available</p>
         )}
-        <hr />
         <h3
           className="fw-bold text-center mt-3 mb-4"
           style={{ color: "orange" }}
         >
           Add Movie Rating & Review
         </h3>
-        <RatingForm movieId={movie._id} /><hr />
-        
+        <RatingForm movieId={movie._id} />
       </Container>
     </>
   );

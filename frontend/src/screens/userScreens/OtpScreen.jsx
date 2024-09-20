@@ -11,8 +11,8 @@ function LoginScreen() {
     const location = useLocation();
     const [otp, setOtp] = useState('');
     const email = location.state?.email || ''; 
-    const [isResendDisabled, setIsResendDisabled] = useState(true); // Initially disable resend button
-    const [timer, setTimer] = useState(30); // Set the timer to 30 seconds initially
+    const [isResendDisabled, setIsResendDisabled] = useState(true); 
+    const [timer, setTimer] = useState(30);
 
     const [verifyOtp, { isLoading: verifyLoading }] = useVerifyOtpMutation();
     const [resendOtp, { isLoading: resendLoading }] = useResendOtpMutation();
@@ -24,7 +24,7 @@ function LoginScreen() {
                 setTimer((prevTimer) => prevTimer - 1);
             }, 1000);
         } else {
-            setIsResendDisabled(false); // Enable the resend button after 30 seconds
+            setIsResendDisabled(false); 
         }
         return () => clearInterval(interval);
     }, [timer]);

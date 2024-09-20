@@ -26,8 +26,6 @@ const bookingController = {
         totalPrice,
       } = req.body;
 
-      console.log(owner)
-
       const createdBooking = await bookingService.createBooking(
         req.user._id,
         movieId,
