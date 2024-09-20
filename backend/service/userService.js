@@ -3,6 +3,8 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import userRepository from "../repository/userRepository.js";
 import userGenerateToken from "../utils/userGenerateToken.js";
+import twilio from "twilio";
+
 
 dotenv.config();
 
@@ -203,46 +205,75 @@ let userService = {
       throw new Error("Movie already saved");
     }
     moviesList.items.sort((a, b) => new Date(b.date) - new Date(a.date));
-    return moviesList
+    return moviesList;
   },
 
   removeSavedMovie: async (movieId, userId) => {
     const result = await userRepository.deleteSavedMovieById(movieId, userId);
     if (!result) {
-      throw new Error('Movie not found in saved list');
+      throw new Error("Movie not found in saved list");
     }
     return result;
   },
 
   bannerDisplay: async () => {
-    const banners = await userRepository.findBanner()
+    const banners = await userRepository.findBanner();
     if (!banners) {
-      throw new Error('Banner not found')
+      throw new Error("Banner not found");
     }
-    return banners
+    return banners;
   },
 
-  addRatingAndReview : async (movie, rating, review, user) => {
-
+  addRatingAndReview: async (movie, rating, review, user) => {
     if (!rating || !review) {
       throw new Error("All fields are required");
     }
 
-    const existingRating = await userRepository.findRatingByUser(user, movie)
+    const existingRating = await userRepository.findRatingByUser(user, movie);
 
     if (existingRating) {
       throw new Error("You have already reviewed this movie");
     }
 
-    const createRatingAndReview = await userRepository.createRatingAndReview(user, movie, rating, review)
+    const createRatingAndReview = await userRepository.createRatingAndReview(
+      user,
+      movie,
+      rating,
+      review
+    );
 
-    return createRatingAndReview
+    return createRatingAndReview;
   },
 
-  getAllReview: async(movie) => {
-    const reviews = await userRepository.findReviews(movie)
-    return reviews
-  }
+  getAllReview: async (movie) => {
+    const reviews = await userRepository.findReviews(movie);
+    return reviews;
+  },
+
+  sendOtpToMobile: async (phone) => {
+    const user = await userRepository.findByPhone(phone);
+
+    if (!user) {
+      throw new Error("You are not registered.");
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.otp = otp;
+    await user.save();
+
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIOAUTHTOKEN;
+    const client = new twilio(accountSid, authToken);
+
+    await client.messages.create({
+      body: `Your OTP is ${otp}`,
+      from: "+14233015018",
+      to: `+91${phone}`,
+    });
+
+    return;
+  },
 };
 
 export default userService;

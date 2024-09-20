@@ -212,20 +212,22 @@ const userController = {
     try {
       const { phone } = req.body;
 
-      const user = await User.findOne({ phone });
-      if (!user) {
-        return res.status(400).json({ message: "You are not registered." });
-      }
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      await userService.sendOtpToMobile(phone)
 
-      user.otp = otp;
-      await user.save();
+      // const user = await User.findOne({ phone });
+      // if (!user) {
+      //   return res.status(400).json({ message: "You are not registered." });
+      // }
+      // const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-      await client.messages.create({
-        body: `Your OTP is ${otp}`,
-        from: "+14233015018",
-        to: `+91${phone}`,
-      });
+      // user.otp = otp;
+      // await user.save();
+
+      // await client.messages.create({
+      //   body: `Your OTP is ${otp}`,
+      //   from: "+14233015018",
+      //   to: `+91${phone}`,
+      // });
 
       res.status(200).json({ message: "OTP sent successfully." });
     } catch (error) {

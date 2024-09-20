@@ -73,8 +73,8 @@ let userRepository = {
     return await newRating.save();
   },
 
-  findReviews: async (movie) => {     
-    return await Rating.find({movie : movie})
+  findReviews: async (movie) => {
+    return await Rating.find({ movie: movie })
       .populate({
         path: "user",
         select: "name",
@@ -83,6 +83,10 @@ let userRepository = {
         path: "movie",
         select: "name",
       });
+  },
+
+  findByPhone: async (phone) => {
+    return await User.findOne({ phone });
   },
 };
 
