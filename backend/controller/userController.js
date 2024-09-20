@@ -4,7 +4,7 @@ import userGenerateToken from "../utils/userGenerateToken.js";
 import showService from "../service/showService.js";
 import twilio from "twilio";
 import User from "../model/user.js";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIOAUTHTOKEN;
@@ -212,22 +212,7 @@ const userController = {
     try {
       const { phone } = req.body;
 
-      await userService.sendOtpToMobile(phone)
-
-      // const user = await User.findOne({ phone });
-      // if (!user) {
-      //   return res.status(400).json({ message: "You are not registered." });
-      // }
-      // const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-      // user.otp = otp;
-      // await user.save();
-
-      // await client.messages.create({
-      //   body: `Your OTP is ${otp}`,
-      //   from: "+14233015018",
-      //   to: `+91${phone}`,
-      // });
+      await userService.sendOtpToMobile(phone);
 
       res.status(200).json({ message: "OTP sent successfully." });
     } catch (error) {
@@ -239,24 +224,7 @@ const userController = {
     try {
       const { phone, otp, newPassword } = req.body;
 
-      const user = await User.findOne({ phone });
-      if (!user) {
-        return res.status(400).json({ message: "User not found." });
-      }
-
-      if (user.otp !== otp) {
-        return res.status(400).json({ message: "Invalid OTP." });
-      }
-
-      if (newPassword.length < 6) {
-        return res
-          .status(400)
-          .json({ message: "Password must be at least 6 characters long." });
-      }
-
-      user.password = await bcrypt.hash(newPassword, 10);
-      
-      await user.save();
+      await userService.confirmOtpAndChangePassword(phone, otp, newPassword);
 
       res.status(200).json({ message: "Password changed successfully." });
     } catch (error) {

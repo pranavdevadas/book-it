@@ -5,7 +5,6 @@ import userRepository from "../repository/userRepository.js";
 import userGenerateToken from "../utils/userGenerateToken.js";
 import twilio from "twilio";
 
-
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -273,6 +272,28 @@ let userService = {
     });
 
     return;
+  },
+
+  confirmOtpAndChangePassword: async (phone, otp, password) => {
+    const user = await userRepository.findByPhone(phone);
+
+    if (!user) {
+      throw new Error("You are not registered.");
+    }
+
+    if (user.otp !== otp) {
+      throw new Error("Invalid OTP.")
+    }
+
+    if (password.length < 6) {
+      throw new Error("Password must be at least 6 characters long.")
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    
+    await user.save();
+
+    return 
   },
 };
 

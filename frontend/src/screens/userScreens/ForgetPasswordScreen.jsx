@@ -30,7 +30,7 @@ function ForgetPasswordScreen() {
       toast.success(res.message);
       setOtpSent(true);
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to send OTP");
+      toast.error(error?.data?.message);
     }
   };
 
