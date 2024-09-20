@@ -6,7 +6,7 @@ import twilio from "twilio";
 import User from "../model/user.js";
 import bcrypt from 'bcryptjs'
 
-const accountSid = process.env.ACCOUNTSID;
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIOAUTHTOKEN;
 const client = new twilio(accountSid, authToken);
 
