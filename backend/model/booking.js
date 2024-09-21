@@ -48,15 +48,23 @@ const bookingSchema = new mongoose.Schema({
   bookingDate: {
     type: Date,
     default: Date.now,
-    require: true
+    require: true,
   },
   status: {
     type: String,
     enum: ["confirmed", "cancelled", "pending"],
     default: "pending",
-    require: true
+    require: true,
   },
 });
+
+bookingSchema.index(
+  { bookingDate: 1 },
+  {
+    expireAfterSeconds: 300,
+    partialFilterExpression: { status: "pending" },
+  }
+);
 
 const Booking = mongoose.model("Booking", bookingSchema);
 export default Booking;
