@@ -6,6 +6,7 @@ import showController from '../controller/showController.js'
 import movieController from '../controller/movieController.js'
 import bookingController from '../controller/bookingController.js'
 import theatreController from '../controller/theatreController.js'
+import walletController from '../controller/walletController.js'
 
 // Autherisation
 router.post('/', userController.registerUser)
@@ -51,6 +52,11 @@ router.post('/update-booking', userProtect, bookingController.updateBooking)
 //Rating
 router.post('/rating-review', userProtect, movieController.addRatingAndReview)
 router.get('/get-review/:movieId', userProtect, movieController.getAllReview)
+
+//Wallet
+router.post('/add-amount-wallet', userProtect, walletController.addAmount)
+router.get('/transactions', userProtect, walletController.getTransactions)
+router.get('/wallet-balance', userProtect, walletController.getWalletBalance)
 
 
 export default router

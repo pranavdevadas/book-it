@@ -36,6 +36,7 @@ import CheckoutScreen from "./screens/userScreens/CheckoutScreen.jsx";
 import ThankyouScreen from "./screens/userScreens/ThankyouScreen.jsx";
 import TicketScreen from "./screens/userScreens/TicketScreen.jsx";
 import ForgetPasswordScreen from "./screens/userScreens/ForgetPasswordScreen.jsx";
+import WalletScreen from './screens/userScreens/WalletScreen.jsx'
 
 import OwnerLoginScreen from "./screens/ownerScreens/LoginScreen.jsx";
 import OwnerPrivateRoute from "./components/ownerComonents/PrivateRoute.jsx";
@@ -70,6 +71,7 @@ const router = createBrowserRouter(
         <Route path="/checkout" element={<CheckoutScreen />} />
         <Route path="/thank-you" element={<ThankyouScreen />} />
         <Route path="/ticket" element={<TicketScreen />} />
+        <Route path="/wallet" element={<WalletScreen />} />
       </Route>
 
       {/* Admin Routes */}

@@ -9,6 +9,8 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSignInAlt, FaSignOutAlt, FaRegBookmark } from "react-icons/fa";
+import { RiProfileLine } from "react-icons/ri";
+import { FaWallet } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import {
@@ -93,7 +95,7 @@ function Header() {
                   </div>
                   <IoCloseSharp
                     onClick={(e) => {
-                      e.stopPropagation(); 
+                      e.stopPropagation();
                       handleRemoveMovie(item.movie._id);
                     }}
                     style={{
@@ -157,9 +159,11 @@ function Header() {
               <LinkContainer to="/movie">
                 <Nav.Link>Movie</Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/ticket">
-                <Nav.Link>Ticket</Nav.Link>
-              </LinkContainer>
+              {userInfo && (
+                <LinkContainer to="/ticket">
+                  <Nav.Link>Ticket</Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
             <Nav className="ms-auto">
               {userInfo ? (
@@ -176,10 +180,17 @@ function Header() {
                   </OverlayTrigger>
                   <NavDropdown title={userInfo.name} id="userName">
                     <LinkContainer to="/profile">
-                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                      <NavDropdown.Item>
+                        <RiProfileLine /> Profile
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/wallet">
+                      <NavDropdown.Item>
+                        <FaWallet /> Wallet
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <NavDropdown.Item onClick={logoutHandler}>
-                      Logout
+                      <FaSignOutAlt /> Logout
                     </NavDropdown.Item>
                   </NavDropdown>
                 </>

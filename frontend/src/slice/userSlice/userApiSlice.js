@@ -164,6 +164,25 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addAmountToWallet: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/add-amount-wallet`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getTransactions: builder.query({
+      query: () => ({
+        url: `${USER_URL}/transactions`,
+        method: "GET",
+      }),
+    }),
+    getWalletBalance: builder.query({
+      query: () => ({
+        url: `${USER_URL}/wallet-balance`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -192,4 +211,7 @@ export const {
   useSendOtpToMobileMutation,
   useConfirmOtpAndChangePasswordMutation,
   useUpdateBookingMutation,
+  useAddAmountToWalletMutation,
+  useGetTransactionsQuery,
+  useGetWalletBalanceQuery
 } = userApiSlice;
