@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   useMoveDetailsByIdQuery,
   useTheatreDetailsByIdQuery,
-  useCreateBookingMutation,
+  useUpdateBookingMutation,
 } from "../../slice/userSlice/userApiSlice";
 import Loader from "../../components/userComponents/Loader";
 import { toast } from "react-toastify";
@@ -20,25 +20,19 @@ function CheckoutScreen() {
     selectedDate,
     selectedTime,
     theatreId,
+    bookingId,
     screen,
     selectedSeats,
     movieId,
   } = location.state;
 
-  const {
-    data: movie,
-    isLoading: movieLoading,
-    error: movieError,
-  } = useMoveDetailsByIdQuery(movieId);
+  const { data: movie, isLoading: movieLoading } =
+    useMoveDetailsByIdQuery(movieId);
 
-  const {
-    data: theatre,
-    isLoading: theatreLoading,
-    error: theatreError,
-  } = useTheatreDetailsByIdQuery(theatreId);
+  const { data: theatre, isLoading: theatreLoading } =
+    useTheatreDetailsByIdQuery(theatreId);
 
-
-  const [createBooking] = useCreateBookingMutation();
+  const [updateBooking] = useUpdateBookingMutation();
 
   if (movieLoading || theatreLoading) {
     return <Loader />;
@@ -46,33 +40,29 @@ function CheckoutScreen() {
 
   const totalTickets = selectedSeats.length;
   const totalPrice = totalTickets * theatre.ticketPrice;
-  const owner = theatre.owner
+
 
   const handlePayment = () => {
     const options = {
       key: "rzp_test_TVVqN3CVooB2Tt",
-      amount: totalPrice * 100,
+      amount: totalPrice * 100, 
       currency: "INR",
       name: "Book it",
       description: `Booking for ${movie.name} at ${theatre.name}`,
-      image: "p",
       handler: async function (response) {
         try {
-          await createBooking({
-            movieId,
-            theatreId,
-            screen,
-            owner,
-            selectedSeats,
-            selectedDate,
-            selectedTime,
+          await updateBooking({
+            bookingId,
             paymentMethod: "razorpay",
+            paymentStatus: "completed",
             totalPrice,
           });
-          toast.success(`Booking Completed`);
+          toast.success("Booking Completed");
           navigate("/thank-you");
         } catch (error) {
-          toast.error(`Booking failed: ${error.message}`);
+          toast.error(
+            `Booking failed: ${error.data?.message || error.message}`
+          );
         }
 
         console.log(response.razorpay_payment_id);

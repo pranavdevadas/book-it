@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   useGetSeatsssQuery,
   useGetAvailableSeatsForBookingQuery,
+  useTheatreDetailsByIdQuery,
+  useCreateBookingMutation
 } from "../../slice/userSlice/userApiSlice";
 import Loader from "../../components/userComponents/Loader";
 
@@ -30,6 +32,13 @@ function SelectSeatsScreen() {
     selectedTime,
   });
 
+  const {
+    data: theatre,
+    isLoading: theatreLoading,
+  } = useTheatreDetailsByIdQuery(theatreId);
+
+  const [createBooking] = useCreateBookingMutation();
+
   useEffect(() => {
     refetch();
   }, [refetch]);
@@ -38,7 +47,7 @@ function SelectSeatsScreen() {
     return <Alert variant="danger">{error.data.message}</Alert>;
   }
 
-  if (isLoading) {
+  if (isLoading || theatreLoading) {
     return <Loader />;
   }
 
@@ -54,8 +63,44 @@ function SelectSeatsScreen() {
     });
   };
 
-  const seats = data.seats || {};
+  const handleCheckout = async () => {
+    const selectedSeats = Array.from(clickedSeats).map(
+      (seatIndex) => seats[seatIndex]?.seatNumber
+    );
 
+    try {
+
+      const booking = await createBooking({
+        movieId,
+        theatreId,
+        screen,
+        owner : theatre.owner,
+        selectedSeats,
+        selectedDate,
+        selectedTime,
+      });
+
+      navigate("/checkout", {
+        state: {
+          selectedDate,
+          selectedTime,
+          theatreId,
+          bookingId : booking.data._id,
+          screen,
+          selectedSeats,
+          movieId,
+        },
+      })
+
+    } catch (error) {
+      toast.error(`Booking failed: ${error.data.message}`);
+    }
+    
+  };
+
+
+
+  const seats = data.seats || {};
   const renderSeats = () => {
     const rows = [];
     for (let row = 9; row >= 0; row--) {
@@ -126,21 +171,7 @@ function SelectSeatsScreen() {
     return rows;
   };
 
-  const handleCheckout = () => {
-    const selectedSeatNumbers = Array.from(clickedSeats).map(
-      (seatIndex) => seats[seatIndex]?.seatNumber
-    );
-    navigate("/checkout", {
-      state: {
-        selectedDate,
-        selectedTime,
-        theatreId,
-        screen,
-        selectedSeats: selectedSeatNumbers,
-        movieId,
-      },
-    });
-  };
+  
 
   return (
     <Container className="mt-3">

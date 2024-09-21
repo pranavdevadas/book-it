@@ -22,8 +22,6 @@ const bookingController = {
         selectedSeats,
         selectedDate,
         selectedTime,
-        paymentMethod,
-        totalPrice,
       } = req.body;
 
       const createdBooking = await bookingService.createBooking(
@@ -35,11 +33,9 @@ const bookingController = {
         selectedSeats,
         selectedDate,
         selectedTime,
-        paymentMethod,
-        totalPrice
       );
-
-      res.status(201).json(createdBooking);
+      
+      res.status(200).json(createdBooking);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -83,7 +79,29 @@ const bookingController = {
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
-  })
+  }),
+
+  updateBooking: expressAsyncHandler(async (req, res) => {
+    try {
+      const {
+        bookingId,
+        paymentMethod,
+        paymentStatus,
+        totalPrice,
+      } = req.body;
+
+      const booking = await bookingService.updateBookingAndCreate(
+        bookingId,
+        paymentMethod,
+        paymentStatus,
+        totalPrice,
+      );
+      
+      res.status(200).json(booking);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
 };
 
 export default bookingController;

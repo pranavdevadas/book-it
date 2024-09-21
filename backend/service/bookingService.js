@@ -26,9 +26,7 @@ const bookingService = {
     screen,
     selectedSeats,
     selectedDate,
-    selectedTime,
-    paymentMethod,
-    totalPrice
+    selectedTime
   ) => {
     const booking = await bookingRepository.createBooking({
       userId,
@@ -39,44 +37,7 @@ const bookingService = {
       selectedSeats,
       selectedDate,
       selectedTime,
-      paymentMethod,
-      totalPrice,
     });
-
-    if (booking.status === "confirmed") {
-      const generateUniqueTicketNumber = async () => {
-        let ticketNumber;
-        let isUnique = false;
-        while (!isUnique) {
-          ticketNumber = Math.floor(100000 + Math.random() * 900000).toString();
-          const existingTicket = await Ticket.findOne({ ticketNumber });
-          if (!existingTicket) isUnique = true;
-        }
-        return ticketNumber;
-      };
-
-      const ticketNumber = await generateUniqueTicketNumber();
-
-      const qrCodeData = `Booking ID: ${
-        booking._id
-      }, Ticket No: ${ticketNumber}, Movie: ${movieId}, Seats: ${selectedSeats.join(
-        ","
-      )}`;
-      const qrCode = await QRCode.toDataURL(qrCodeData);
-
-      await bookingRepository.createTicket({
-        booking: booking._id,
-        user: userId,
-        movie: movieId,
-        theatre: theatreId,
-        screen,
-        seats: selectedSeats,
-        showDate: selectedDate,
-        showTime: selectedTime,
-        ticketNumber,
-        qrCode,
-      });
-    }
 
     return booking;
   },
@@ -87,7 +48,7 @@ const bookingService = {
       screen,
       showDate: selectedDate,
       showTime: selectedTime,
-      status: "confirmed",
+      status: { $in: ["pending", "confirmed"] },
     });
 
     if (bookings.length === 0) {
@@ -106,11 +67,67 @@ const bookingService = {
   },
 
   getTickets: async (id) => {
-    const tickets = await bookingRepository.findTicketByUserId(id)
+    const tickets = await bookingRepository.findTicketByUserId(id);
     if (!tickets) {
-      throw new Error('No Tickets found')
+      throw new Error("No Tickets found");
     }
-    return tickets
+    return tickets;
+  },
+
+  updateBookingAndCreate: async (
+    BookingId,
+    paymentMethod,
+    paymentStatus,
+    totalPrice
+  ) => {
+    const booking = await bookingRepository.findById(BookingId);
+
+    if (!booking) {
+      throw new Error("Booking not found.");
+    }
+
+    booking.payment.method = paymentMethod;
+    booking.payment.status = paymentStatus;
+    booking.payment.amount = totalPrice;
+    booking.status = "confirmed";
+
+    await booking.save();
+
+    if (booking.status === "confirmed") {
+      const generateUniqueTicketNumber = async () => {
+        let ticketNumber;
+        let isUnique = false;
+        while (!isUnique) {
+          ticketNumber = Math.floor(100000 + Math.random() * 900000).toString();
+          const existingTicket = await Ticket.findOne({ ticketNumber });
+          if (!existingTicket) isUnique = true;
+        }
+        return ticketNumber;
+      };
+
+      const ticketNumber = await generateUniqueTicketNumber();
+      const qrCodeData = `Booking ID: ${
+        booking._id
+      }, Ticket No: ${ticketNumber}, Movie: ${
+        booking.movie
+      }, Seats: ${booking.seats.join(", ")}`;
+      const qrCode = await QRCode.toDataURL(qrCodeData);
+
+      await bookingRepository.createTicket({
+        booking: booking._id,
+        user: booking.user,
+        movie: booking.movie,
+        theatre: booking.theatre,
+        screen: booking.screen,
+        seats: booking.seats,
+        showDate: booking.showDate,
+        showTime: booking.showTime,
+        ticketNumber,
+        qrCode,
+      });
+    }
+
+    return booking;
   },
 };
 

@@ -124,6 +124,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    updateBooking: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/update-booking`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     getTickets: builder.query({
       query: () => ({
         url: `${USER_URL}/ticket`,
@@ -183,5 +190,6 @@ export const {
   useAddRatingAndReviewMutation,
   useGetAllReviewsQuery,
   useSendOtpToMobileMutation,
-  useConfirmOtpAndChangePasswordMutation
+  useConfirmOtpAndChangePasswordMutation,
+  useUpdateBookingMutation,
 } = userApiSlice;

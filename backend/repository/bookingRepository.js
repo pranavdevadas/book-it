@@ -11,8 +11,6 @@ const bookingRepository = {
     selectedSeats,
     selectedDate,
     selectedTime,
-    paymentMethod,
-    totalPrice,
   }) => {
     const booking = new Booking({
       user: userId,
@@ -23,12 +21,6 @@ const bookingRepository = {
       seats: selectedSeats,
       showDate: selectedDate,
       showTime: selectedTime,
-      payment: {
-        method: paymentMethod,
-        amount: totalPrice,
-        status: "completed",
-      },
-      status: "confirmed",
     });
 
     return await booking.save();
@@ -51,11 +43,12 @@ const bookingRepository = {
       .populate({
         path: "movie",
         select: "name",
-      }).sort({ bookingDate: -1 })
+      })
+      .sort({ bookingDate: -1 });
   },
 
   findBookingById: async (id) => {
-    return await Booking.findById(id)
+    return await Booking.findById(id);
   },
 
   createTicket: async (data) => {
@@ -76,6 +69,11 @@ const bookingRepository = {
       })
       .sort({ issuedDate: -1 });
   },
+
+  findById: async (id) => {
+    return await Booking.findById(id);
+  },
+
 };
 
 export default bookingRepository;
