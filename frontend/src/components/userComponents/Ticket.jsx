@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { TabContainer, Button, Pagination } from "react-bootstrap";
 import { format } from "date-fns";
+import { useCancelTicketMutation } from "../../slice/userSlice/userApiSlice";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
-function Ticket({ tickets }) {
+function Ticket({ tickets, refetch }) {
   const [currentPage, setCurrentPage] = useState(1);
   const ticketsPerPage = 4;
   const totalPages = Math.ceil(tickets.length / ticketsPerPage);
+  const [cancelTicket] = useCancelTicketMutation();
 
   const startIndex = (currentPage - 1) * ticketsPerPage;
   const endIndex = startIndex + ticketsPerPage;
@@ -20,6 +24,38 @@ function Ticket({ tickets }) {
     return new Date() > showDateTime;
   };
 
+  const canCancel = (showDate, showTime) => {
+    const showDateTime = new Date(`${showDate}T${showTime}`);
+    const cancelDeadline = new Date(showDateTime.getTime() - 30 * 60000);
+    return new Date() < cancelDeadline;
+  };
+
+  const handleCancel = async (id, amount) => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const cancelled = await cancelTicket({ id, amount }).unwrap();
+          refetch();
+          Swal.fire({
+            title: "Cancelled!",
+            text: cancelled.message,
+            icon: "success",
+          });
+        }
+      });
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to cancel ticket");
+    }
+  };
+
   return (
     <div>
       <TabContainer>
@@ -30,6 +66,7 @@ function Ticket({ tickets }) {
         ) : (
           currentTickets.map((ticket) => {
             const expired = isExpired(ticket.showDate, ticket.showTime);
+            const cancelDisabled = !canCancel(ticket.showDate, ticket.showTime);
 
             return (
               <div className="d-flex justify-content-center" key={ticket.id}>
@@ -39,21 +76,34 @@ function Ticket({ tickets }) {
                     style={{
                       backgroundColor: "#000",
                       width: "900px",
-                      color: expired ? "gray" : "#FFA500",
+                      color: ticket.isCancelled
+                        ? "gray"
+                        : expired
+                        ? "gray"
+                        : "#FFA500",
                       padding: "20px",
                       borderRadius: "10px",
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
                       marginBottom: "20px",
-                      filter: expired ? "grayscale(100%)" : "none",
+                      filter:
+                        ticket.isCancelled || expired
+                          ? "grayscale(100%)"
+                          : "none",
                     }}
                   >
                     <div style={{ textAlign: "left" }}>
                       <img
                         src={`http://localhost:5000/moviePoster/${ticket.movie.poster}`}
                         alt="Movie Poster"
-                        style={{ width: "120px", filter: expired ? "grayscale(100%)" : "none" }}
+                        style={{
+                          width: "120px",
+                          filter:
+                            ticket.isCancelled || expired
+                              ? "grayscale(100%)"
+                              : "none",
+                        }}
                       />
                       <h2 style={{ margin: "10px 0" }}>{ticket.movie.name}</h2>
                     </div>
@@ -64,23 +114,54 @@ function Ticket({ tickets }) {
                       <p style={{ margin: "5px 0" }}>
                         {format(new Date(ticket.showDate), "dd-MMM")}
                       </p>
-                      <p style={{ margin: "5px 0" }}>{ticket.showTime} (24hr)</p>
+                      <p style={{ margin: "5px 0" }}>
+                        {ticket.showTime} (24hr)
+                      </p>
                       <strong style={{ display: "block", margin: "5px 0" }}>
-                        {ticket.theatre.name} Screen {ticket.screen} ({ticket.theatre.city})
+                        {ticket.theatre.name} Screen {ticket.screen} (
+                        {ticket.theatre.city})
                       </strong>
-                      {expired ? (
+                      {ticket.isCancelled ? (
+                        <div>
+                          <h4 style={{ color: "red" }}>Refunded</h4>
+                        </div>
+                      ) : expired ? (
                         <Button variant="secondary" className="mt-3" disabled>
                           Expired
                         </Button>
                       ) : (
-                        <Button variant="warning" className="mt-3">
-                          Cancel
-                        </Button>
+                        !cancelDisabled && (
+                          <>
+                            <Button
+                              variant="warning"
+                              className="mt-3"
+                              disabled={cancelDisabled}
+                              onClick={() =>
+                                handleCancel(
+                                  ticket._id,
+                                  ticket.theatre.ticketPrice *
+                                    ticket.seats.length
+                                )
+                              }
+                            >
+                              Cancel
+                            </Button>
+                            <p
+                              className="mt-1"
+                              style={{ fontSize: "10px", color: "red" }}
+                            >
+                              *Cancel the ticket at least 30 minutes before the
+                              show.
+                            </p>
+                          </>
+                        )
                       )}
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <p style={{ margin: "5px 0" }}>{ticket.ticketNumber}</p>
-                      {expired ? (
+                      {ticket.isCancelled ? (
+                        <h3>Cancelled</h3>
+                      ) : expired ? (
                         <h3>Expired</h3>
                       ) : (
                         <img

@@ -5,7 +5,7 @@ import {
   useGetSeatsssQuery,
   useGetAvailableSeatsForBookingQuery,
   useTheatreDetailsByIdQuery,
-  useCreateBookingMutation
+  useCreateBookingMutation,
 } from "../../slice/userSlice/userApiSlice";
 import Loader from "../../components/userComponents/Loader";
 
@@ -21,6 +21,7 @@ function SelectSeatsScreen() {
     isLoading,
   } = useGetSeatsssQuery({ theatreId, screen });
 
+
   const {
     data: bookedSeats = [],
     refetch,
@@ -32,10 +33,8 @@ function SelectSeatsScreen() {
     selectedTime,
   });
 
-  const {
-    data: theatre,
-    isLoading: theatreLoading,
-  } = useTheatreDetailsByIdQuery(theatreId);
+  const { data: theatre, isLoading: theatreLoading } =
+    useTheatreDetailsByIdQuery(theatreId);
 
   const [createBooking] = useCreateBookingMutation();
 
@@ -69,12 +68,11 @@ function SelectSeatsScreen() {
     );
 
     try {
-
       const booking = await createBooking({
         movieId,
         theatreId,
         screen,
-        owner : theatre.owner,
+        owner: theatre.owner,
         selectedSeats,
         selectedDate,
         selectedTime,
@@ -85,20 +83,16 @@ function SelectSeatsScreen() {
           selectedDate,
           selectedTime,
           theatreId,
-          bookingId : booking.data._id,
+          bookingId: booking.data._id,
           screen,
           selectedSeats,
           movieId,
         },
-      })
-
+      });
     } catch (error) {
       toast.error(`Booking failed: ${error.data.message}`);
     }
-    
   };
-
-
 
   const seats = data.seats || {};
   const renderSeats = () => {
@@ -170,8 +164,6 @@ function SelectSeatsScreen() {
     }
     return rows;
   };
-
-  
 
   return (
     <Container className="mt-3">

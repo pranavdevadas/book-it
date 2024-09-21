@@ -13,7 +13,7 @@ function TicketScreen() {
   return (
     <Container>
       <h2 className="text-center fw-bold mt-4 mb-4">Tickets</h2>
-      {isLoading ? <Loader /> : <Ticket tickets={tickets}  />}
+      {isLoading ? <Loader /> : <Ticket tickets={tickets} refetch= {refetch} />}
     </Container>
   );
 }

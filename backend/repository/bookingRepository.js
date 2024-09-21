@@ -61,7 +61,7 @@ const bookingRepository = {
     return await Ticket.find({ user })
       .populate({
         path: "theatre",
-        select: "name city",
+        select: "name city ticketPrice",
       })
       .populate({
         path: "movie",
@@ -71,8 +71,12 @@ const bookingRepository = {
   },
 
   findById: async (id) => {
-    return await Booking.findById(id);
+    return await Booking.findById(id);  
   },
+
+  findTicketById: async (ticketId) => {
+    return await Ticket.findById(ticketId)
+  }
 
 };
 

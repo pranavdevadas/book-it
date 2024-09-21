@@ -183,6 +183,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    cancelTicket: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/cancel-ticket`, 
+        method: "PATCH",
+        body: data, 
+      }),
+    }),
   }),
 });
 
@@ -213,5 +220,6 @@ export const {
   useUpdateBookingMutation,
   useAddAmountToWalletMutation,
   useGetTransactionsQuery,
-  useGetWalletBalanceQuery
+  useGetWalletBalanceQuery,
+  useCancelTicketMutation
 } = userApiSlice;

@@ -48,6 +48,7 @@ router.post('/create-booking', userProtect, bookingController.createBooking)
 router.get('/get-availableseats', userProtect, bookingController.getBookingForSeats)
 router.get('/ticket', userProtect, bookingController.getTickets)
 router.post('/update-booking', userProtect, bookingController.updateBooking)
+router.patch('/cancel-ticket', userProtect, bookingController.cancelTicket)
 
 //Rating
 router.post('/rating-review', userProtect, movieController.addRatingAndReview)

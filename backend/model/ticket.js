@@ -48,6 +48,10 @@ const ticketSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  isCancelled: {
+    type: Boolean,
+    default: false
+  },
   qrCode: {
     type: String,
   },

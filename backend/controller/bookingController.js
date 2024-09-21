@@ -32,9 +32,9 @@ const bookingController = {
         screen,
         selectedSeats,
         selectedDate,
-        selectedTime,
+        selectedTime
       );
-      
+
       res.status(200).json(createdBooking);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -65,8 +65,8 @@ const bookingController = {
 
   OwnerBookings: expressAsyncHandler(async (req, res) => {
     try {
-      const bookings = await bookingService.findOwnerBookings(req.owner._id)
-      res.status(200).json(bookings)
+      const bookings = await bookingService.findOwnerBookings(req.owner._id);
+      res.status(200).json(bookings);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -74,8 +74,8 @@ const bookingController = {
 
   getTickets: expressAsyncHandler(async (req, res) => {
     try {
-      const tickets = await bookingService.getTickets(req.user._id)
-      res.status(200).json(tickets)
+      const tickets = await bookingService.getTickets(req.user._id);
+      res.status(200).json(tickets);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -83,21 +83,26 @@ const bookingController = {
 
   updateBooking: expressAsyncHandler(async (req, res) => {
     try {
-      const {
-        bookingId,
-        paymentMethod,
-        paymentStatus,
-        totalPrice,
-      } = req.body;
+      const { bookingId, paymentMethod, paymentStatus, totalPrice } = req.body;
 
       const booking = await bookingService.updateBookingAndCreate(
         bookingId,
         paymentMethod,
         paymentStatus,
-        totalPrice,
+        totalPrice
       );
-      
+
       res.status(200).json(booking);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
+  cancelTicket: expressAsyncHandler(async (req, res) => {
+    try {
+      const { id, amount } = req.body;
+      const cancelledTicket = await bookingService.cancelTicket(req.user._id, id, amount);
+      res.status(200).json({cancelledTicket, message: 'Ticket Cancelled'});
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

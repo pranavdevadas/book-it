@@ -2,6 +2,7 @@ import bookingRepository from "../repository/bookingRepository.js";
 import theatreRepository from "../repository/theatreRepository.js";
 import QRCode from "qrcode";
 import Ticket from "../model/ticket.js";
+import walletRepository from "../repository/walletRepository.js";
 
 const bookingService = {
   getSeatsForBooking: async (theatreId, screen) => {
@@ -128,6 +129,45 @@ const bookingService = {
     }
 
     return booking;
+  },
+
+  cancelTicket: async (userId, ticketId, amount) => {
+    const parsedAmount = parseInt(amount);
+    const ticket = await bookingRepository.findTicketById(ticketId);
+
+    if (!ticket) {
+      throw new Error("Ticket not found");
+    }
+
+    let wallet = await walletRepository.findByUserId(userId);
+
+    if (!wallet) {
+      wallet = await walletRepository.createWallet(userId, parsedAmount);
+    } else {
+      wallet = await walletRepository.updateWalletBalance(userId, parsedAmount);
+    }
+
+    await walletRepository.createTransaction({
+      userId,
+      amount: parsedAmount,
+      status: "Success",
+      type: "Refunded",
+    });
+
+    const booking = await bookingRepository.findBookingById(ticket.booking);
+
+    if (!booking) {
+      throw new Error("Booking not found.");
+    }
+
+    booking.seats = [];
+    booking.status = "cancelled";
+    await booking.save();
+
+    ticket.isCancelled = true;
+    await ticket.save();
+
+    return ticket;
   },
 };
 
