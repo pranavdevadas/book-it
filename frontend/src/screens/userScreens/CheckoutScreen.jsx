@@ -13,10 +13,12 @@ import {
   useMoveDetailsByIdQuery,
   useTheatreDetailsByIdQuery,
   useUpdateBookingMutation,
+  useGetWalletBalanceQuery,
 } from "../../slice/userSlice/userApiSlice";
 import Loader from "../../components/userComponents/Loader";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 function CheckoutScreen() {
   const navigate = useNavigate();
@@ -36,6 +38,8 @@ function CheckoutScreen() {
 
   const { data: movie, isLoading: movieLoading } =
     useMoveDetailsByIdQuery(movieId);
+
+  const { refetch: walletRefetch } = useGetWalletBalanceQuery();
 
   const { data: theatre, isLoading: theatreLoading } =
     useTheatreDetailsByIdQuery(theatreId);
@@ -72,6 +76,7 @@ function CheckoutScreen() {
           });
           toast.success("Booking Completed");
           navigate("/thank-you");
+          walletRefetch()
         } catch (error) {
           toast.error(
             `Booking failed: ${error.data?.message || error.message}`
@@ -96,19 +101,44 @@ function CheckoutScreen() {
 
   const handleWalletPayment = async () => {
     try {
-      const response = await updateBooking({
-        bookingId,
-        paymentMethod: "wallet",
-        paymentStatus: "completed",
-        totalPrice,
+      let timerInterval;
+
+      Swal.fire({
+        title: "Wallet payment",
+        html: "Confirming your booking",
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const timer = Swal.getPopup().querySelector("b");
+          timerInterval = setInterval(() => {
+            if (timer) {
+              timer.textContent = `${Swal.getTimerLeft()}`;
+            }
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then(async (result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+          try {
+            const response = await updateBooking({
+              bookingId,
+              paymentMethod: "wallet",
+              paymentStatus: "completed",
+              totalPrice,
+            });
+
+            if (response.error) {
+              throw new Error(response.error.data.message);
+            }
+            navigate("/thank-you");
+          } catch (error) {
+            toast.error(error.message || "Booking failed");
+          }
+        }
       });
-
-      if (response.error) {
-        throw new Error(response.error.data.message);
-      }
-
-      toast.success(response.data.message);
-      navigate("/thank-you");
     } catch (error) {
       toast.error(error.message || "Booking failed");
     }

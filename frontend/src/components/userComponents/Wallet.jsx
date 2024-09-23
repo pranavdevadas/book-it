@@ -14,6 +14,7 @@ function Wallet({ transactionRefetch }) {
   const [addAmount] = useAddAmountToWalletMutation();
   const { data: walletData, error, refetch } = useGetWalletBalanceQuery();
 
+
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {

@@ -39,14 +39,14 @@ function Ticket({ tickets, refetch }) {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Yes, cancel it!",
       }).then(async (result) => {
         if (result.isConfirmed) {
           const cancelled = await cancelTicket({ id, amount }).unwrap();
           refetch();
           Swal.fire({
             title: "Cancelled!",
-            text: cancelled.message,
+            text: `${cancelled.message} Refund Amount added to in your wallet.`,
             icon: "success",
           });
         }

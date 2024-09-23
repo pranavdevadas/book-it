@@ -147,6 +147,11 @@ let ownerService = {
     return cities
   },
 
+  topMovies: async () => {
+    const movies = ownerRepository.findMoviesFromRating()
+    return movies
+  },
+
 };
 
 export default ownerService;

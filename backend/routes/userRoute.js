@@ -23,6 +23,7 @@ router.post('/confirm-otp', userController.confirmOtpAndChangePassword)
 router.route('/profile')
                         .get(userProtect, userController.getUserProfile)
                         .put(userProtect, userController.updateUserProfile)
+                        
 
 //Show
 router.get('/get-show', showController.getShowForUser)
@@ -36,7 +37,6 @@ router.get('/movie/:id', userProtect, movieController.getMovieById)
 router.post('/add-saved-movie', userProtect, userController.addSavedMovie)
 router.get('/get-savedmovies', userProtect, userController.savedMovies)
 router.delete('/remove-savedmovie/:id', userProtect, userController.removeSavedMovie)
-
 
 //Banner
 router.get('/banner-display', userController.bannerDisplay)

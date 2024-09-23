@@ -14,13 +14,13 @@ router.post('/owner-verify-otp', ownerController.verifyOtp)
 router.post('/owner-resend-otp', ownerController.resendOtp)
 // router.get('/owner/fetchData', ownerController.fetchData)
 
-//Profile managment
+//Profile
 router.route('/owner-profile')
                             .get(ownerProtect, ownerController.getOwnerProfile)
                             .put(ownerProtect, ownerController.updateOwnerProfile)
 
 
-//Theatre managmant           
+//Theatre           
 router.get('/owner-theatres', ownerProtect, theatreController.getTheatres) 
 router.get('/owner-listedtheatres', ownerProtect, theatreController.getListedTheatres) 
 router.post('/owner-addtheatre', ownerProtect, theatreController.addTheatre)
@@ -29,7 +29,7 @@ router.route('/theatre/:id')
                             .put(ownerProtect, theatreController.editTheatre)
 router.patch('/theatre/:id/toggle-status', ownerProtect, theatreController.toggleTheatreStatus)
 
-//city managment
+//city
 router.get('/owner-city',ownerProtect, ownerController.getCities)
 
 //Now Showing
@@ -40,5 +40,8 @@ router.patch('/show/:id/toggle-status', ownerProtect, showController.toggleStatu
 
 //Booking
 router.get('/owner-getbookings', ownerProtect, bookingController.OwnerBookings)
+
+//HomeScreen
+router.get('/top-movies', ownerController.topMovies)
 
 export default router

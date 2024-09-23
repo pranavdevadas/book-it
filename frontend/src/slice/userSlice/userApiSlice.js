@@ -190,6 +190,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data, 
       }),
     }),
+    
   }),
 });
 
@@ -221,5 +222,6 @@ export const {
   useAddAmountToWalletMutation,
   useGetTransactionsQuery,
   useGetWalletBalanceQuery,
-  useCancelTicketMutation
+  useCancelTicketMutation,
+  
 } = userApiSlice;

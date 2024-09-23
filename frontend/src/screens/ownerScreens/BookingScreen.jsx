@@ -2,7 +2,6 @@ import Sidebar from "../../components/ownerComonents/SideBar";
 import React, { useEffect } from "react";
 import BookingTable from "../../components/ownerComonents/BookingTable";
 import { useGetAllBookingsQuery } from "../../slice/ownerSlice/ownerApiSlice";
-import { Container, Pagination } from "react-bootstrap";
 import Loader from "../../components/userComponents/Loader";
 import { toast } from "react-toastify";
 

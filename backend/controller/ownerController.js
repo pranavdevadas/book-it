@@ -145,6 +145,16 @@ let ownerController = {
     }
   }),
 
+  topMovies: expressAsyncHandler(async (req, res) => {
+    try {
+      let topMovies = await ownerService.topMovies();
+      res.status(200).json( topMovies );
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
+    }
+  }),
+
 
 };
 

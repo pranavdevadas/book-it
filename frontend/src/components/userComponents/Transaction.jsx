@@ -4,12 +4,15 @@ import { Container, Table, Button } from "react-bootstrap";
 function Transaction({ transactions = [] }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  
+
   const totalPages = Math.ceil(transactions.length / itemsPerPage);
 
   const indexOfLastTransaction = currentPage * itemsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - itemsPerPage;
-  const currentTransactions = transactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
+  const currentTransactions = transactions.slice(
+    indexOfFirstTransaction,
+    indexOfLastTransaction
+  );
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -40,7 +43,14 @@ function Transaction({ transactions = [] }) {
             currentTransactions.map((transaction, index) => (
               <tr key={index}>
                 <td>{new Date(transaction.date).toLocaleDateString()}</td>
-                <td>{transaction.type}</td>
+                <td
+                  style={{
+                    color: transaction.type === "Debit" ? "red" : "green",
+                  }}
+                >
+                  {transaction.type}
+                </td>
+
                 <td
                   style={{
                     color: transaction.status === "Success" ? "green" : "red",
@@ -63,9 +73,9 @@ function Transaction({ transactions = [] }) {
 
       {/* Pagination Controls */}
       <div className="d-flex justify-content-between mt-3">
-        <Button 
-          variant="secondary" 
-          onClick={prevPage} 
+        <Button
+          variant="secondary"
+          onClick={prevPage}
           disabled={currentPage === 1}
         >
           Previous
@@ -73,9 +83,9 @@ function Transaction({ transactions = [] }) {
         <span>
           Page {currentPage} of {totalPages}
         </span>
-        <Button 
-          variant="secondary" 
-          onClick={nextPage} 
+        <Button
+          variant="secondary"
+          onClick={nextPage}
           disabled={currentPage === totalPages}
         >
           Next

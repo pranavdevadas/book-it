@@ -120,6 +120,12 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getTop5Movies: builder.query({
+      query: () => ({
+        url: `${OWNER_URL}/top-movies`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -141,5 +147,6 @@ export const {
   useToggleStatusMutation,
   useToggleTheatreStatusMutation,
   useGetListedTheatresQuery,
-  useGetAllBookingsQuery
+  useGetAllBookingsQuery,
+  useGetTop5MoviesQuery
 } = ownerApiSlice;

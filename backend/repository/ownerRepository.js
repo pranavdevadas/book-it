@@ -1,5 +1,6 @@
 import City from "../model/city.js";
 import Owner from "../model/owner.js";
+import Rating from "../model/ratingandreview.js";
 
 let ownerRepository = {
   findOwnerByEmail: async (email) => {
@@ -24,6 +25,31 @@ let ownerRepository = {
 
   findCities: async () => {
     return await City.find();
+  },
+
+  findMoviesFromRating: async () => {
+    return await Rating.aggregate([
+      {
+        $group: {
+          _id: "$movie", 
+          averageRating: { $avg: { $toDouble: "$rating" } },
+        },
+      },
+      {
+        $sort: { averageRating: -1 },
+      },
+      {
+        $limit: 5,
+      },
+    ])
+      .exec()
+      .then((topMovies) => {
+        return Rating.populate(topMovies, {
+          path: "_id",
+          select: "name", 
+          model: "Movie",
+        });
+      });
   },
 };
 
