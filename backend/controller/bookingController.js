@@ -89,10 +89,10 @@ const bookingController = {
         bookingId,
         paymentMethod,
         paymentStatus,
-        totalPrice
+        totalPrice,
+        req.user._id,
       );
-
-      res.status(200).json(booking);
+      res.status(200).json({booking, message : 'Booking Completed'});
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

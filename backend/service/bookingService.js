@@ -79,7 +79,8 @@ const bookingService = {
     BookingId,
     paymentMethod,
     paymentStatus,
-    totalPrice
+    totalPrice,
+    userId
   ) => {
     const booking = await bookingRepository.findById(BookingId);
 
@@ -87,7 +88,32 @@ const bookingService = {
       throw new Error("Booking not found.");
     }
 
+    
+
     booking.payment.method = paymentMethod;
+
+    if (paymentMethod === "wallet") {
+      let wallet = await walletRepository.findByUserId(userId);
+
+      if (!wallet) {
+        throw new Error("Wallet not found");
+      }
+
+      if (wallet.balance < totalPrice) {
+        throw new Error('Insufficient Balance')
+      } else {
+        wallet.balance = wallet.balance - totalPrice
+        await wallet.save()
+        await walletRepository.createTransaction({
+          userId,
+          amount: parseInt(totalPrice),
+          status: "Success",
+          type: "Debit",
+        });
+      }
+
+    }
+
     booking.payment.status = paymentStatus;
     booking.payment.amount = totalPrice;
     booking.status = "confirmed";

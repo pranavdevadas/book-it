@@ -1,5 +1,13 @@
-import React from "react";
-import { Container, Card, ListGroup, Row, Col, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import {
+  Container,
+  Card,
+  ListGroup,
+  Row,
+  Col,
+  Button,
+  Modal,
+} from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useMoveDetailsByIdQuery,
@@ -34,6 +42,8 @@ function CheckoutScreen() {
 
   const [updateBooking] = useUpdateBookingMutation();
 
+  const [showModal, setShowModal] = useState(false);
+
   if (movieLoading || theatreLoading) {
     return <Loader />;
   }
@@ -41,11 +51,14 @@ function CheckoutScreen() {
   const totalTickets = selectedSeats.length;
   const totalPrice = totalTickets * theatre.ticketPrice;
 
-
   const handlePayment = () => {
+    setShowModal(true);
+  };
+
+  const handleRazorpayPayment = () => {
     const options = {
       key: "rzp_test_TVVqN3CVooB2Tt",
-      amount: totalPrice * 100, 
+      amount: totalPrice * 100,
       currency: "INR",
       name: "Book it",
       description: `Booking for ${movie.name} at ${theatre.name}`,
@@ -79,6 +92,27 @@ function CheckoutScreen() {
 
     const razorpay = new window.Razorpay(options);
     razorpay.open();
+  };
+
+  const handleWalletPayment = async () => {
+    try {
+      const response = await updateBooking({
+        bookingId,
+        paymentMethod: "wallet",
+        paymentStatus: "completed",
+        totalPrice,
+      });
+
+      if (response.error) {
+        throw new Error(response.error.data.message);
+      }
+
+      toast.success(response.data.message);
+      navigate("/thank-you");
+    } catch (error) {
+      toast.error(error.message || "Booking failed");
+    }
+    setShowModal(false);
   };
 
   return (
@@ -168,6 +202,28 @@ function CheckoutScreen() {
           Pay Now
         </Button>
       </div>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Select Payment Method</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Button
+            variant="primary"
+            className="w-100 mb-3"
+            onClick={handleWalletPayment}
+          >
+            Pay with Wallet
+          </Button>
+          <Button
+            variant="secondary"
+            className="w-100"
+            onClick={handleRazorpayPayment}
+          >
+            Pay with Razorpay
+          </Button>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }
