@@ -105,6 +105,12 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getBookings: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/bookings`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -124,5 +130,6 @@ export const {
   useBlockUnblockOwnerMutation,
   useGetTheatressQuery,
   useBannerManagmentMutation,
-  useGetBannerQuery
+  useGetBannerQuery,
+  useGetBookingsQuery
 } = adminApiSlice;

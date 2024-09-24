@@ -107,6 +107,17 @@ const bookingController = {
       res.status(400).json({ message: error.message });
     }
   }),
+
+  getBookings: expressAsyncHandler(async (req, res) => {
+    try {
+      const bookings = await bookingService.getBookings();
+      res.status(200).json(bookings);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
+
 };
 
 export default bookingController;

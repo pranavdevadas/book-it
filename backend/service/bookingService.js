@@ -195,6 +195,12 @@ const bookingService = {
 
     return ticket;
   },
+
+  getBookings: async () => {
+    const bookings = await bookingRepository.getBookings()
+
+    return bookings
+  },
 };
 
 export default bookingService;
