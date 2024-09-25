@@ -7,7 +7,7 @@ const chatSchema = new mongoose.Schema({
   ],
   messages: [
     {
-      sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      sender: { type: mongoose.Schema.Types.ObjectId},
       senderType: { type: String, enum: ["User", "Owner"], required: true },
       message: String,
       timestamp: { type: Date, default: Date.now },

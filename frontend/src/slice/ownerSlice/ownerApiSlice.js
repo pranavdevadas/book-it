@@ -126,6 +126,25 @@ export const ownerApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    ownerChatList: builder.query({
+      query: ({ownerId}) => ({
+        url: `/api/chat/chat-list/${ownerId}`,
+        method: "GET",
+      }),
+    }),
+    chatDetails: builder.query({
+      query: ({chatId}) => ({
+        url: `/api/chat/chat-details/${chatId}`,
+        method: "GET",
+      }),
+    }),
+    saveMessages: builder.mutation({
+      query: (data) => ({
+        url: `/api/chat/chat-save`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -148,5 +167,8 @@ export const {
   useToggleTheatreStatusMutation,
   useGetListedTheatresQuery,
   useGetAllBookingsQuery,
-  useGetTop5MoviesQuery
+  useGetTop5MoviesQuery,
+  useOwnerChatListQuery,
+  useChatDetailsQuery,
+  useSaveMessagesMutation
 } = ownerApiSlice;

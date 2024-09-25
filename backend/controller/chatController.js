@@ -71,15 +71,41 @@ const chatController = {
     const { chatId } = req.params;
 
     try {
-      const chat = await Chat.findById(chatId)
-      .populate('messages.sender', '_id name')
+      const chat = await Chat.findById(chatId).populate(
+        "messages.sender",
+        "_id name"
+      );
 
       if (!chat) {
-        return res.status(404).json({ message: 'Chat not found' });
+        return res.status(404).json({ message: "Chat not found" });
       }
       res.status(200).json(chat);
     } catch (error) {
       console.log(error);
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
+  saveChatOwner: expressAsyncHandler(async (req, res) => {
+    const { chatId, sender, senderType, message } = req.body;
+    try {
+      const chat = await Chat.findById(chatId);
+      if (!chat) {
+        return res.status(404).json({ message: "Chat not found" });
+      }
+
+      const newMessage = {
+        sender,
+        senderType,
+        message,
+      };
+
+      chat.messages.push(newMessage);
+
+      await chat.save();
+
+      res.status(200).json(chat);
+    } catch (error) {
       res.status(400).json({ message: error.message });
     }
   }),

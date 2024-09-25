@@ -190,7 +190,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data, 
       }),
     }),
-    
+    getChatHistory: builder.query({
+      query: ({ userId, ownerId }) => ({
+        url: `/api/chat/chats/${userId}/${ownerId}`,
+        method: "GET",
+      }),
+    }),
+    saveChat: builder.mutation({
+      query: (data) => ({
+        url: `/api/chat/chat`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -223,5 +235,7 @@ export const {
   useGetTransactionsQuery,
   useGetWalletBalanceQuery,
   useCancelTicketMutation,
+  useGetChatHistoryQuery,
+  useSaveChatMutation
   
 } = userApiSlice;

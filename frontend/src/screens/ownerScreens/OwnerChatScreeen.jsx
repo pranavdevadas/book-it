@@ -3,6 +3,10 @@ import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 import "./style.css";
 import SideBarOwner from "../../components/ownerComonents/SideBar";
+import {
+  useChatDetailsQuery,
+  useSaveMessagesMutation,
+} from "../../slice/ownerSlice/ownerApiSlice";
 
 const socket = io("http://localhost:5000");
 
@@ -14,44 +18,18 @@ const OwnerChatScreen = () => {
   const location = useLocation();
   const { userId, ownerId, chatId, customerName } = location.state;
 
-  const fetchChat = async () => {
-    try {
-      const response = await fetch(`/api/chat/chat-details/${chatId}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch chat");
-      }
-      const chatData = await response.json();
-      console.log(chatData)
-      setMessages(chatData.messages || []);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { data: chatData, isLoading, refetch } = useChatDetailsQuery({ chatId });
 
-  const sendChatMessage = async (messageData) => {
-    try {
-      const response = await fetch("/api/chat/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(messageData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
-
-      const savedChat = await response.json();
-      return savedChat;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const [saveMessage] = useSaveMessagesMutation();
 
   useEffect(() => {
-    fetchChat();
+    if (chatData) {
+      setMessages(chatData.messages || []);
+      refetch()
+    }
+  }, [chatData]);
 
+  useEffect(() => {
     socket.on("receiveMessage", (messageData) => {
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
@@ -59,25 +37,27 @@ const OwnerChatScreen = () => {
     return () => {
       socket.off("receiveMessage");
     };
-  }, [chatId]);
+  }, []);
 
   const sendMessage = async () => {
     if (message.trim()) {
       const messageData = {
+        chatId,
         sender: ownerId,
         userId: userId,
         ownerId,
-        senderType: 'Owner',
+        senderType: "Owner",
         message,
         timestamp: new Date().toISOString(),
       };
 
       socket.emit("sendMessage", messageData);
-
       try {
-        await sendChatMessage(messageData);
+        await saveMessage(messageData).unwrap();
+        
+        refetch()
       } catch (error) {
-        console.log(error);
+        console.error("Failed to send message:", error);
       }
 
       setMessage("");
@@ -124,20 +104,24 @@ const OwnerChatScreen = () => {
           </div>
 
           <div className="messages-container" ref={messagesRef}>
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`message ${
-                  msg.senderType === 'Owner'? "sent" : "received"
-                }`}
-              >
-                {console.log(msg.senderType)}
-                <strong>{msg.senderType === 'Owner' ? "You" : `${customerName}`}</strong>:
-                {msg.message}
-                <div className="timestamp">{formatTime(msg.timestamp)}</div>
-                {console.log(msg)}
-              </div>
-            ))}
+            {isLoading ? (
+              <p>Loading messages...</p>
+            ) : (
+              messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`message ${
+                    msg.senderType === "Owner" ? "sent" : "received"
+                  }`}
+                >
+                  <strong>
+                    {msg.senderType === "Owner" ? "You" : `${customerName}`}
+                  </strong>
+                  : {msg.message}
+                  <div className="timestamp">{formatTime(msg.timestamp)}</div>
+                </div>
+              ))
+            )}
           </div>
 
           {/* Input Section */}

@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import "./style.css";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useGetChatHistoryQuery, useSaveChatMutation } from "../../slice/userSlice/userApiSlice";
 
 const socket = io("http://localhost:5000");
 
@@ -14,44 +15,16 @@ const Chat = ({ userId, ownerId }) => {
   const location = useLocation();
   const { theatreName, city } = location.state || {};
 
-  // Fetch chat history
-  const fetchChat = async (userId, ownerId) => {
-    try {
-      const response = await fetch(`/api/chat/chats/${userId}/${ownerId}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch chat");
-      }
-      const chatData = await response.json();
-      setMessages(chatData?.messages || []);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const sendChatMessage = async (messageData) => {
-    try {
-      const response = await fetch("/api/chat/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(messageData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
-
-      const savedChat = await response.json();
-      return savedChat;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { data: chatData, refetch } = useGetChatHistoryQuery({ userId, ownerId });
+  const [saveChat] = useSaveChatMutation();
 
   useEffect(() => {
-    fetchChat(userId, ownerId);
+    if (chatData) {
+      setMessages(chatData?.messages || []);
+    }
+  }, [chatData]);
 
+  useEffect(() => {
     socket.on("receiveMessage", (messageData) => {
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
@@ -59,7 +32,7 @@ const Chat = ({ userId, ownerId }) => {
     return () => {
       socket.off("receiveMessage");
     };
-  }, [userId, ownerId]);
+  }, []);
 
   const sendMessage = async () => {
     if (message.trim()) {
@@ -71,11 +44,11 @@ const Chat = ({ userId, ownerId }) => {
         timestamp: new Date().toISOString(),
       };
 
-      // Emit the message to the server
       socket.emit("sendMessage", messageData);
 
       try {
-        await sendChatMessage(messageData);
+        await saveChat(messageData).unwrap();
+        refetch();
       } catch (error) {
         console.log(error);
       }
@@ -119,10 +92,8 @@ const Chat = ({ userId, ownerId }) => {
   return (
     <div className="chat-container">
       <div className="chat-header">
-        <IoMdArrowBack onClick={() => navigate(-1)}
-          style={{cursor:'pointer'}}
-        />
-        <h2>{theatreName} ({city}) </h2>
+        <IoMdArrowBack onClick={() => navigate(-1)} style={{ cursor: 'pointer' }} />
+        <h2>{theatreName} ({city})</h2>
       </div>
 
       <div className="messages-container" ref={messagesRef}>
