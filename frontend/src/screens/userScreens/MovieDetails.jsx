@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Alert, Button } from "react-bootstrap";
+import { Container, Alert, Button, Badge } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/userComponents/Loader";
 import {
@@ -10,6 +10,8 @@ import { format } from "date-fns";
 import "./style.css";
 import Search from "../../components/userComponents/Search";
 import RatingForm from "../../components/userComponents/RatingReview";
+import { useSelector } from "react-redux";
+import { LuMessagesSquare } from "react-icons/lu";
 
 function MovieDetails() {
   const { id } = useParams();
@@ -17,10 +19,11 @@ function MovieDetails() {
   const [locationError, setLocationError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [hoveredTheatreId, setHoveredTheatreId] = useState(null); // State for hover
 
   const navigate = useNavigate();
 
+  const { userInfo } = useSelector((state) => state.auth);
   const {
     data: movie,
     isLoading: movieLoading,
@@ -102,6 +105,14 @@ function MovieDetails() {
     });
   };
 
+  const handleChat = (ownerId, theatreName, city) => {
+    const userId = userInfo._id;
+
+    navigate(`/chat/${userId}/${ownerId}`,{
+      state: { theatreName, city },
+    });
+  };
+
   return (
     <>
       <div className="posterBackground">
@@ -158,8 +169,26 @@ function MovieDetails() {
               key={index}
               className="d-flex justify-content-between align-items-center mt-4"
             >
-              <h5 className="fw-bold">
+              <h5
+                className="fw-bold"
+                onMouseEnter={() => setHoveredTheatreId(show.theatre._id)}
+                onMouseLeave={() => setHoveredTheatreId(null)}
+              >
                 {show.theatre.name} Screen {show.screen} ({show.theatre.city})
+                {hoveredTheatreId === show.theatre._id && (
+                  <>
+                    <Badge
+                      bg="dark"
+                      className="ms-2"
+                      style={{ cursor: "pointer" }} 
+                      pill
+                      onClick={() => handleChat(show.owner, show.theatre.name, show.theatre.city)}
+                    >
+                      <LuMessagesSquare /> &nbsp;
+                      Message with owner
+                    </Badge>
+                  </>
+                )}
               </h5>
               <div className="d-flex gap-4">
                 {show.showtime

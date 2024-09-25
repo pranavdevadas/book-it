@@ -1,0 +1,112 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #e5ddd5; 
+}
+
+.chat-header {
+  background-color: #075e54;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px 10px 0 0;
+}
+
+.chat-header h2 {
+  margin-top: 5px;
+  margin-right: 611px;
+  font-size: 18px;
+}
+
+.chat-header .header-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-header .header-icon {
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+}
+
+.messages-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  height: 400px;
+  scrollbar-width: none;
+  background-color: #d9dbd5;
+  padding: 10px;
+  border-radius: 0 0 10px 10px;
+}
+
+.messages-container::-webkit-scrollbar {
+  display: none;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 10px;
+  background-color: #f1f1f1;
+  max-width: 80%;
+}
+
+.message.sent {
+  background-color: #dcf8c6; /* WhatsApp green for sent messages */
+  text-align: right;
+  margin-left: auto;
+}
+
+.message.received {
+  background-color: #ffffff; /* WhatsApp white for received messages */
+  text-align: left;
+  margin-right: auto;
+}
+
+.timestamp {
+  font-size: 0.7em;
+  color: gray;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.input-container {
+  display: flex;
+  margin-top: 10px;
+  background-color: #ffffff;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 0 0 10px 10px;
+}
+
+input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #f1f1f1;
+}
+
+button {
+  padding: 5px 10px;
+  margin-left: 10px;
+  border: none;
+  background-color: #25d366; /* WhatsApp green send button */
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #128c7e;
+}

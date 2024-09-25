@@ -60,8 +60,6 @@ const showController = {
       const { id } = req.params;
       const { lat, lng } = req.query;
 
-
-
       if (!lat || !lng) {
         res
           .status(400)

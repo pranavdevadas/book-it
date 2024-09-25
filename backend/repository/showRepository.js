@@ -32,7 +32,7 @@ const showRepository = {
   findShowsForUser: async () => {
     const shows = await Show.find({ isListed: true })
     .populate('movie', 'name duration categories language poster') 
-    .populate('theatre', 'name city screens');
+    .populate('theatre', 'name city screens owner');
 
   return shows.map(show => ({
     showId: show._id,

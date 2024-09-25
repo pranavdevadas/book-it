@@ -12,3 +12,48 @@
     width: calc(100% - 250px); /* Takes up the remaining width */
   }
   
+
+
+
+
+  .chat-item {
+    display: flex;
+    justify-content: space-between; 
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .chat-info {
+    flex-grow: 1;
+  }
+  
+  .chat-time {
+    font-size: 0.9em;
+    color: gray;
+    align-self: center;
+  }
+
+  .message-screen {
+    padding: 20px;
+  }
+  
+  .message-screen ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .message-screen li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .message-screen li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .message-screen h2 {
+    margin-bottom: 20px;
+  }

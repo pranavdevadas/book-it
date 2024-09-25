@@ -60,4 +60,5 @@ router.get('/transactions', userProtect, walletController.getTransactions)
 router.get('/wallet-balance', userProtect, walletController.getWalletBalance)
 
 
+
 export default router
