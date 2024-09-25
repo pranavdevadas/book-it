@@ -57,3 +57,13 @@
   .message-screen h2 {
     margin-bottom: 20px;
   }
+
+  .pill {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    border-radius: 12px;
+    padding: 4px 8px;
+    margin-left: 8px; 
+    font-size: 0.9rem;
+  }

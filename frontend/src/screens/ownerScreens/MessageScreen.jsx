@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 import "./style.css";
 import SideBarOwner from "../../components/ownerComonents/SideBar.jsx";
-import {
-  useOwnerChatListQuery,
-  useChatDetailsQuery,
-} from "../../slice/ownerSlice/ownerApiSlice.js";
+import { useOwnerChatListQuery } from "../../slice/ownerSlice/ownerApiSlice.js";
+
+const socket = io("http://localhost:5000");
 
 const MessageScreen = () => {
-  const [selectedChatId, setSelectedChatId] = useState(null);
   const navigate = useNavigate();
   const { ownerInfo } = useSelector((state) => state.ownerAuth);
   const ownerId = ownerInfo._id;
@@ -20,18 +19,19 @@ const MessageScreen = () => {
     refetch,
   } = useOwnerChatListQuery({ ownerId });
 
-  useEffect(() => {
-    refetch();
-  }, [refetch, chatList]);
-
-  const { data: chatDetails, error: chatDetailsError } = useChatDetailsQuery(
-    selectedChatId ? { chatId: selectedChatId } : null
-  );
+  const [updatedChatList, setUpdatedChatList] = useState(chatList);
+  const [newMessageChatIds, setNewMessageChatIds] = useState(new Set()); // To track chats with new messages
+  const [selectedChatId, setSelectedChatId] = useState(null); // To keep track of the selected chat
 
   const handleChatClick = (chatId, customerName) => {
-    setSelectedChatId(chatId);
+    setSelectedChatId(chatId); // Update the selected chat
+    setNewMessageChatIds((prev) => {
+      const updatedSet = new Set(prev);
+      updatedSet.delete(chatId); // Remove the chat from new messages when clicked
+      return updatedSet;
+    });
     navigate(`/owner/chat/${chatId}`, {
-      state: { userId: chatDetails?.customerId, ownerId, chatId, customerName },
+      state: { ownerId, chatId, customerName },
     });
   };
 
@@ -44,10 +44,45 @@ const MessageScreen = () => {
   };
 
   useEffect(() => {
-    if (chatDetailsError) {
-      console.error("Failed to fetch chat details:", chatDetailsError);
-    }
-  }, [chatDetailsError]);
+    // Listen for new messages from the socket
+    socket.on("newMessage", (newMessageData) => {
+      const { chatId, message, timestamp } = newMessageData;
+
+      // Update the chat list with the new message
+      setUpdatedChatList((prevChatList) =>
+        prevChatList.map((chat) =>
+          chat.chatId === chatId
+            ? {
+                ...chat,
+                lastMessage: {
+                  message,
+                  timestamp,
+                },
+              }
+            : chat
+        )
+      );
+
+      // Add chatId to newMessageChatIds if the chat is not selected
+      if (chatId !== selectedChatId) {
+        setNewMessageChatIds((prev) => new Set(prev).add(chatId));
+      }
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [selectedChatId]); // Re-run effect if selectedChatId changes
+
+  // Effect to refetch chat list when the component mounts or changes
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  // Update the updatedChatList when the initial chatList is loaded
+  useEffect(() => {
+    setUpdatedChatList(chatList);
+  }, [chatList]);
 
   return (
     <div className="d-flex">
@@ -59,7 +94,7 @@ const MessageScreen = () => {
             <p>Loading chat list...</p>
           ) : (
             <ul>
-              {chatList.map((chat) => (
+              {updatedChatList.map((chat) => (
                 <li
                   key={chat.chatId}
                   onClick={() =>
@@ -67,9 +102,12 @@ const MessageScreen = () => {
                   }
                   className="chat-item"
                 >
-                  <div className="chat-info">
+                  <div className="chat-info ms-2">
                     <b>{chat.participants[0]}</b>
-                    <p>{chat.lastMessage?.message || "No messages yet"}</p>
+                    <p>{chat.lastMessage?.message || "No messages yet"}{newMessageChatIds.has(chat.chatId) && (
+                      <span className="pill">New</span>
+                    )}</p>
+                    
                   </div>
                   <span className="chat-time">
                     {chat.lastMessage?.timestamp
@@ -87,3 +125,4 @@ const MessageScreen = () => {
 };
 
 export default MessageScreen;
+  

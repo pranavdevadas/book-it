@@ -40,7 +40,12 @@ const chatController = {
 
       await chat.save();
 
-      res.status(200).json(chat);
+      //res.status(200).json(chat);
+      res.status(200).json({
+        chatId: chat._id,
+        participants: chat.participants,
+        messages: chat.messages,
+      });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: error.message });
@@ -60,7 +65,6 @@ const chatController = {
         participants: chat.participants.map((participant) => participant.name),
         lastMessage: chat.messages[chat.messages.length - 1],
       }));
-
       res.status(200).json(chatList);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -103,8 +107,12 @@ const chatController = {
       chat.messages.push(newMessage);
 
       await chat.save();
-
-      res.status(200).json(chat);
+      // res.status(200).json(chat);
+      res.status(200).json({
+        chatId: chat._id, 
+        participants: chat.participants,
+        messages: chat.messages,
+      });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

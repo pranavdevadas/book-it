@@ -16,7 +16,7 @@ const OwnerChatScreen = () => {
   const messagesRef = useRef(null);
 
   const location = useLocation();
-  const { userId, ownerId, chatId, customerName } = location.state;
+  const {  ownerId, chatId, customerName } = location.state;
 
   const { data: chatData, isLoading, refetch } = useChatDetailsQuery({ chatId });
 
@@ -44,7 +44,6 @@ const OwnerChatScreen = () => {
       const messageData = {
         chatId,
         sender: ownerId,
-        userId: userId,
         ownerId,
         senderType: "Owner",
         message,

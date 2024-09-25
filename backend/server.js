@@ -64,7 +64,9 @@ io.on("connection", (socket) => {
   //console.log('User connected');
 
   socket.on("sendMessage", (messageData) => {
+    const {chatId, message, timestamp} = messageData
     io.emit("receiveMessage", messageData);
+    io.emit("newMessage",{chatId, message, timestamp});
   });
 
   socket.on("disconnect", () => {

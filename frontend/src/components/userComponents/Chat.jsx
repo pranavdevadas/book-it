@@ -40,14 +40,30 @@ const Chat = ({ userId, ownerId }) => {
         sender: userId,
         ownerId: ownerId,
         senderType: "User",
-        message,
+        message: message, 
         timestamp: new Date().toISOString(),
       };
 
-      socket.emit("sendMessage", messageData);
-
       try {
-        await saveChat(messageData).unwrap();
+        const savedChat = await saveChat(messageData).unwrap();
+        const chatId = savedChat.chatId;
+
+        socket.emit("sendMessage", {
+          chatId,
+          message: message,
+          timestamp: messageData.timestamp
+        });
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { 
+            chatId, 
+            sender: userId, 
+            message: message,
+            timestamp: messageData.timestamp 
+          }
+        ]);
+
         refetch();
       } catch (error) {
         console.log(error);
@@ -103,7 +119,7 @@ const Chat = ({ userId, ownerId }) => {
             className={`message ${msg.sender === userId ? "sent" : "received"}`}
           >
             <strong>{msg.sender === userId ? "You" : "Owner"}</strong>:{" "}
-            {msg.message}
+            {msg.message} {/* Displaying the message string directly */}
             <div className="timestamp">{formatTime(msg.timestamp)}</div>
           </div>
         ))}
