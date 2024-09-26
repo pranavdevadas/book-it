@@ -23,6 +23,7 @@ import { clearCredentials } from "../../slice/userSlice/userAuthSlice";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 import { IoCloseSharp } from "react-icons/io5";
+import { FaRegMessage } from "react-icons/fa6";
 
 function Header() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -168,6 +169,7 @@ function Header() {
             <Nav className="ms-auto">
               {userInfo ? (
                 <>
+                  
                   <OverlayTrigger
                     placement="bottom"
                     overlay={popover}
@@ -175,9 +177,14 @@ function Header() {
                     onToggle={() => setShowPopover(!showPopover)}
                   >
                     <Nav.Link>
-                      <FaRegBookmark variant="light" /> Saved Movies
+                      <FaRegBookmark  /> Saved Movies
                     </Nav.Link>
                   </OverlayTrigger>
+                  <LinkContainer to="/messages">
+                    <Nav.Link>
+                      <FaRegMessage /> 
+                    </Nav.Link>
+                  </LinkContainer> 
                   <NavDropdown title={userInfo.name} id="userName">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>

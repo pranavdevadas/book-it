@@ -8,5 +8,6 @@ router.post('/chat', chatController.saveChat)
 router.get('/chat-list/:ownerId', chatController.chatList)
 router.get('/chat-details/:chatId', chatController.getChatOwner)
 router.post('/chat-save', chatController.saveChatOwner)
+router.get('/message-list/:userId', chatController.getMessageListUser)
 
 export default router

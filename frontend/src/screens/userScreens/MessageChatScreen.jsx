@@ -1,33 +1,40 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import "./style.css";
-import SideBarOwner from "../../components/ownerComonents/SideBar";
 import {
   useChatDetailsQuery,
   useSaveMessagesMutation,
 } from "../../slice/ownerSlice/ownerApiSlice";
+import { IoMdArrowBack } from "react-icons/io";
+
 
 const socket = io("http://localhost:5000");
 
-const OwnerChatScreen = () => {
+const MessageChatScreen = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesRef = useRef(null);
 
   const location = useLocation();
-  const {  ownerId, chatId, customerName } = location.state;
+  const { userId, chatId, ownerName } = location.state;
 
-  const { data: chatData, isLoading, refetch } = useChatDetailsQuery({ chatId });
+  const navigate = useNavigate()
+
+  const {
+    data: chatData,
+    isLoading,
+    refetch,
+  } = useChatDetailsQuery({ chatId });
 
   const [saveMessage] = useSaveMessagesMutation();
 
   useEffect(() => {
     if (chatData) {
       setMessages(chatData.messages || []);
-      refetch()
+      refetch();
     }
-  }, [chatData]);
+  }, [chatData, refetch]);
 
   useEffect(() => {
     socket.on("receiveMessage", (messageData) => {
@@ -43,8 +50,8 @@ const OwnerChatScreen = () => {
     if (message.trim()) {
       const messageData = {
         chatId,
-        sender: ownerId,
-        senderType: "Owner",
+        sender: userId,
+        senderType: "User",
         message,
         timestamp: new Date().toISOString(),
       };
@@ -52,8 +59,7 @@ const OwnerChatScreen = () => {
       socket.emit("sendMessage", messageData);
       try {
         await saveMessage(messageData).unwrap();
-        
-        refetch()
+        refetch();
       } catch (error) {
         console.error("Failed to send message:", error);
       }
@@ -93,49 +99,44 @@ const OwnerChatScreen = () => {
   };
 
   return (
-    <div className="d-flex">
-      <SideBarOwner />
-      <div className="content">
-        <div className="chat-container">
-          <div className="chat-header">
-            <h2>{customerName}</h2>
-          </div>
+    <div className="chat-container">
+      <div className="chat-header">
+      <IoMdArrowBack onClick={() => navigate(-1)} style={{ cursor: 'pointer' }} />
+        <h2>{ownerName.charAt(0).toUpperCase() + ownerName.slice(1).toLowerCase()}</h2>
+      </div>
 
-          <div className="messages-container" ref={messagesRef}>
-            {isLoading ? (
-              <p>Loading messages...</p>
-            ) : (
-              messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`message ${
-                    msg.senderType === "Owner" ? "sent" : "received"
-                  }`}
-                >
-                  <strong>
-                    {msg.senderType === "Owner" ? "You" : `${customerName}`}
-                  </strong>
-                  : {msg.message}
-                  <div className="timestamp">{formatTime(msg.timestamp)}</div>
-                </div>
-              ))
-            )}
-          </div>
+      <div className="messages-container" ref={messagesRef}>
+        {isLoading ? (
+          <p>Loading messages...</p>
+        ) : (
+          messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`message ${
+                msg.senderType === "User" ? "sent" : "received"
+              }`}
+            >
+              <strong>
+                {msg.senderType === "User" ? "You" : `${ownerName}`}
+              </strong>
+              : {msg.message}
+              <div className="timestamp">{formatTime(msg.timestamp)}</div>
+            </div>
+          ))
+        )}
+      </div>
 
-          {/* Input Section */}
-          <div className="input-container">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type your message here..."
-            />
-            <button onClick={sendMessage}>Send</button>
-          </div>
-        </div>
+      <div className="input-container">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type your message here..."
+        />
+        <button onClick={sendMessage}>Send</button>
       </div>
     </div>
   );
 };
 
-export default OwnerChatScreen;
+export default MessageChatScreen;

@@ -20,14 +20,14 @@ const MessageScreen = () => {
   } = useOwnerChatListQuery({ ownerId });
 
   const [updatedChatList, setUpdatedChatList] = useState(chatList);
-  const [newMessageChatIds, setNewMessageChatIds] = useState(new Set()); // To track chats with new messages
-  const [selectedChatId, setSelectedChatId] = useState(null); // To keep track of the selected chat
+  const [newMessageChatIds, setNewMessageChatIds] = useState(new Set());
+  const [selectedChatId, setSelectedChatId] = useState(null); 
 
   const handleChatClick = (chatId, customerName) => {
-    setSelectedChatId(chatId); // Update the selected chat
+    setSelectedChatId(chatId);
     setNewMessageChatIds((prev) => {
       const updatedSet = new Set(prev);
-      updatedSet.delete(chatId); // Remove the chat from new messages when clicked
+      updatedSet.delete(chatId); 
       return updatedSet;
     });
     navigate(`/owner/chat/${chatId}`, {
@@ -44,7 +44,6 @@ const MessageScreen = () => {
   };
 
   useEffect(() => {
-    // Listen for new messages from the socket
     socket.on("newMessage", (newMessageData) => {
       const { chatId, message, timestamp } = newMessageData;
 
@@ -63,7 +62,6 @@ const MessageScreen = () => {
         )
       );
 
-      // Add chatId to newMessageChatIds if the chat is not selected
       if (chatId !== selectedChatId) {
         setNewMessageChatIds((prev) => new Set(prev).add(chatId));
       }
@@ -72,14 +70,12 @@ const MessageScreen = () => {
     return () => {
       socket.off("newMessage");
     };
-  }, [selectedChatId]); // Re-run effect if selectedChatId changes
+  }, [selectedChatId]);
 
-  // Effect to refetch chat list when the component mounts or changes
   useEffect(() => {
     refetch();
   }, [refetch]);
 
-  // Update the updatedChatList when the initial chatList is loaded
   useEffect(() => {
     setUpdatedChatList(chatList);
   }, [chatList]);

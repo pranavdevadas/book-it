@@ -71,14 +71,35 @@ const chatController = {
     }
   }),
 
+  getMessageListUser: expressAsyncHandler(async (req, res) => {
+    const { userId } = req.params;
+    try {
+      const chats = await Chat.find({ participants: userId })
+      .populate({ path: "participants", model: "Owner", select: "name" })
+      .sort({ "messages.timestamp": -1 });
+
+      const chatList = chats.map((chat) => ({
+        chatId: chat._id,
+        participants: chat.participants.map((participant) => participant.name),
+        lastMessage: chat.messages[chat.messages.length - 1],
+      }));
+      res.status(200).json(chatList);
+
+
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }),
+
   getChatOwner: expressAsyncHandler(async (req, res) => {
     const { chatId } = req.params;
-
     try {
-      const chat = await Chat.findById(chatId).populate(
+      const chat = await Chat.findById(chatId)
+        .populate(
         "messages.sender",
         "_id name"
-      );
+      )
+      .populate({ path: "participants", model: "Owner", select: "name" })
 
       if (!chat) {
         return res.status(404).json({ message: "Chat not found" });
@@ -117,6 +138,8 @@ const chatController = {
       res.status(400).json({ message: error.message });
     }
   }),
+
+  
 };
 
 export default chatController;

@@ -38,6 +38,7 @@ import TicketScreen from "./screens/userScreens/TicketScreen.jsx";
 import ForgetPasswordScreen from "./screens/userScreens/ForgetPasswordScreen.jsx";
 import WalletScreen from './screens/userScreens/WalletScreen.jsx'
 import ChatScreen from './screens/userScreens/ChatScreen.jsx'
+import MessageListScreen from "./screens/userScreens/MessageListScreen.jsx";
 
 import OwnerLoginScreen from "./screens/ownerScreens/LoginScreen.jsx";
 import OwnerPrivateRoute from "./components/ownerComonents/PrivateRoute.jsx";
@@ -53,6 +54,7 @@ import ShowAddScreen from "./screens/ownerScreens/ShowAddScreen.jsx";
 import BookingScreen from "./screens/ownerScreens/BookingScreen.jsx";
 import MessageScreen from "./screens/ownerScreens/MessageScreen.jsx";
 import OwnerChatScreen from "./screens/ownerScreens/OwnerChatScreeen.jsx";
+import MessageChatScreen from "./screens/userScreens/MessageChatScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -67,6 +69,7 @@ const router = createBrowserRouter(
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/message/:chatId" element={<MessageChatScreen />} />
         <Route
           path="/select-seats/:theatreId/:screen"
           element={<SelectSeatsScreen />}
@@ -75,6 +78,7 @@ const router = createBrowserRouter(
         <Route path="/thank-you" element={<ThankyouScreen />} />
         <Route path="/ticket" element={<TicketScreen />} />
         <Route path="/wallet" element={<WalletScreen />} />
+        <Route path="/messages" element={<MessageListScreen />} />
         <Route path="/chat/:userId/:ownerId" element={<ChatScreen />} />
       </Route>
 

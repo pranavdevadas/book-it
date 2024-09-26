@@ -10,7 +10,6 @@ function HomeScreen() {
   const {
     data: movies = [],
     isLoading,
-    error,
     refetch,
   } = useGetAllmoviesQuery();
 
@@ -19,6 +18,10 @@ function HomeScreen() {
     isLoading: bannerLoading,
     refetch: bannerRefetch
   } = useBannerDisplayQuery()
+
+  if (isLoading || bannerLoading) {
+    <Loader/>
+  }
 
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
@@ -39,8 +42,6 @@ function HomeScreen() {
         <Carousels banner={banners} bannerRefetch={bannerRefetch} />
         {isLoading || bannerLoading ? (
           <Loader />
-        ) : error ? (
-          toast.error(error.message)
         ) : (
           <Card movies={movies} refetch={refetch}  />
         )}
