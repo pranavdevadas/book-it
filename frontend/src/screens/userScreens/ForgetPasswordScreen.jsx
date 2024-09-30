@@ -87,14 +87,11 @@ function ForgetPasswordScreen() {
         <Form onSubmit={handleChangePassword}>
           <Form.Group className="my-2" controlId="otp">
             <Form.Label>OTP</Form.Label>
-            <OtpInput
+            <Form.Control
+              type="otp"
+              placeholder='enter your otp'
               value={otp}
-              onChange={setOtp}
-              numInputs={6}
-              renderSeparator={<span>-</span>}
-              renderInput={(props) => (
-                <input {...props} style={{ width: "2rem" }} />
-              )}
+              onChange={(e) => setOtp(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="my-2" controlId="newPassword">
