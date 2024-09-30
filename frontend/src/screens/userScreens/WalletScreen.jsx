@@ -11,11 +11,15 @@ function WalletScreen() {
     refetch: transactionRefetch,
   } = useGetTransactionsQuery();
 
+  useEffect(() => {
+    transactionRefetch()
+  },[transactionRefetch])
+
   return (
     <Container>
       <Row>
         <Col md={6}>
-          <Wallet transactionRefetch= {transactionRefetch} />
+          <Wallet />
         </Col>
         <Col md={6}>
           <Transaction transactions={transactions}  />

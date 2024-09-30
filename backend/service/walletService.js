@@ -30,10 +30,7 @@ const walletService = {
 
   getWalletBalance: async (userId) => {
     const wallet = await walletRepository.findByUserId(userId);
-    if (!wallet) {
-      throw new Error("Wallet now found");
-    }
-    return wallet.balance;
+    return wallet ? wallet.balance : 0
   },
 };
 

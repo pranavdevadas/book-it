@@ -74,13 +74,14 @@ function CheckoutScreen() {
             paymentStatus: "completed",
             totalPrice,
           });
-          toast.success("Booking Completed");
-          navigate("/thank-you");
+          //toast.success("Booking Completed");
           walletRefetch()
+          navigate("/thank-you");
         } catch (error) {
-          toast.error(
-            `Booking failed: ${error.data?.message || error.message}`
-          );
+          console.log(error)
+          // toast.error(
+          //   `Booking failed: ${error.data?.message || error.message}`
+          // );
         }
 
         console.log(response.razorpay_payment_id);

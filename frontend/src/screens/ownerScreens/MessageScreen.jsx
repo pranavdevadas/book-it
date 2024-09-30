@@ -88,6 +88,8 @@ const MessageScreen = () => {
           <h2 className="text-center fw-bold">Your Messages</h2>
           {isChatListLoading ? (
             <p>Loading chat list...</p>
+          ) : updatedChatList.length === 0 ? (
+            <p className="text-center">No chats available</p>
           ) : (
             <ul>
               {updatedChatList.map((chat) => (

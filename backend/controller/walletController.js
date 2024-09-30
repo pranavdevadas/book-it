@@ -29,6 +29,7 @@ const walletController = {
       const balance = await walletService.getWalletBalance(req.user._id);
       res.status(200).json(balance);
     } catch (error) {
+      console.log(error)
       res.status(400).json({ message: error.message });
     }
   }),

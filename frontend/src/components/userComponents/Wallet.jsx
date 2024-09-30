@@ -5,22 +5,17 @@ import {
   useAddAmountToWalletMutation,
   useGetWalletBalanceQuery,
 } from "../../slice/userSlice/userApiSlice";
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";  
 
-function Wallet({ transactionRefetch }) {
+function Wallet() {
   const [amount, setAmount] = useState(0);
-  const [balance, setBalance] = useState(0);
 
   const [addAmount] = useAddAmountToWalletMutation();
   const { data: walletData, error, refetch } = useGetWalletBalanceQuery();
-
-
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (walletData) {
-      setBalance(0 || walletData);
-    }
+    
     if (error) {
       toast.error("Failed to load wallet balance");
     }
@@ -43,11 +38,9 @@ function Wallet({ transactionRefetch }) {
       handler: async (response) => {
         try {
           const wallet = await addAmount({ amount }).unwrap();
-          setBalance(wallet.balance);
           toast.success(`Amount added successfully!`);
           setAmount(0);
           refetch();
-          transactionRefetch();
         } catch (error) {
           toast.error(error.data?.message || "Failed to add funds");
         }
@@ -65,6 +58,9 @@ function Wallet({ transactionRefetch }) {
     const razorpay = new window.Razorpay(options);
     razorpay.open();
   };
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   return (
     <Container className="mt-5">
@@ -72,7 +68,7 @@ function Wallet({ transactionRefetch }) {
         <Card.Body>
           <h2 className="text-center mt-3">Wallet</h2>
           <Card.Text className="text-center mt-3 mb-3">
-            Current Balance: <strong>Rs. {balance}</strong>
+            Current Balance: <strong>Rs. {walletData}</strong>
           </Card.Text>
           <Form>
             <Form.Group controlId="formAmount">

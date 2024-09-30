@@ -86,6 +86,8 @@ function MessageListScreen() {
         <h2 className="fw-bold text-center mt-3 mb-3">Messages</h2>
         {isChatListLoading ? (
           <Loader />
+        ) : updatedChatList.length === 0 ? ( 
+          <p className="text-center">No chats available</p>
         ) : (
           <ul>
             {updatedChatList.map((chat) => (
@@ -118,6 +120,9 @@ function MessageListScreen() {
           </ul>
         )}
       </div>
+      <br />
+      <br />
+      <br />
       <br />
       <br />
       <br />
