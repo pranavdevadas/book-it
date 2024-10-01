@@ -30,9 +30,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Enable CORS
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://book-it-psi.vercel.app", 
+];
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -54,7 +58,7 @@ const server = http.createServer(app);
 
 const io = new socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -64,9 +68,9 @@ io.on("connection", (socket) => {
   //console.log('User connected');
 
   socket.on("sendMessage", (messageData) => {
-    const {chatId, message, timestamp} = messageData
+    const { chatId, message, timestamp } = messageData;
     io.emit("receiveMessage", messageData);
-    io.emit("newMessage",{chatId, message, timestamp});
+    io.emit("newMessage", { chatId, message, timestamp });
   });
 
   socket.on("disconnect", () => {
