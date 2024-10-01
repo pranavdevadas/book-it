@@ -32,7 +32,8 @@
     "react-toastify": "^10.0.5",
     "sass": "^1.77.8",
     "socket.io-client": "^4.7.5",
-    "sweetalert2": "^11.13.2"
+    "sweetalert2": "^11.13.2",
+    "tabbable": "^6.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
