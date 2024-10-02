@@ -95,7 +95,7 @@ function Ticket({ tickets, refetch }) {
                   >
                     <div style={{ textAlign: "left" }}>
                       <img
-                        src={`http://localhost:5000/moviePoster/${ticket.movie.poster}`}
+                        src={`https://bookitt.online/moviePoster/${ticket.movie.poster}`}
                         alt="Movie Poster"
                         style={{
                           width: "120px",

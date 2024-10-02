@@ -6,9 +6,9 @@ import ExampleCarouselImage2 from "../../assets/kali.jpg";
 
 function Carousels({ banner, bannerRefetch }) {
 
-  const banner1 = `http://localhost:5000/${banner.banner1}`
-  const banner2 = `http://localhost:5000/${banner.banner2}`
-  const banner3 = `http://localhost:5000/${banner.banner3}`
+  const banner1 = `https://bookitt.online/${banner.banner1}`
+  const banner2 = `https://bookitt.online/${banner.banner2}`
+  const banner3 = `https://bookitt.online/${banner.banner3}`
 
   return (
     <>

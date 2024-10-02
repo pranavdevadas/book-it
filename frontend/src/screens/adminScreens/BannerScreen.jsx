@@ -32,13 +32,13 @@ function BannerScreen() {
     if (banner) {
       setPreview({
         banner1: banner.banner1
-          ? `http://localhost:5000/${banner.banner1}`
+          ? `https://bookitt.online/${banner.banner1}`
           : null,
         banner2: banner.banner2
-          ? `http://localhost:5000/${banner.banner2}`
+          ? `https://bookitt.online/${banner.banner2}`
           : null,
         banner3: banner.banner3
-          ? `http://localhost:5000/${banner.banner3}`
+          ? `https://bookitt.online/${banner.banner3}`
           : null,
       });
     }

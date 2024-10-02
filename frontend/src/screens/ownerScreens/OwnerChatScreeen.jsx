@@ -8,7 +8,7 @@ import {
   useSaveMessagesMutation,
 } from "../../slice/ownerSlice/ownerApiSlice";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://bookitt.online");
 
 const OwnerChatScreen = () => {
   const [message, setMessage] = useState("");

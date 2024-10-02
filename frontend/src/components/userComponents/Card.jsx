@@ -43,7 +43,7 @@ function UserCard({ movies }) {
               <Card style={{ width: "75%", height: "100%" }} className="shadow">
                 <Card.Img
                   variant="top"
-                  src={`http://localhost:5000/moviePoster/${movie.poster}`}
+                  src={`https://bookitt.online/moviePoster/${movie.poster}`}
                   className="img-fluid"
                   style={{ height: "300px", objectFit: "cover" }}
                 />

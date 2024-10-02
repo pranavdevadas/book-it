@@ -73,7 +73,7 @@ function MovieDetails() {
     return <Loader />;
   }
 
-  const poster = `http://localhost:5000/moviePoster/${movie.poster}`;
+  const poster = `https://bookitt.online/moviePoster/${movie.poster}`;
 
   const today = new Date();
   const currentTime = format(today, "HH:mm");

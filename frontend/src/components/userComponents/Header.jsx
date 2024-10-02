@@ -83,7 +83,7 @@ function Header() {
                   <div style={{ display: "flex", alignItems: "center" }}>
                     {item.movie.poster && (
                       <img
-                        src={`http://localhost:5000/moviePoster/${item.movie.poster}`}
+                        src={`https://bookitt.online/moviePoster/${item.movie.poster}`}
                         alt={item.movie.name}
                         style={{
                           width: "50px",

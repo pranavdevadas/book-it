@@ -89,7 +89,7 @@ function HorizontalCards({ movies }) {
             >
               <Card.Img
                 variant="left"
-                src={`http://localhost:5000/moviePoster/${show.poster}`}
+                src={`https://bookitt.online/moviePoster/${show.poster}`}
                 style={{ width: "150px", height: "100%", objectFit: "cover" }}
               />
               <Card.Body>

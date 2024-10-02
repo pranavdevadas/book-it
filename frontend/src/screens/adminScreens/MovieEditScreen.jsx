@@ -38,7 +38,7 @@ function MovieEditScreen() {
       setCategories(movie.categories);
       setLanguage(movie.language);
       setCast(movie.cast.join(", "));
-      setPreview(`http://localhost:5000/moviePoster/${movie.poster}`);
+      setPreview(`https://bookitt.online/moviePoster/${movie.poster}`);
       refetch();
     }
   }, [movie, refetch]);

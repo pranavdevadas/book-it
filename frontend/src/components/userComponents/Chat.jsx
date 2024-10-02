@@ -5,7 +5,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useGetChatHistoryQuery, useSaveChatMutation } from "../../slice/userSlice/userApiSlice";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://bookitt.online");
 
 const Chat = ({ userId, ownerId }) => {
   const [message, setMessage] = useState("");

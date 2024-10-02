@@ -9,7 +9,7 @@ import {
 import { IoMdArrowBack } from "react-icons/io";
 
 
-const socket = io("http://localhost:5000");
+const socket = io("https://bookitt.online");
 
 const MessageChatScreen = () => {
   const [message, setMessage] = useState("");

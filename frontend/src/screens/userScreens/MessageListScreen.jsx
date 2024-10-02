@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 import Loader from "../../components/userComponents/Loader";
 import { useNavigate } from "react-router-dom";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://bookitt.online");
 
 function MessageListScreen() {
   const { userInfo } = useSelector((state) => state.auth);
