@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-let baseQuery = fetchBaseQuery({ baseUrl : ''})
+const baseUrl = 'https://bookitt.online/api';
+
+const baseQuery = fetchBaseQuery({ baseUrl })
 
 export const apiSlice = createApi({
     baseQuery,
