@@ -32,7 +32,8 @@ app.use(cookieParser());
 // Enable CORS
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://book-it-psi.vercel.app", 
+  "https://book-it-psi.vercel.app",
+  "https://bookitt.online",
 ];
 app.use(
   cors({
@@ -79,6 +80,6 @@ io.on("connection", (socket) => {
 });
 
 // Start server
-server.listen(port, '0.0.0.0',() => {
+server.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on port ${port}`);
 });
