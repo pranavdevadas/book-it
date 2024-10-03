@@ -38,7 +38,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: "https://book-it-psi.vercel.app",
-    methods: ["GET", "POST"],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   })
 );
