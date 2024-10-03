@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const fetchUserData = async () => {
-    console.log('nnnnnnnnnnnnnnnnnnnnn')
     try {
         const response = await axios.get('/api/users/fetchData', {
             withCredentials: true,

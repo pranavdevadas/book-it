@@ -74,7 +74,6 @@ const bookingController = {
 
   getTickets: expressAsyncHandler(async (req, res) => {
     console.log('jjjjlll')
-    console.log(req)
     try {
       const tickets = await bookingService.getTickets(req.user._id);
       res.status(200).json(tickets);

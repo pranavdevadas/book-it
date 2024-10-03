@@ -5,7 +5,7 @@ import { useGetTicketsQuery } from "../../slice/userSlice/userApiSlice";
 import Loader from "../../components/userComponents/Loader";
 
 function TicketScreen() {
-  const { data: tickets =[], isLoading, refetch } = useGetTicketsQuery();
+  const { data: tickets =[], isLoading, refetch, } = useGetTicketsQuery();
 
   useEffect(() => {
     refetch()

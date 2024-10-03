@@ -20,6 +20,7 @@ function PrivateRoute() {
           dispatch(clearCredentials()); 
         }
       } catch (error) {
+        console.log('errordddddd',error)
         console.error("Failed to fetch user data:", error);
         toast.error("You are Blocked, Contact Admin for more info")
         dispatch(clearCredentials());  
