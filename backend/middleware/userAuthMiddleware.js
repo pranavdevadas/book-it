@@ -5,6 +5,9 @@ import User from "../model/user.js";
 const userProtect = expressAsyncHandler(async (req, res, next) => {
   const token = req.cookies.userJwt;
 
+  console.log(token)
+  console.log(process.env.JWT_SECRET_USER)
+
   if (token) {
     try {
       let decoded = jwt.verify(token, process.env.JWT_SECRET_USER);
