@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import User from "../model/user.js";
 
 const userProtect = expressAsyncHandler(async (req, res, next) => {
-  console.log('djdjdj')
+  console.log('djdjdjf')
   const token = req.cookies.userJwt;
 
   console.log(token)
@@ -26,6 +26,7 @@ const userProtect = expressAsyncHandler(async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
+      console.log('jjjhjhhj',error)
       console.error("Token verification failed:", error);
       res.status(401);
       throw new Error("Not Authorized, Invalid token");
