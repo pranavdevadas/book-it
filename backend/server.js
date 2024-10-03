@@ -35,11 +35,26 @@ const allowedOrigins = [
   "https://book-it-psi.vercel.app",
   "https://bookitt.online",
 ];
+// app.use(
+//   cors({
+//     origin: allowedOrigins,
+//     methods: ["GET", "POST"],
+//     credentials: true,
+//   })
+// );
+
 app.use(
   cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
-    credentials: true,
+    origin: function (origin, callback) {
+      // Check if the origin is in the allowedOrigins array
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ["GET", "POST", "OPTIONS"],  // Allow OPTIONS for preflight
+    credentials: true,                    // Allow cookies to be sent
   })
 );
 
