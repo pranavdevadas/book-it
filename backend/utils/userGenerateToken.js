@@ -9,7 +9,7 @@ let userGenerateToken = (res, userId) => {
     res.cookie('userJwt', token, {
         httpOnly : true,
         secure : true,
-        sameSite : 'strict',
+        sameSite : 'None',
         maxAge : 30 * 24 * 60 * 60 * 100
     })
     console.log('llljjjj')
