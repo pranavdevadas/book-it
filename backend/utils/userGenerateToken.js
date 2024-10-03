@@ -5,8 +5,6 @@ let userGenerateToken = (res, userId) => {
         expiresIn : '30d'
     })
     
-    console.log(token)
-
     res.cookie('userJwt', token, {
         httpOnly : true,
         secure : process.env.NODE_ENV !== 'development',
