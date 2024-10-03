@@ -139,7 +139,7 @@ const userController = {
   fetchData: expressAsyncHandler(async (req, res) => {
     try {
       let user = await userService.getUserById(req.user._id);
-      res.json(user);
+      res.status(200).json(user);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
