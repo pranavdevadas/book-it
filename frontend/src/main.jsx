@@ -55,6 +55,9 @@ import BookingScreen from "./screens/ownerScreens/BookingScreen.jsx";
 import MessageScreen from "./screens/ownerScreens/MessageScreen.jsx";
 import OwnerChatScreen from "./screens/ownerScreens/OwnerChatScreeen.jsx";
 import MessageChatScreen from "./screens/userScreens/MessageChatScreen.jsx";
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 const router = createBrowserRouter(
   createRoutesFromElements(
