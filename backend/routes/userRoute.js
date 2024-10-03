@@ -8,7 +8,7 @@ import bookingController from '../controller/bookingController.js'
 import theatreController from '../controller/theatreController.js'
 import walletController from '../controller/walletController.js'
 
-// Autherisation
+// Authorization
 router.post('/', userController.registerUser)
 router.post('/auth', userController.authUser)
 router.post('/logout', userController.logoutUser)

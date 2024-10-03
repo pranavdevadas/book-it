@@ -80,6 +80,7 @@ const userController = {
         otp: user.otp,
       });
     } catch (error) {
+      console.log(error)
       res.status(400);
       throw new Error(error.message);
     }

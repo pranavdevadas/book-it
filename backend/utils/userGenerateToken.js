@@ -13,4 +13,6 @@ let userGenerateToken = (res, userId) => {
     })
 }
 
+console.log(userGenerateToken)
+
 export default userGenerateToken
