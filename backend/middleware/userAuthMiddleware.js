@@ -3,11 +3,15 @@ import expressAsyncHandler from "express-async-handler";
 import User from "../model/user.js";
 
 const userProtect = expressAsyncHandler(async (req, res, next) => {
-  let token = req.cookies.userJwt;
+  console.log('djdjdj')
+  const token = req.cookies.userJwt;
+
+  console.log(token)
 
   if (token) {
     try {
       let decoded = jwt.verify(token, process.env.JWT_SECRET_USER);
+      console.log('dfdfd',decoded)
       let user = await User.findById(decoded.userId).select("-password");
 
       if (user.isBlocked) {
