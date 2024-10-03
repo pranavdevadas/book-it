@@ -3,15 +3,11 @@ import expressAsyncHandler from "express-async-handler";
 import User from "../model/user.js";
 
 const userProtect = expressAsyncHandler(async (req, res, next) => {
-  console.log('djdjdjf')
   const token = req.cookies.userJwt;
-
-  console.log(token)
 
   if (token) {
     try {
       let decoded = jwt.verify(token, process.env.JWT_SECRET_USER);
-      console.log('dfdfd',decoded)
       let user = await User.findById(decoded.userId).select("-password");
 
       if (user.isBlocked) {
@@ -26,7 +22,6 @@ const userProtect = expressAsyncHandler(async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      console.log('jjjhjhhj',error)
       console.error("Token verification failed:", error);
       res.status(401);
       throw new Error("Not Authorized, Invalid token");

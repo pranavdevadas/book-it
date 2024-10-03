@@ -21,6 +21,7 @@ const userController = {
       if (!isVerified) {
         res.status(200).json({ message: "User Not Verified", otp, email });
       } else {
+        
         userGenerateToken(res, user._id);
         res.status(200).json({
           _id: user._id,
