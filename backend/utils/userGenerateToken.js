@@ -4,6 +4,8 @@ let userGenerateToken = (res, userId) => {
     let token = jwt.sign({userId}, process.env.JWT_SECRET_USER, {
         expiresIn : '30d'
     })
+
+    console.log(process.env.NODE_ENV)
     
     res.cookie('userJwt', token, {
         httpOnly : true,
