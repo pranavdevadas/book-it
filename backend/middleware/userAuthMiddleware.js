@@ -6,7 +6,6 @@ const userProtect = expressAsyncHandler(async (req, res, next) => {
   const token = req.cookies.userJwt;
 
   console.log('token',token)
-  console.log('req',req)
 
   if (token) {
     try {
