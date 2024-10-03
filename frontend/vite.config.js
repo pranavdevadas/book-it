@@ -9,6 +9,8 @@ export default defineConfig({
       '/api': {
         target: 'https://bookitt.online',
         changeOrigin: true,
+        secure: true,
+        cookieDomainRewrite: ''
       },
     },
   },
