@@ -1,26 +1,25 @@
 import React, { useEffect } from "react";
 import Card from "../../components/userComponents/Card.jsx";
 import { Container } from "react-bootstrap";
-import Loader from '../../components/userComponents/Loader.jsx'
+import Loader from "../../components/userComponents/Loader.jsx";
 import Carousels from "../../components/userComponents/Carousels.jsx";
-import { useGetAllmoviesQuery, useBannerDisplayQuery } from "../../slice/userSlice/userApiSlice.js";
-import { toast } from 'react-toastify'
+import {
+  useGetAllmoviesQuery,
+  useBannerDisplayQuery,
+} from "../../slice/userSlice/userApiSlice.js";
+import { toast } from "react-toastify";
 
 function HomeScreen() {
-  const {
-    data: movies = [],
-    isLoading,
-    refetch,
-  } = useGetAllmoviesQuery();
+  const { data: movies = [], isLoading, refetch } = useGetAllmoviesQuery();
 
   const {
     data: banners = [],
     isLoading: bannerLoading,
-    refetch: bannerRefetch
-  } = useBannerDisplayQuery()
+    refetch: bannerRefetch,
+  } = useBannerDisplayQuery();
 
   if (isLoading || bannerLoading) {
-    <Loader/>
+    <Loader />;
   }
 
   useEffect(() => {
@@ -38,12 +37,12 @@ function HomeScreen() {
 
   return (
     <>
+      <Carousels banner={banners} bannerRefetch={bannerRefetch} />
       <Container>
-        <Carousels banner={banners} bannerRefetch={bannerRefetch} />
         {isLoading || bannerLoading ? (
           <Loader />
         ) : (
-          <Card movies={movies} refetch={refetch}  />
+          <Card movies={movies} refetch={refetch} />
         )}
       </Container>
     </>

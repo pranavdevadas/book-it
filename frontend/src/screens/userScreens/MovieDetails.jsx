@@ -107,7 +107,7 @@ function MovieDetails() {
 
   const handleChat = (ownerId, theatreName, city) => {
     const userId = userInfo._id;
-    console.log(userId)
+    
     navigate(`/chat/${userId}/${ownerId}`,{
       state: { theatreName, city },
     });
