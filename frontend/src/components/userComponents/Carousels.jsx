@@ -11,7 +11,7 @@ function Carousels({ banner }) {
 
   return (
     <>
-      <h2 className="text-center mt-3 fw-bold">Book Movies Now</h2>
+      
       <Carousel
         style={{ width: "100%", margin: 0, padding: 0, overflow: 'hidden' }} // Added overflow hidden
       >
@@ -58,6 +58,7 @@ function Carousels({ banner }) {
           />
         </Carousel.Item>
       </Carousel>
+      <h2 className="text-center mt-3 fw-bold">Book Movies Now</h2>
     </>
   );
 }
