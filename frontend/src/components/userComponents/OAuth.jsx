@@ -18,7 +18,7 @@ function OAuth() {
     provider.setCustomParameters({ prompt: "select_account" });
     try {
       let resultFromGoogle = await signInWithPopup(auth, provider);
-      let res = await fetch("/api/users/google", {
+      let res = await fetch("https://bookitt.online/api/users/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
