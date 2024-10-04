@@ -12,16 +12,21 @@ function Carousels({ banner }) {
   return (
     <>
       <h2 className="text-center mt-3 fw-bold">Book Movies Now</h2>
-      <Carousel 
-        style={{ width: '100%', margin: 0, padding: 0 }} 
-        className="d-flex justify-content-center mt-5"
+      <Carousel
+        style={{ width: "100%", margin: 0, padding: 0, overflow: 'hidden' }} // Added overflow hidden
       >
         <Carousel.Item>
           <img
             className="d-block"
             src={banner1 || ExampleCarouselImage}
             alt="First slide"
-            style={{ height: "500px", objectFit: "cover", width: '100%', margin: 0 }}
+            style={{
+              height: "500px",
+              objectFit: "cover",
+              width: "100%",
+              margin: 0,
+              display: "block" // Added display block
+            }}
           />
         </Carousel.Item>
         <Carousel.Item>
@@ -29,7 +34,13 @@ function Carousels({ banner }) {
             className="d-block"
             src={banner2 || ExampleCarouselImage1}
             alt="Second slide"
-            style={{ height: "500px", objectFit: "cover", width: '100%', margin: 0 }}
+            style={{
+              height: "500px",
+              objectFit: "cover",
+              width: "100%",
+              margin: 0,
+              display: "block" // Added display block
+            }}
           />
         </Carousel.Item>
         <Carousel.Item>
@@ -37,7 +48,13 @@ function Carousels({ banner }) {
             className="d-block"
             src={banner3 || ExampleCarouselImage2}
             alt="Third slide"
-            style={{ height: "500px", objectFit: "cover", width: '100%', margin: 0 }}
+            style={{
+              height: "500px",
+              objectFit: "cover",
+              width: "100%",
+              margin: 0,
+              display: "block" // Added display block
+            }}
           />
         </Carousel.Item>
       </Carousel>
