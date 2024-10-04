@@ -70,6 +70,7 @@ function BannerScreen() {
       await bannerManagment(formData);
       toast.success("Banners updated successfully");
     } catch (err) {
+      console.log(err)
       toast.error(err?.data?.message || err.error);
     }
   };
