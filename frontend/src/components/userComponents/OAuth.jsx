@@ -17,6 +17,7 @@ function OAuth() {
 
         try {
             let resultFromGoogle = await signInWithPopup(auth, provider);
+            console.log('result from google',resultFromGoogle)
             let res = await fetch("/api/users/google", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -25,6 +26,8 @@ function OAuth() {
                     email: resultFromGoogle.user.email,
                 }),
             });
+
+            console.log('res',res)
 
             let data = await res.json();
             if (res.ok) {
