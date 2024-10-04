@@ -9,15 +9,16 @@ function Carousels({ banner }) {
   const banner2 = `https://bookitt.online/${banner.banner2}`;
   const banner3 = `https://bookitt.online/${banner.banner3}`;
 
-  // Vignette overlay style
+  // Vignette overlay style for all four sides
   const vignetteStyle = {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    background: "radial-gradient(circle, rgba(0, 0, 0, 0.5) 60%, transparent 100%)",
+    background: "linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent), linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent), linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent), linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent)",
     pointerEvents: "none", // Allow clicks to pass through
+    zIndex: 1, // Ensure the vignette is above the image
   };
 
   return (
