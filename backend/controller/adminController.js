@@ -104,7 +104,6 @@ let adminController = {
   }),
 
   bannerManagment: expressAsyncHandler(async (req, res) => {
-    console.log('fdfdf')
     try {
       console.log(req.files);
       let banner = await Banner.findOne();
