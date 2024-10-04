@@ -28,12 +28,17 @@ function OAuth() {
 
             let data = await res.json();
             if (res.ok) {
+              console.log('dfdfdfd', res)
                 dispatch(setCredentials(data));
                 navigate('/');
             } else {
+              console.log('ddfdfd')
+              console.log(data)
                 console.error("Failed to login:", data); // Log any errors received from the server
             }
         } catch (error) {
+          console.log('error')
+          console.log(error)
             console.error("Error during Google sign-in:", error); // Enhanced error logging
         }
     };
