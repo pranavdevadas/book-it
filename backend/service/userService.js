@@ -141,8 +141,8 @@ let userService = {
 
   loginOrCreateGoogleUser: async (email, name, res) => {
     let user = await userRepository.findUserByEmail(email);
-
     if (user) {
+      console.log('dddddddddd',user)
       userGenerateToken(res, user._id);
 
       return {
@@ -151,6 +151,7 @@ let userService = {
         email: user.email,
       };
     } else {
+      console.log('nnnkk')
       let generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
@@ -166,7 +167,7 @@ let userService = {
       });
 
       userGenerateToken(res, newUser._id);
-
+      console.log('service',newUser)
       return {
         message: "Login Success",
         name: newUser.name,
