@@ -67,9 +67,11 @@ function BannerScreen() {
     formData.append("banner3", poster.banner3);
 
     try {
-      await bannerManagment(formData);
+      let  bannerr = await bannerManagment(formData);
+      console.log(bannerr)
       //toast.success("Banners updated successfully");
     } catch (err) {
+      console.log('dddddddd')
       console.log(err)
       toast.error(err?.data?.message || err.error);
     }
