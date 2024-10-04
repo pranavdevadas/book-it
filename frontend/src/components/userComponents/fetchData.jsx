@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const fetchUserData = async () => {
     try {
-        const response = await axios.get('/api/users/fetchData', {
+        const response = await axios.get('https://www.bookitt.online/api/users/fetchData', {
             withCredentials: true,
         });
 
