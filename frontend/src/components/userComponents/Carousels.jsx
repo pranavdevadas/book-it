@@ -16,7 +16,7 @@ function Carousels({ banner, bannerRefetch }) {
       <Carousel className="d-flex justify-content-center mt-5">
         <Carousel.Item>
           <img
-            className="d-block w-75 mx-auto"
+            className="d-block mx-auto"
             src={banner1 || ExampleCarouselImage}
             alt="First slide"
             style={{ height: "500px", objectFit: "cover" }}
@@ -24,7 +24,7 @@ function Carousels({ banner, bannerRefetch }) {
         </Carousel.Item>
         <Carousel.Item>
           <img
-            className="d-block w-75 mx-auto"
+            className="d-block mx-auto"
             src={banner2 ||ExampleCarouselImage1}
             alt="Second slide"
             style={{ height: "500px", objectFit: "cover" }}
@@ -32,7 +32,7 @@ function Carousels({ banner, bannerRefetch }) {
         </Carousel.Item>
         <Carousel.Item>
           <img
-            className="d-block w-75 mx-auto"
+            className="d-block mx-auto"
             src={banner3 || ExampleCarouselImage2}
             alt="Third slide"
             style={{ height: "500px", objectFit: "cover" }}
