@@ -7,40 +7,40 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 function OAuth() {
+    let dispatch = useDispatch();
+    let navigate = useNavigate();
+    let auth = getAuth(app);
 
-    let dispatch = useDispatch()
-    let navigate = useNavigate()
+    let handleGoogleClick = async () => {
+        let provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
 
+        try {
+            let resultFromGoogle = await signInWithPopup(auth, provider);
+            let res = await fetch("/api/users/google", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: resultFromGoogle.user.displayName,
+                    email: resultFromGoogle.user.email,
+                }),
+            });
 
-  let auth = getAuth(app);
-  let handleGoogleClick = async () => {
-    let provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
-    try {
-      let resultFromGoogle = await signInWithPopup(auth, provider);
-      let res = await fetch("/api/users/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: resultFromGoogle.user.displayName,
-          email: resultFromGoogle.user.email,
-        }),
-    });
+            let data = await res.json();
+            if (res.ok) {
+                dispatch(setCredentials(data));
+                navigate('/');
+            } else {
+                console.error("Failed to login:", data); // Log any errors received from the server
+            }
+        } catch (error) {
+            console.error("Error during Google sign-in:", error); // Enhanced error logging
+        }
+    };
 
-    let data = await res.json()
-    if (res.ok) {
-        dispatch(setCredentials(data));
-        navigate('/')
-    }
-
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  return (
-    <GoogleButton style={{ width: "496px" }} onClick={handleGoogleClick} />
-  );
+    return (
+        <GoogleButton style={{ width: "496px" }} onClick={handleGoogleClick} />
+    );
 }
 
 export default OAuth;
