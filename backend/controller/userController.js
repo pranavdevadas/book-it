@@ -87,16 +87,13 @@ const userController = {
   }),
 
   google: expressAsyncHandler(async (req, res) => {
-    console.log("dddddd")
     let { email, name } = req.body;
-    console.log('hhhhhhhhhhhhh',email,name)
     try {
       const result = await userService.loginOrCreateGoogleUser(
         email,
         name,
         res
       );
-      console.log('result', result)
       res.status(200).json(result);
     } catch (error) {
       console.log(error)
