@@ -59,27 +59,20 @@ function BannerScreen() {
     }
   };
 
-  // const submitHandler = async (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData();
-  //   formData.append("banner1", poster.banner1);
-  //   formData.append("banner2", poster.banner2);
-  //   formData.append("banner3", poster.banner3);
-
-  //   try {
-  //     let  bannerr = await bannerManagment(formData);
-  //     console.log(bannerr)
-  //     //toast.success("Banners updated successfully");
-  //   } catch (err) {
-  //     console.log('dddddddd')
-  //     console.log(err)
-  //     toast.error(err?.data?.message || err.error);
-  //   }
-  // };
-
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log('Form submitted');  // Add this
+    const formData = new FormData();
+    formData.append("banner1", poster.banner1);
+    formData.append("banner2", poster.banner2);
+    formData.append("banner3", poster.banner3);
+
+    try {
+      let  bannerr = await bannerManagment(formData);
+      console.log(bannerr)
+      toast.success("Banners updated successfully");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
   };
 
   return (
