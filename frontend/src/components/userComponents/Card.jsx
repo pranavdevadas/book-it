@@ -44,6 +44,8 @@ function UserCard({ movies }) {
                 style={{
                   width: window.innerWidth <= 375 ? "100%" : "75%",
                   height: "100%",
+                  margin: 0,
+                  padding: 0
                 }}
                 className="shadow"
               >
