@@ -42,9 +42,9 @@ function UserCard({ movies }) {
             <div key={index} className="col-md-4 mb-4 ">
               <Card
                 style={{
-                  width: window.innerWidth <= 375 ? "100%" : "75%",
+                  width: window.innerWidth <= 375 ? "114%" : "75%",
                   height: "100%",
-                  margin: 0,
+                  margin: '-24px',
                   padding: 0
                 }}
                 className="shadow"
