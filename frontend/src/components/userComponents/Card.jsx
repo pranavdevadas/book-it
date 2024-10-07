@@ -43,7 +43,7 @@ function UserCard({ movies }) {
               <Card
                 style={{
                   width: window.innerWidth <= 375 ? "114%" : "75%",
-                  height: "100%",
+                  height: "114%",
                   margin: '-24px',
                   padding: 0
                 }}
