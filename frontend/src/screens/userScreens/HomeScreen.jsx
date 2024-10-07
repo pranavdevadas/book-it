@@ -37,7 +37,7 @@ function HomeScreen() {
 
   return (
     <>
-      <Carousels banner={banners} bannerRefetch={bannerRefetch} />
+        <Carousels banner={banners} bannerRefetch={bannerRefetch} />
       <Container>
         {isLoading || bannerLoading ? (
           <Loader />

@@ -20,7 +20,7 @@ function UserCard({ movies }) {
     try {
       const response = await addSavedMovie(movieId).unwrap();
       toast.success("Movie saved successfully!");
-      refetchSavedMovies()
+      refetchSavedMovies();
     } catch (error) {
       console.error("Error saving movie:", error);
       toast.error(
@@ -40,7 +40,13 @@ function UserCard({ movies }) {
         <div className="row">
           {movies.map((movie, index) => (
             <div key={index} className="col-md-4 mb-4 ">
-              <Card style={{ width: "75%", height: "100%" }} className="shadow">
+              <Card
+                style={{
+                  width: window.innerWidth <= 375 ? "100%" : "75%",
+                  height: "100%",
+                }}
+                className="shadow"
+              >
                 <Card.Img
                   variant="top"
                   src={`https://bookitt.online/moviePoster/${movie.poster}`}
