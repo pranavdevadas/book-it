@@ -6,7 +6,7 @@ import "./style.css";
 import SideBarOwner from "../../components/ownerComonents/SideBar.jsx";
 import { useOwnerChatListQuery } from "../../slice/ownerSlice/ownerApiSlice.js";
 
-const socket = io("https://bookitt.online");
+const socket = io("https://bookitt.online", { withCredentials: true });
 
 const MessageScreen = () => {
   const navigate = useNavigate();
