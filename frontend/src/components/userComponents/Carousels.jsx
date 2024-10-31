@@ -5,7 +5,7 @@ import ExampleCarouselImage1 from "../../assets/batman.jpg";
 import ExampleCarouselImage2 from "../../assets/kali.jpg";
 
 function Carousels({ banner }) {
-  const banner1 = `https://bookitt.online${banner.banner1}`;
+  const banner1 = `https://bookitt.online/${banner.banner1}`;
   const banner2 = `https://bookitt.online/${banner.banner2}`;
   const banner3 = `https://bookitt.online/${banner.banner3}`;
 
