@@ -44,7 +44,8 @@ function CheckoutScreen() {
   const { data: theatre, isLoading: theatreLoading } =
     useTheatreDetailsByIdQuery(theatreId);
 
-  const [updateBooking] = useUpdateBookingMutation();
+  const [updateBooking, { isLoading: bookingLoading }] =
+    useUpdateBookingMutation();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -75,10 +76,10 @@ function CheckoutScreen() {
             totalPrice,
           });
           //toast.success("Booking Completed");
-          walletRefetch()
+          walletRefetch();
           navigate("/thank-you");
         } catch (error) {
-          console.log(error)
+          console.log(error);
           // toast.error(
           //   `Booking failed: ${error.data?.message || error.message}`
           // );
@@ -229,6 +230,7 @@ function CheckoutScreen() {
         </Card.Body>
       </Card>
       <div className="d-flex justify-content-center mt-4 mb-2">
+        {theatreLoading && <Loader />}
         <Button variant="dark" onClick={handlePayment}>
           Pay Now
         </Button>
